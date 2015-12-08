@@ -3,7 +3,7 @@
 Helps you focus on only the lines of code you are working with,
 all other lines are faded into the background.
 
-![Focus mode screenshot](https://github.com/davidleghorn/atom-focus-mode/blob/master/screenshots/focus-mode.png)
+![Focus mode screenshot](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-mode.png)
 
 ###focus mode
 Fades all lines in the editor except the lines you focus
