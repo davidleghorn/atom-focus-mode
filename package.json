@@ -1,14 +1,17 @@
 {
   "name": "atom-focus-mode",
   "main": "./lib/focus-mode",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Fades editor content and highlights only the lines you are working on.",
   "activationCommands": {
-    "atom-workspace": ["focus-mode:toggle", "focus-mode:toggle-single-line"]
+    "atom-workspace": [
+      "focus-mode:toggle",
+      "focus-mode:toggle-single-line"
+    ]
   },
   "repository": "https://github.com/davidleghorn/atom-focus-mode",
   "license": "MIT",
   "engines": {
-  "atom": ">=1.0.0"
+    "atom": ">=1.0.0"
   }
 }
