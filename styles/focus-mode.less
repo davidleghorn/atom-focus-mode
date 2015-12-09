@@ -1,10 +1,35 @@
 
-.focus-mode  atom-text-editor::shadow .line {
+// Editor line styling
+.focus-mode atom-text-editor::shadow .line {
     opacity: 0.15;
 }
 
-.focus-mode  atom-text-editor::shadow .line .comment,
-.focus-mode  atom-text-editor::shadow .line.cursor-line,
-.focus-mode  atom-text-editor::shadow .focus-line {
+.focus-mode atom-text-editor::shadow .line:hover,
+.focus-mode atom-text-editor::shadow .line .comment,
+.focus-mode atom-text-editor::shadow .line.cursor-line,
+.focus-mode atom-text-editor::shadow .focus-line {
+    opacity: 1;
+}
+
+// Line number styling
+.focus-mode atom-text-editor::shadow .line-number {
+    opacity: 0.2;
+}
+
+.focus-mode atom-text-editor::shadow .line-number.cursor-line {
+    opacity: 0.6;
+}
+
+// File browser styling
+.focus-mode .tool-panel li span,
+.focus-mode .tool-panel .list-item::before {
+    opacity: 0.25;
+}
+
+.focus-mode .tool-panel li.selected span {
+    opacity: 0.8;
+}
+
+.focus-mode .tool-panel li:hover span {
     opacity: 1;
 }
