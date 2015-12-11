@@ -7,7 +7,7 @@ class FocusModeManager
 
     constructor: ->
         @cursorEventSubscribers = null
-        @focussedBufferRowsCache = {}
+        @focusModeMarkersCache = {}
         @focusModeBodyCssClass = "focus-mode"
         @focusLineCssClass = "focus-line"
 
@@ -33,13 +33,15 @@ class FocusModeManager
         return if @bufferRowIsAlreadyFocussed(textEditor.id, bufferRow)
 
         @addFocusLineMarker(textEditor, bufferRow)
-        @cacheFocussedBufferRow(textEditor.id, bufferRow)
 
 
     bufferRowIsAlreadyFocussed: (editorId, bufferRowNumber) =>
-        focussedRows = @focussedBufferRowsCache[editorId] or []
-        for rowNumber in focussedRows
-            if rowNumber is bufferRowNumber
+        focusMarkers = @focusModeMarkersCache[editorId] or []
+        for marker in focusMarkers
+            range = marker.getBufferRange()
+            rowNumber = range.getRows()
+
+            if rowNumber[0] is bufferRowNumber
                 return true
 
         return false
@@ -53,13 +55,14 @@ class FocusModeManager
         range = [[bufferRow, 0], [bufferRow, 0]]
         marker = @getBufferRangeMarker(textEditor, range)
         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+        @cacheFocusModeMarker(textEditor.id, marker)
 
 
-    cacheFocussedBufferRow: (editorId, bufferRow) =>
-        if @focussedBufferRowsCache[editorId]
-            @focussedBufferRowsCache[editorId].push(bufferRow)
+    cacheFocusModeMarker: (editorId, marker) =>
+        if @focusModeMarkersCache[editorId]
+            @focusModeMarkersCache[editorId].push(marker)
         else
-            @focussedBufferRowsCache[editorId] = [bufferRow]
+            @focusModeMarkersCache[editorId] = [marker]
 
 
     getBodyTagElement: ->
@@ -86,7 +89,7 @@ class FocusModeManager
         @focusModeActivated = false
         @removeCssClass(bodyElem, @focusModeBodyCssClass)
         @removeFocusLineClass()
-        @focussedBufferRowsCache = {}
+        @focusModeMarkersCache = {}
         @cursorEventSubscribers.dispose()
 
 

@@ -12,7 +12,7 @@ describe "FocusModeManager", ->
 
         it "should initialise properties with expected values", ->
             expect(focusMode.cursorEventSubscribers).toEqual(null)
-            expect(focusMode.focussedBufferRowsCache).toEqual({})
+            expect(focusMode.focusModeMarkersCache).toEqual({})
             expect(focusMode.focusLineCssClass).toEqual("focus-line")
             expect(focusMode.focusModeBodyCssClass).toEqual("focus-mode")
 
@@ -73,15 +73,11 @@ describe "FocusModeManager", ->
             spyOn(focusMode, "getActiveTextEditor").andReturn(activeTextEditor)
             spyOn(focusMode, "bufferRowIsAlreadyFocussed").andReturn(false)
             spyOn(focusMode, "addFocusLineMarker")
-            spyOn(focusMode, "cacheFocussedBufferRow")
 
             focusMode.focusLine(cursor)
 
             expect(focusMode.addFocusLineMarker).toHaveBeenCalledWith(
                 activeTextEditor, bufferRow
-            )
-            expect(focusMode.cacheFocussedBufferRow).toHaveBeenCalledWith(
-                activeTextEditor.id, bufferRow
             )
 
 
@@ -92,12 +88,12 @@ describe "FocusModeManager", ->
             spyOn(focusMode, "getActiveTextEditor").andReturn(activeTextEditor)
             spyOn(focusMode, "bufferRowIsAlreadyFocussed").andReturn(true)
             spyOn(focusMode, "addFocusLineMarker")
-            spyOn(focusMode, "cacheFocussedBufferRow")
+            spyOn(focusMode, "cacheFocusModeMarker")
 
             focusMode.focusLine(cursor)
 
             expect(focusMode.addFocusLineMarker).not.toHaveBeenCalled()
-            expect(focusMode.cacheFocussedBufferRow).not.toHaveBeenCalled()
+            expect(focusMode.cacheFocusModeMarker).not.toHaveBeenCalled()
 
 
     describe "bufferRowIsAlreadyFocussed", ->
@@ -105,11 +101,26 @@ describe "FocusModeManager", ->
         it "should return true if bufferRow has already been focussed", ->
             testBufferRow = 5
             editorId = 1
+            range1 = { getRows: -> }
+            range2 = { getRows: -> }
+            marker1 = { getBufferRange: -> range1 }
+            marker2 = { getBufferRange: -> range2 }
 
-            # simulate testBufferRow has already been focussed and in cache
-            focusMode.focussedBufferRowsCache[editorId] = [1,2,testBufferRow]
+            spyOn(marker1, "getBufferRange").andReturn(range1)
+            spyOn(marker2, "getBufferRange").andReturn(range2)
+
+            # range1 is row 11 and range2 is row 5
+            spyOn(range1, "getRows").andReturn([11, 0])
+            spyOn(range2, "getRows").andReturn([5, 0])
+
+            focusMode.focusModeMarkersCache[editorId] = [marker1, marker2]
 
             result = focusMode.bufferRowIsAlreadyFocussed(editorId, testBufferRow)
+
+            expect(marker1.getBufferRange).toHaveBeenCalled()
+            expect(marker2.getBufferRange).toHaveBeenCalled()
+            expect(range1.getRows).toHaveBeenCalled()
+            expect(range2.getRows).toHaveBeenCalled()
 
             expect(result).toEqual(true)
 
@@ -117,11 +128,26 @@ describe "FocusModeManager", ->
         it "should return false if bufferRow has not already been focussed", ->
             testBufferRow = 5
             editorId = 1
+            range1 = { getRows: -> }
+            range2 = { getRows: -> }
+            marker1 = { getBufferRange: -> range1 }
+            marker2 = { getBufferRange: -> range2 }
 
-            # simulate a focussedBufferRowsCache that does not include the testBufferRow
-            focusMode.focussedBufferRowsCache[editorId] = [1,2,3]
+            spyOn(marker1, "getBufferRange").andReturn(range1)
+            spyOn(marker2, "getBufferRange").andReturn(range2)
+
+            # range1 is row 11 and range2 is row 55
+            spyOn(range1, "getRows").andReturn([11, 0])
+            spyOn(range2, "getRows").andReturn([55, 0])
+
+            focusMode.focusModeMarkersCache[editorId] = [marker1, marker2]
 
             result = focusMode.bufferRowIsAlreadyFocussed(editorId, testBufferRow)
+
+            expect(marker1.getBufferRange).toHaveBeenCalled()
+            expect(marker2.getBufferRange).toHaveBeenCalled()
+            expect(range1.getRows).toHaveBeenCalled()
+            expect(range2.getRows).toHaveBeenCalled()
 
             expect(result).toEqual(false)
 
@@ -145,20 +171,20 @@ describe "FocusModeManager", ->
             )
 
 
-    describe "cacheFocussedBufferRow", ->
+    describe "cacheFocusModeMarker", ->
 
         it "should add bufferRow to the focussed rows cache of passed editor id", ->
             bufferRow = 11
             bufferRow2 = 22
             editorId = 10
 
-            focusMode.cacheFocussedBufferRow(editorId, bufferRow)
+            focusMode.cacheFocusModeMarker(editorId, bufferRow)
 
-            expect(focusMode.focussedBufferRowsCache[editorId]).toEqual([bufferRow])
+            expect(focusMode.focusModeMarkersCache[editorId]).toEqual([bufferRow])
 
-            focusMode.cacheFocussedBufferRow(editorId, bufferRow2)
+            focusMode.cacheFocusModeMarker(editorId, bufferRow2)
 
-            expect(focusMode.focussedBufferRowsCache[editorId]).toEqual(
+            expect(focusMode.focusModeMarkersCache[editorId]).toEqual(
                 [bufferRow, bufferRow2]
             )
 
@@ -258,11 +284,11 @@ describe "FocusModeManager", ->
             expect(focusMode.removeFocusLineClass).toHaveBeenCalled()
 
 
-        it "should set focussedBufferRowsCache to an empty object", ->
-            focusMode.focussedBufferRowsCache = {"1": [1,3,5,7,8]}
+        it "should set focusModeMarkersCache to an empty object", ->
+            focusMode.focusModeMarkersCache = {"1": [1,3,5,7,8]}
             focusMode.focusModeOff(fakeBodyTagElem)
 
-            expect(focusMode.focussedBufferRowsCache).toEqual({})
+            expect(focusMode.focusModeMarkersCache).toEqual({})
 
 
         it "should call cursorEventSubscribers dispose()", ->

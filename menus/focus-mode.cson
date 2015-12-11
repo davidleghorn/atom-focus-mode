@@ -1,6 +1,3 @@
-# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
-
-# TODO: Re-name focus-mode:toggle to focus-mode:toggle
 
 'context-menu':
   'atom-text-editor': [

@@ -6,7 +6,6 @@ module.exports = FocusMode =
     subscriptions: null
     focusMode: null
 
-    # Called when package is activated
     activate: (state) ->
         @focusModeManager = new FocusModeManager()
         @subscriptions = new CompositeDisposable
@@ -14,7 +13,6 @@ module.exports = FocusMode =
         @subscriptions.add atom.commands.add 'atom-workspace', 'focus-mode:toggle-single-line': => @focusModeManager.toggleFocusModeSingleLine()
 
 
-    # Called when the window is shutting down.
     deactivate: ->
         @subscriptions.dispose()
         @focusModeManager.subscribersDispose()
