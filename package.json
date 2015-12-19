@@ -6,7 +6,8 @@
   "activationCommands": {
     "atom-workspace": [
       "focus-mode:toggle",
-      "focus-mode:toggle-single-line"
+      "focus-mode:toggle-single-line",
+      "focus-mode:toggle-shadow-mode"
     ]
   },
   "repository": "https://github.com/davidleghorn/atom-focus-mode",

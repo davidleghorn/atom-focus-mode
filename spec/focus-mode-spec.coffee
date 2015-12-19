@@ -18,7 +18,7 @@ describe "FocusMode", ->
             focusModePackage.activate()
 
             expect(focusModePackage.subscriptions).not.toBeNull()
-            expect(focusModePackage.subscriptions.disposables.size).toEqual(2)
+            expect(focusModePackage.subscriptions.disposables.size).toEqual(3)
 
 
     describe "when the 'focus-mode:toggle' event is triggered", ->
@@ -47,6 +47,20 @@ describe "FocusMode", ->
             atom.commands.dispatch workspaceElement, 'focus-mode:toggle-single-line'
 
             expect(focusModePackage.focusModeManager.toggleFocusModeSingleLine).toHaveBeenCalled()
+
+
+    describe "when the 'focus-mode:toggle-shadow-mode' event is triggered", ->
+
+        it "should call focus mode method toggleFocusShadowMode()", ->
+            workspaceElement = atom.views.getView(atom.workspace)
+            focusModePackage = FocusMode
+            focusModePackage.activate()
+
+            spyOn(focusModePackage.focusModeManager, "toggleFocusShadowMode")
+
+            atom.commands.dispatch workspaceElement, 'focus-mode:toggle-shadow-mode'
+
+            expect(focusModePackage.focusModeManager.toggleFocusShadowMode).toHaveBeenCalled()
 
 
     describe "deactivate", ->

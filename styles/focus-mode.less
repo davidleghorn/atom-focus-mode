@@ -1,34 +1,62 @@
 
-// Editor line styling
-.focus-mode atom-text-editor::shadow .line {
-    opacity: 0.15;
+// focus-mode text editor styling
+.focus-mode atom-text-editor::shadow
+{
+    // Focus mode faded line styling
+    .line { opacity: 0.15; }
+
+    // focussed lines styling
+    .line .comment,
+    .line.cursor-line,
+    .focus-line {
+        opacity: 1;
+    }
 }
 
-.focus-mode atom-text-editor::shadow .line .comment,
-.focus-mode atom-text-editor::shadow .line.cursor-line,
-.focus-mode atom-text-editor::shadow .focus-line {
-    opacity: 1;
+// focus-mode-shadow text editor styling
+.focus-mode-shadow atom-text-editor::shadow
+{
+    // Focus mode faded line styling
+    .line { opacity: 0.15; }
+
+    // active cursor line
+    .line.cursor-line,
+    .line.comment.cursor-line,
+    .focus-line.cursor-line {
+        opacity: 1;
+    }
+
+    // shadow lines around main cursor line
+    // TODO: should use a different class name rather than .focus-line
+    // e.g. focus-shadow-line?
+    .line.comment,
+    .focus-line {
+        opacity: 0.55;
+    }
 }
 
-// Line number styling
-.focus-mode atom-text-editor::shadow .line-number {
-    opacity: 0.2;
-}
+// gutter line number styling
+.focus-mode atom-text-editor::shadow,
+.focus-mode-shadow atom-text-editor::shadow
+{
+    .line-number
+    {
+        opacity: 0.2;
 
-.focus-mode atom-text-editor::shadow .line-number.cursor-line {
-    opacity: 0.6;
+        &.cursor-line {opacity: 0.6;}
+    }
 }
 
 // File browser styling
-.focus-mode .tool-panel li span,
-.focus-mode .tool-panel .list-item::before {
-    opacity: 0.25;
-}
+.focus-mode .tool-panel,
+.focus-mode-shadow .tool-panel
+{
+    li span,
+    .list-item::before {
+        opacity: 0.25;
+    }
 
-.focus-mode .tool-panel li.selected span {
-    opacity: 0.8;
-}
+    li.selected span {opacity: 0.8;}
 
-.focus-mode .tool-panel li:hover span {
-    opacity: 1;
+    li:hover span {opacity: 1;}
 }

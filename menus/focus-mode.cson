@@ -12,6 +12,10 @@
             'label': 'Toggle Focus Single Line'
             'command': 'focus-mode:toggle-single-line'
           }
+          {
+            'label': 'Toggle Focus Shadow Mode'
+            'command': 'focus-mode:toggle-shadow-mode'
+          }
       ]
     }
   ]
@@ -28,6 +32,10 @@
         {
           'label': 'Toggle Focus Single Line'
           'command': 'focus-mode:toggle-single-line'
+        }
+        {
+          'label': 'Toggle Focus Shadow Mode'
+          'command': 'focus-mode:toggle-shadow-mode'
         }
       ]
     ]

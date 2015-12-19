@@ -11,6 +11,7 @@ module.exports = FocusMode =
         @subscriptions = new CompositeDisposable
         @subscriptions.add atom.commands.add 'atom-workspace', 'focus-mode:toggle': => @focusModeManager.toggleFocusMode()
         @subscriptions.add atom.commands.add 'atom-workspace', 'focus-mode:toggle-single-line': => @focusModeManager.toggleFocusModeSingleLine()
+        @subscriptions.add atom.commands.add 'atom-workspace', 'focus-mode:toggle-shadow-mode': => @focusModeManager.toggleFocusShadowMode()
 
 
     deactivate: ->

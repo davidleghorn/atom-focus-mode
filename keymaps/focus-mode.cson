@@ -2,3 +2,4 @@
 'atom-workspace':
   'ctrl-alt-o': 'focus-mode:toggle'
   'ctrl-alt-i': 'focus-mode:toggle-single-line'
+  'ctrl-alt-u': 'focus-mode:toggle-shadow-mode'
