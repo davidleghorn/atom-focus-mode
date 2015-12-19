@@ -11,11 +11,10 @@ class FocusModeManager
         @cursorEventSubscribers = null
         @focusModeMarkersCache = {}
         @focusShadowMarkerCache = {}
-        #TODO: these could maybe go outside constructor as will apply to all instances?
         @focusModeBodyCssClass = "focus-mode"
         @focusLineCssClass = "focus-line"
         @focusModeShadowBodyClassName = "focus-mode-shadow"
-        # TODO: set from config
+        # TODO: set number of rows from config
         @shadowModeNumberOfRowsBeforeCursor = 3
         @shadowModeNumberOfRowsAfterCursor = 3
 
@@ -25,19 +24,14 @@ class FocusModeManager
             @focusLine(cursor)
 
         if @focusModeShadowActivated
-            console.log("didAddCursor called")
             @focusModeShadowOnCursorMove(cursor)
 
 
     didChangeCursorPosition: (obj) =>
-        console.log("didChangeCursorPosition @focusModeActivated = ", @focusModeActivated,
-        "focusModeShadowActivated = ", @focusModeShadowActivated)
         if @focusModeActivated
-            console.log("focus mode focusLine called")
             @focusLine(obj.cursor)
 
         if @focusModeShadowActivated
-            console.log("didChangeCursorPosition focus shadow mode focusModeShadowOnCursorMove called")
             @focusModeShadowOnCursorMove(obj.cursor)
 
 
@@ -89,23 +83,22 @@ class FocusModeManager
 
 
     toggleFocusMode: =>
-        @focusModeActivated = !@focusModeActivated
         bodyElem = @getBodyTagElement()
 
-        if @focusModeSingleLine
-            @focusModeSingleLine = false
-            @removeCssClass(bodyElem, @focusModeBodyCssClass)
-
-        if @focusModeShadowActivated
-            @focusModeShadowActivated = false
-            @focusModeShadowOff(bodyElem)
+        @focusModeSingleLineOff(bodyElem) if @focusModeSingleLine
+        @focusModeShadowOff(bodyElem) if @focusModeShadowActivated
 
         if @focusModeActivated
-            @addCssClass(bodyElem, @focusModeBodyCssClass)
-            @cursorEventSubscribers = @registerCursorEventHandlers()
-            @focusAllCursorLines()
-        else
             @focusModeOff(bodyElem)
+        else
+            @focusModeOn(bodyElem)
+
+
+    focusModeOn: (bodyElem) =>
+        @focusModeActivated = true
+        @addCssClass(bodyElem, @focusModeBodyCssClass)
+        @cursorEventSubscribers = @registerCursorEventHandlers()
+        @focusAllCursorLines()
 
 
     focusModeOff: (bodyElem) =>
@@ -122,12 +115,20 @@ class FocusModeManager
         @focusModeOff(bodyElem) if @focusModeActivated
         @focusModeShadowOff(bodyElem) if @focusModeShadowActivated
 
-        @focusModeSingleLine = !@focusModeSingleLine
-
         if @focusModeSingleLine
-            @addCssClass(bodyElem, @focusModeBodyCssClass)
+            @focusModeSingleLineOff(bodyElem)
         else
-            @removeCssClass(bodyElem, @focusModeBodyCssClass)
+            @focusModeSingleLineOn(bodyElem)
+
+
+    focusModeSingleLineOn: (bodyElem) =>
+        @focusModeSingleLine = true
+        @addCssClass(bodyElem, @focusModeBodyCssClass)
+
+
+    focusModeSingleLineOff: (bodyElem) =>
+        @focusModeSingleLine = false
+        @removeCssClass(bodyElem, @focusModeBodyCssClass)
 
 
     focusAllCursorLines: =>
@@ -158,17 +159,12 @@ class FocusModeManager
         bodyTag = @getBodyTagElement()
 
         @focusModeOff(bodyTag) if @focusModeActivated
-
-        if @focusModeSingleLine
-            @removeCssClass(bodyTag, @focusModeBodyCssClass)
-            @focusModeSingleLine = false
-
-        @focusModeShadowActivated = !@focusModeShadowActivated
+        @focusModeSingleLineOff(bodyTag) if @focusModeSingleLine
 
         if @focusModeShadowActivated
-            @focusModeShadowOn(bodyTag)
-        else
             @focusModeShadowOff(bodyTag)
+        else
+            @focusModeShadowOn(bodyTag)
 
 
     getFocusShadowBufferStartRow: (cursorBufferRow, numOfRowsToShadow) =>
@@ -197,29 +193,22 @@ class FocusModeManager
             cursorBufferRow, @shadowModeNumberOfRowsAfterCursor, bufferLineCount
         )
 
-        console.log("getFocusModeShadowBufferRange cursor row = ", cursorBufferRow,
-        "bufferLineCount = ", bufferLineCount, " startRow = ", startRow, " endRow = ", endRow)
-
         return [[startRow, 0], [endRow, 0]]
 
 
     createShadowModeMarker: (textEditor) =>
         cursorBufferPos = textEditor.getCursorBufferPosition()
-        console.log("cursorBufferPos = ", cursorBufferPos)
         shadowBufferRange = @getFocusModeShadowBufferRange(
             cursorBufferPos.row, textEditor.getLineCount()
         )
-        console.log("testEditor = ", textEditor, "  shadowBufferRange = ", shadowBufferRange)
         marker = @getBufferRangeMarker(textEditor, shadowBufferRange)
-        console.log("marker  = ", marker)
         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
 
         return marker
 
 
     focusModeShadowOn: (bodyTag) =>
-        # create focus mode shadow marker and cache
-        console.log("focusModeShadowOn")
+        @focusModeShadowActivated = true
         textEditor = @getActiveTextEditor()
         cursor = textEditor.getLastCursor()
         @cursorEventSubscribers = @registerCursorEventHandlers()
@@ -228,6 +217,7 @@ class FocusModeManager
 
 
     focusModeShadowOff: (bodyTag) =>
+        @focusModeShadowActivated = false
         @removeCssClass(bodyTag, @focusModeShadowBodyClassName)
         @removeFocusModeShadowMarkers()
         @cursorEventSubscribers.dispose()
@@ -240,7 +230,7 @@ class FocusModeManager
             marker.destroy() if marker
 
 
-    getEditorFocusShadowMarker: (editor) =>
+    getFocusShadowMarkerForEditor: (editor) =>
         marker = @focusShadowMarkerCache[editor.id]
 
         if not marker
@@ -251,13 +241,9 @@ class FocusModeManager
 
 
     focusModeShadowOnCursorMove: (cursor) =>
-        #TODO: exit of cursor new and old row is the same
-        console.log("moveFocusModeShadow cursor = ", cursor)
         editor = cursor.editor
         cursorRow = cursor.getBufferRow()
-        console.log("editor = ", editor, " cursorRow = ", cursorRow)
-        marker = @getEditorFocusShadowMarker(cursor.editor)
-        console.log("marker = ", marker)
+        marker = @getFocusShadowMarkerForEditor(cursor.editor)
         startRow = @getFocusShadowBufferStartRow(
             cursorRow, @shadowModeNumberOfRowsBeforeCursor
         )
@@ -268,9 +254,8 @@ class FocusModeManager
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
 
-        console.log("marker.bufferMarker.properties = ", marker.bufferMarker.properties)
 
-# =========== FOCUS SHADOW MODE END =========
+    # =========== FOCUS SHADOW MODE END =========
 
 
     addCssClass: (elem, cssClass) ->

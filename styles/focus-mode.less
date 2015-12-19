@@ -2,10 +2,8 @@
 // focus-mode text editor styling
 .focus-mode atom-text-editor::shadow
 {
-    // Focus mode faded line styling
     .line { opacity: 0.15; }
 
-    // focussed lines styling
     .line .comment,
     .line.cursor-line,
     .focus-line {
@@ -16,7 +14,6 @@
 // focus-mode-shadow text editor styling
 .focus-mode-shadow atom-text-editor::shadow
 {
-    // Focus mode faded line styling
     .line { opacity: 0.15; }
 
     // active cursor line
@@ -27,8 +24,6 @@
     }
 
     // shadow lines around main cursor line
-    // TODO: should use a different class name rather than .focus-line
-    // e.g. focus-shadow-line?
     .line.comment,
     .focus-line {
         opacity: 0.55;

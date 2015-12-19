@@ -15,6 +15,9 @@ describe "FocusModeManager", ->
             expect(focusMode.focusModeMarkersCache).toEqual({})
             expect(focusMode.focusLineCssClass).toEqual("focus-line")
             expect(focusMode.focusModeBodyCssClass).toEqual("focus-mode")
+            expect(focusMode.focusModeShadowBodyClassName).toEqual("focus-mode-shadow")
+            expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(3)
+            expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(3)
 
 
     describe "didAddCursor", ->
@@ -23,9 +26,7 @@ describe "FocusModeManager", ->
             cursor = {}
             focusMode.focusModeActivated = true
             spyOn(focusMode, "focusLine")
-
             focusMode.didAddCursor(cursor)
-
             expect(focusMode.focusLine).toHaveBeenCalledWith(cursor)
 
 
@@ -33,9 +34,7 @@ describe "FocusModeManager", ->
             cursor = {}
             focusMode.focusModeActivated = false
             spyOn(focusMode, "focusLine")
-
             focusMode.didAddCursor(cursor)
-
             expect(focusMode.focusLine).not.toHaveBeenCalledWith(cursor)
 
 
@@ -44,22 +43,15 @@ describe "FocusModeManager", ->
         it "should call focusLine if focusModeActivated is true", ->
             param = {cursor: {}}
             focusMode.focusModeActivated = true
-
             spyOn(focusMode, "focusLine")
-
             focusMode.didChangeCursorPosition(param)
-
             expect(focusMode.focusLine).toHaveBeenCalledWith(param.cursor)
-
 
         it "should not call focusLine if focusModeActivated is false", ->
             param = {cursor: {}}
             focusMode.focusModeActivated = false
-
             spyOn(focusMode, "focusLine")
-
             focusMode.didChangeCursorPosition(param)
-
             expect(focusMode.focusLine).not.toHaveBeenCalledWith(param)
 
 
@@ -79,7 +71,6 @@ describe "FocusModeManager", ->
             expect(focusMode.addFocusLineMarker).toHaveBeenCalledWith(
                 activeTextEditor, bufferRow
             )
-
 
         it "should not call addFocusLineMarker if buffer row is already focussed", ->
             activeTextEditor = {id: 1}
@@ -163,7 +154,6 @@ describe "FocusModeManager", ->
 
             spyOn(focusMode, "getBufferRangeMarker").andReturn(marker)
             spyOn(textEditor, "decorateMarker")
-
             focusMode.addFocusLineMarker(textEditor, bufferRow)
 
             expect(textEditor.decorateMarker).toHaveBeenCalledWith(
@@ -179,9 +169,7 @@ describe "FocusModeManager", ->
             editorId = 10
 
             focusMode.cacheFocusModeMarker(editorId, bufferRow)
-
             expect(focusMode.focusModeMarkersCache[editorId]).toEqual([bufferRow])
-
             focusMode.cacheFocusModeMarker(editorId, bufferRow2)
 
             expect(focusMode.focusModeMarkersCache[editorId]).toEqual(
@@ -198,19 +186,17 @@ describe "FocusModeManager", ->
             spyOn(focusMode, "focusAllCursorLines").andCallFake( -> )
             spyOn(focusMode, "getBodyTagElement").andReturn(fakeBodyTagElem)
 
-
-        it "should turn off focusModeSingleLine mode if focusModeSingleLine is on", ->
-            spyOn(focusMode, "removeCssClass")
+        it "should call focusModeSingleLineOff if focusModeSingleLine is activated", ->
+            spyOn(focusMode, "focusModeSingleLineOff")
             focusMode.focusModeSingleLine = true
-            focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
+            expect(focusMode.focusModeSingleLineOff).toHaveBeenCalled()
 
-            expect(focusMode.focusModeSingleLine).toEqual(false)
-            expect(focusMode.removeCssClass).toHaveBeenCalledWith(
-                fakeBodyTagElem, focusMode.focusModeBodyCssClass
-            )
-
-        # **** Toggle focus mode ON tests ****
+        it "should call focusModeShadowOff() if focusModeShadowActivated is true", ->
+            spyOn(focusMode, "focusModeShadowOff")
+            focusMode.focusModeShadowActivated = true
+            focusMode.toggleFocusMode()
+            expect(focusMode.focusModeShadowOff).toHaveBeenCalledWith(fakeBodyTagElem)
 
         it "should set focusModeActivated to true when focusModeActivated is false", ->
             focusMode.focusModeActivated = false
@@ -225,32 +211,53 @@ describe "FocusModeManager", ->
                 fakeBodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-
         it "should call registerCursorEventHandlers() when focusModeActivated is true", ->
             focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
             expect(focusMode.registerCursorEventHandlers).toHaveBeenCalled()
-
 
         it "should call focusAllCursorLines() when focusModeActivated is true", ->
             focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
             expect(focusMode.focusAllCursorLines).toHaveBeenCalled()
 
-        # **** Toggle focus mode OFF tests ****
-
-        it "should set focusModeActivated to false when focusModeActivated is true", ->
-            spyOn(focusMode, "focusModeOff").andCallFake( -> )
-            focusMode.focusModeActivated = true
+        it "should call focusModeOn when focusModeActivated is false", ->
+            spyOn(focusMode, "focusModeOn")
+            focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
-            expect(focusMode.focusModeActivated).toEqual(false)
+            expect(focusMode.focusModeOn).toHaveBeenCalledWith(fakeBodyTagElem)
 
-
-        it "should call focusModeOff when focusModeActivated is false", ->
+        it "should call focusModeOff when focusModeActivated is true", ->
             spyOn(focusMode, "focusModeOff")
             focusMode.focusModeActivated = true
             focusMode.toggleFocusMode()
             expect(focusMode.focusModeOff).toHaveBeenCalledWith(fakeBodyTagElem)
+
+
+    describe "focusModeOn", ->
+
+        beforeEach ->
+            spyOn(focusMode, "registerCursorEventHandlers").andCallFake( -> )
+            spyOn(focusMode, "focusAllCursorLines").andCallFake( -> )
+
+            it "should set focusModeActivated to true", ->
+                focusMode.focusModeActivated = false
+                focusMode.focusModeOn(fakeBodyTagElem)
+                expect(focusMode.focusModeActivated).toEqual(true)
+
+            it "should call addCssClass()", ->
+                focusMode.focusModeOn(fakeBodyTagElem)
+                expect(focusMode.addCssClass).toHaveBeenCalledWith(
+                    fakeBodyTagElem, focusMode.focusModeBodyCssClass
+                )
+
+            it "should call registerCursorEventHandlers()", ->
+                focusMode.focusModeOn(fakeBodyTagElem)
+                expect(focusMode.registerCursorEventHandlers).toHaveBeenCalled()
+
+            it "should call focusAllCursorLines()", ->
+                focusMode.focusModeOn(fakeBodyTagElem)
+                expect(focusMode.focusAllCursorLines).toHaveBeenCalled()
 
 
     describe "focusModeOff", ->
@@ -263,12 +270,10 @@ describe "FocusModeManager", ->
             spyOn(focusMode, "removeFocusLineClass").andCallFake( -> )
             focusMode.cursorEventSubscribers = mockedCursorEventSubscribers
 
-
         it "should set focusModeActivated to false", ->
             focusMode.focusModeActivated = true
             focusMode.focusModeOff(fakeBodyTagElem)
             expect(focusMode.focusModeActivated).toEqual(false)
-
 
         it "should call removeCssClass()", ->
             focusMode.focusModeOff(fakeBodyTagElem)
@@ -277,26 +282,19 @@ describe "FocusModeManager", ->
                 fakeBodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-
         it "should call removeFocusLineClass()", ->
             focusMode.focusModeOff(fakeBodyTagElem)
-
             expect(focusMode.removeFocusLineClass).toHaveBeenCalled()
-
 
         it "should set focusModeMarkersCache to an empty object", ->
             focusMode.focusModeMarkersCache = {"1": [1,3,5,7,8]}
             focusMode.focusModeOff(fakeBodyTagElem)
-
             expect(focusMode.focusModeMarkersCache).toEqual({})
-
 
         it "should call cursorEventSubscribers dispose()", ->
             spyOn(mockedCursorEventSubscribers, "dispose").andCallFake( -> )
-
             focusMode.cursorEventSubscribers = mockedCursorEventSubscribers
             focusMode.focusModeOff(fakeBodyTagElem)
-
             expect(mockedCursorEventSubscribers.dispose).toHaveBeenCalled()
 
 
@@ -311,48 +309,41 @@ describe "FocusModeManager", ->
         it "should call focusModeOff() if focusModeActivated is true", ->
             spyOn(focusMode, "focusModeOff")
             focusMode.focusModeActivated = true
-
             focusMode.toggleFocusModeSingleLine()
-
             expect(focusMode.focusModeOff).toHaveBeenCalledWith(fakeBodyTagElem)
 
+        it "should call focusModeShadowOff() if focusModeShadowActivated is true", ->
+            spyOn(focusMode, "focusModeShadowOff")
+            focusMode.focusModeShadowActivated = true
+            focusMode.toggleFocusModeSingleLine()
+            expect(focusMode.focusModeShadowOff).toHaveBeenCalledWith(fakeBodyTagElem)
 
         it "should set focusModeSingleLine to true if focusModeSingleLine is false", ->
             focusMode.focusModeSingleLine = false
-
             focusMode.toggleFocusModeSingleLine()
-
             expect(focusMode.focusModeSingleLine).toEqual(true)
-
 
         it "should set focusModeSingleLine to false if focusModeSingleLine is true", ->
             focusMode.focusModeSingleLine = true
-
             focusMode.toggleFocusModeSingleLine()
-
             expect(focusMode.focusModeSingleLine).toEqual(false)
-
 
         it "should call addCssClass() if focusModeSingleLine is true", ->
             spyOn(focusMode, "addCssClass").andCallFake( -> )
-
             focusMode.focusModeSingleLine = false
             focusMode.toggleFocusModeSingleLine()
-
             expect(focusMode.addCssClass).toHaveBeenCalledWith(
                 fakeBodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-
         it "should call removeCssClass() if focusModeSingleLine is false", ->
             spyOn(focusMode, "removeCssClass").andCallFake( -> )
-
             focusMode.focusModeSingleLine = true
             focusMode.toggleFocusModeSingleLine()
-
             expect(focusMode.removeCssClass).toHaveBeenCalledWith(
                 fakeBodyTagElem, focusMode.focusModeBodyCssClass
             )
+
 
     describe "focusAllCursorLines ", ->
 
@@ -370,10 +361,8 @@ describe "FocusModeManager", ->
             focusMode.focusAllCursorLines()
             expect(focusMode.getActiveTextEditor).toHaveBeenCalled()
 
-
         it "should call focusLine() for each cursor in the active text editor", ->
             focusMode.focusAllCursorLines()
-
             expect(focusMode.focusLine).toHaveBeenCalledWith(cursor)
             expect(focusMode.focusLine.callCount).toEqual(3)
 
@@ -423,9 +412,7 @@ describe "FocusModeManager", ->
         it("should add cssClass to elem", ->
             elem = { className: "xxx "}
             cssClass = focusMode.focusModeBodyCssClass
-
             focusMode.addCssClass(elem, cssClass)
-
             expect(elem.className).toContain(cssClass)
         )
 
@@ -434,20 +421,10 @@ describe "FocusModeManager", ->
 
         it("should remove cssClass from elem", ->
             elem = { className: "some-class " + focusMode.focusModeBodyCssClass}
-
             focusMode.removeCssClass(elem, focusMode.focusModeBodyCssClass)
-
             expect(elem.className).not.toContain(focusMode.focusModeBodyCssClass)
             expect(elem.className).toEqual("some-class")
         )
-
-
-    # describe "registerCursorEventHandlers", ->
-    #     it("should return a CompositeDisposable", ->
-    #         subscriptions = focusMode.registerCursorEventHandlers()
-    #         expect(subscriptions).toEqual(new CompositeDisposable)
-    #         subscriptions.dispose()
-    #     )
 
 
     describe "subscribersDispose", ->
