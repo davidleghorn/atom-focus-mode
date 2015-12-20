@@ -187,13 +187,13 @@ describe "FocusModeManager", ->
             spyOn(focusMode, "getBodyTagElement").andReturn(fakeBodyTagElem)
 
         it "should call focusModeSingleLineOff if focusModeSingleLine is activated", ->
-            spyOn(focusMode, "focusModeSingleLineOff")
+            spyOn(focusMode, "focusModeSingleLineOff").andCallFake( -> )
             focusMode.focusModeSingleLine = true
             focusMode.toggleFocusMode()
-            expect(focusMode.focusModeSingleLineOff).toHaveBeenCalled()
+            expect(focusMode.focusModeSingleLineOff).toHaveBeenCalledWith(fakeBodyTagElem)
 
         it "should call focusModeShadowOff() if focusModeShadowActivated is true", ->
-            spyOn(focusMode, "focusModeShadowOff")
+            spyOn(focusMode, "focusModeShadowOff").andCallFake( -> )
             focusMode.focusModeShadowActivated = true
             focusMode.toggleFocusMode()
             expect(focusMode.focusModeShadowOff).toHaveBeenCalledWith(fakeBodyTagElem)
@@ -204,7 +204,7 @@ describe "FocusModeManager", ->
             expect(focusMode.focusModeActivated).toEqual(true)
 
         it "should call addCssClass() when focusModeActivated is true", ->
-            spyOn(focusMode, "addCssClass")
+            spyOn(focusMode, "addCssClass").andCallFake( -> )
             focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
             expect(focusMode.addCssClass).toHaveBeenCalledWith(
@@ -445,3 +445,219 @@ describe "FocusModeManager", ->
             focusMode.subscribersDispose()
             expect(subscriptions.dispose).toHaveBeenCalled()
         )
+
+
+        describe "toggleFocusShadowMode", ->
+
+            fakeBodyTagElem = {fakeBodyTag: {}}
+
+            beforeEach ->
+                spyOn(focusMode, "getBodyTagElement").andReturn(fakeBodyTagElem)
+                spyOn(focusMode, "focusModeShadowOff").andCallFake( -> )
+                spyOn(focusMode, "focusModeShadowOn").andCallFake( -> )
+
+            it "should call focusModeSingleLineOff if focusModeSingleLine is activated", ->
+                spyOn(focusMode, "focusModeSingleLineOff").andCallFake( -> )
+                focusMode.focusModeSingleLine = true
+                focusMode.toggleFocusShadowMode()
+                expect(focusMode.focusModeSingleLineOff).toHaveBeenCalledWith(fakeBodyTagElem)
+
+            it "should call focusModeOff() if focusModeActivated is true", ->
+                spyOn(focusMode, "focusModeOff").andCallFake( -> )
+                focusMode.focusModeActivated = true
+                focusMode.toggleFocusShadowMode()
+                expect(focusMode.focusModeOff).toHaveBeenCalledWith(fakeBodyTagElem)
+
+            it "should call focusModeShadowActivated when focusModeShadowActivated is true", ->
+                focusMode.focusModeShadowActivated = true
+                focusMode.toggleFocusShadowMode()
+                expect(focusMode.focusModeShadowOff).toHaveBeenCalledWith(fakeBodyTagElem)
+
+            it "should call focusModeShadowOn when focusModeShadowActivated is false", ->
+                focusMode.focusModeShadowActivated = false
+                focusMode.toggleFocusShadowMode()
+                expect(focusMode.focusModeShadowOn).toHaveBeenCalledWith(fakeBodyTagElem)
+
+
+        # TODO: tests for
+        # getFocusShadowBufferStartRow
+        # getFocusShadowBufferEndRow
+        # getFocusModeShadowBufferRange
+        # createShadowModeMarker
+
+
+        describe "focusModeShadowOn", ->
+
+            bodyTag = {}
+            cursor = {getBufferRow: -> }
+            textEditor = {
+                id: 1
+                getLastCursor: -> cursor
+            }
+            subscribers = {name: "a fake subscribers object"}
+
+            beforeEach ->
+                spyOn(focusMode, "getActiveTextEditor").andReturn(textEditor)
+                spyOn(textEditor, "getLastCursor").andReturn(cursor)
+                spyOn(focusMode, "registerCursorEventHandlers").andReturn(subscribers)
+                spyOn(focusMode, "focusModeShadowOnCursorMove").andCallFake(->)
+                spyOn(focusMode, "addCssClass").andCallFake(->)
+
+            it "should set focusModeShadowActivated to true", ->
+                focusMode.focusModeShadowActivated = false
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(focusMode.focusModeShadowActivated).toEqual(true)
+
+            it "should call getActiveTextEditor()", ->
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(focusMode.getActiveTextEditor).toHaveBeenCalled()
+
+            it "should call getLastCursor()", ->
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(textEditor.getLastCursor).toHaveBeenCalled()
+
+            it "should set cursorEventSubscribers", ->
+                focusMode.cursorEventSubscribers = null
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(focusMode.registerCursorEventHandlers).toHaveBeenCalled()
+                expect(focusMode.cursorEventSubscribers).toEqual(subscribers)
+
+            it "should call focusModeShadowOnCursorMove()", ->
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(focusMode.focusModeShadowOnCursorMove).toHaveBeenCalledWith(cursor)
+
+            it "should call addCssClass()", ->
+                focusMode.focusModeShadowOn(bodyTag)
+                expect(focusMode.addCssClass).toHaveBeenCalledWith(
+                    bodyTag, focusMode.focusModeShadowBodyClassName
+                )
+
+
+        describe "focusModeShadowOff", ->
+
+            bodyTag = {}
+            eventSubscribers = {
+                dispose: ->
+            }
+
+            beforeEach ->
+                spyOn(focusMode, "removeFocusModeShadowMarkers").andCallFake(->)
+                spyOn(focusMode, "removeCssClass").andCallFake(->)
+                spyOn(eventSubscribers, "dispose").andCallFake(->)
+                focusMode.cursorEventSubscribers = eventSubscribers
+
+            it "should set focusModeShadowActivated to false", ->
+                focusMode.focusModeShadowActivated = true
+                focusMode.focusModeShadowOff(bodyTag)
+                expect(focusMode.focusModeShadowActivated).toEqual(false)
+
+            it "should call removeCssClass()", ->
+                focusMode.focusModeShadowOff(bodyTag)
+                expect(focusMode.removeCssClass).toHaveBeenCalledWith(
+                    bodyTag, focusMode.focusModeShadowBodyClassName
+                )
+
+            it "should call removeFocusModeShadowMarkers()", ->
+                focusMode.focusModeShadowOff(bodyTag)
+                expect(focusMode.removeFocusModeShadowMarkers).toHaveBeenCalled()
+
+            it "should call cursorEventSubscribers dispose()", ->
+                focusMode.focusModeShadowOff(bodyTag)
+                expect(eventSubscribers.dispose).toHaveBeenCalled()
+
+            it "should set focusShadowMarkerCache to an empty object", ->
+                focusMode.focusShadowMarkerCache = { "someEditorId": "someMarkerObj"}
+                focusMode.focusModeShadowOff(bodyTag)
+                expect(focusMode.focusShadowMarkerCache).toEqual({})
+
+
+        describe "removeFocusModeShadowMarkers", ->
+
+            marker1 = { destroy: -> }
+            marker2 = { destroy: -> }
+            workspaceEditors = [{id: "editor1"}, {id: "editor2"}]
+            shadowMarkerCache = {
+                "editor1": marker1,
+                "editor2": marker2
+            }
+
+            beforeEach ->
+                spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn(workspaceEditors)
+                spyOn(marker1, "destroy")
+                spyOn(marker2, "destroy")
+                focusMode.focusShadowMarkerCache = shadowMarkerCache
+
+            it "should iterate over focusShadowMarkerCache and destroy each editors markers", ->
+                focusMode.removeFocusModeShadowMarkers()
+                expect(marker1.destroy).toHaveBeenCalled()
+                expect(marker2.destroy).toHaveBeenCalled()
+
+
+        describe "getFocusShadowMarkerForEditor", ->
+
+            marker1 = { id: "marker1", destroy: -> }
+            marker2 = { id: "marker2", destroy: -> }
+            editor1 = { id: "editor1" }
+            editor2 = { id: "editor2" }
+
+            it "should return the cached marker for the passed editor", ->
+                spyOn(focusMode, "createShadowModeMarker")
+                focusMode.focusShadowMarkerCache = {"editor1": marker1}
+                result = focusMode.getFocusShadowMarkerForEditor(editor1)
+                expect(result).toEqual(marker1)
+                expect(focusMode.createShadowModeMarker).not.toHaveBeenCalled()
+
+            it "should create a marker and add to focusShadowMarkerCache " +
+                "if there is no cached marker for the editor ", ->
+                    spyOn(focusMode, "createShadowModeMarker").andReturn(marker2)
+
+                    focusMode.focusShadowMarkerCache = {"editor1": marker1}
+                    result = focusMode.getFocusShadowMarkerForEditor(editor2)
+
+                    expect(focusMode.createShadowModeMarker).toHaveBeenCalledWith(editor2)
+                    expect(result).toEqual(marker2)
+                    expect(focusMode.focusShadowMarkerCache).toEqual({
+                        "editor1": marker1,
+                        "editor2": marker2
+                    })
+
+
+        describe "focusModeShadowOnCursorMove", ->
+
+            lineCount = 35
+            editor = {
+                getLineCount: -> lineCount
+            }
+            cursorRow = 2
+            cursor = {
+                editor: editor,
+                getBufferRow: -> cursorRow
+            }
+            marker = {
+                setTailBufferPosition: ->
+                setHeadBufferPosition: ->
+            }
+            startRow = 2
+            endRow = 4
+
+            beforeEach ->
+                # spyOn(cursor, "getBufferRow").andReturn(cursorRow)
+                spyOn(focusMode, "getFocusShadowMarkerForEditor").andReturn(marker)
+                spyOn(focusMode, "getFocusShadowBufferStartRow").andReturn(startRow)
+                spyOn(focusMode, "getFocusShadowBufferEndRow").andReturn(endRow)
+                spyOn(marker, "setTailBufferPosition").andCallFake(->)
+                spyOn(marker, "setHeadBufferPosition").andCallFake(->)
+
+            it "should update the markers head and tail buffer positions", ->
+                focusMode.focusModeShadowOnCursorMove(cursor)
+
+                expect(cursor.getBufferRow)
+                expect(focusMode.getFocusShadowMarkerForEditor).toHaveBeenCalled()
+                expect(focusMode.getFocusShadowBufferStartRow).toHaveBeenCalledWith(
+                    cursorRow, focusMode.shadowModeNumberOfRowsBeforeCursor
+                )
+                expect(focusMode.getFocusShadowBufferEndRow).toHaveBeenCalledWith(
+                    cursorRow, focusMode.shadowModeNumberOfRowsAfterCursor, lineCount
+                )
+                expect(marker.setTailBufferPosition).toHaveBeenCalledWith([startRow, 0])
+                expect(marker.setHeadBufferPosition).toHaveBeenCalledWith([endRow, 0])

@@ -234,7 +234,7 @@ class FocusModeManager
         marker = @focusShadowMarkerCache[editor.id]
 
         if not marker
-            marker = @createShadowModeMarker(editor) if not marker
+            marker = @createShadowModeMarker(editor)
             @focusShadowMarkerCache[editor.id] = marker
 
         return marker
