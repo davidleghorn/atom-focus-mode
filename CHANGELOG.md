@@ -1,3 +1,7 @@
+
+## 0.2.0  (2015-12-21)
+* Focus shadow mode feature added
+
 ## 0.1.2  (2015-12-11)
 * Fixes a bug where lines added between focus mode highlighted lines did not receive focus mode styling.
 Implementation updated to cache focus line markers rather than focussed row numbers.
