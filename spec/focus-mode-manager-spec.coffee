@@ -181,7 +181,7 @@ describe "FocusModeManager", ->
 
         beforeEach ->
             spyOn(focusMode, "registerCursorEventHandlers").andCallFake( -> )
-            spyOn(focusMode, "focusAllCursorLines").andCallFake( -> )
+            spyOn(focusMode, "focusTextSelections").andCallFake( -> )
             spyOn(focusMode, "getBodyTagElement").andReturn(fakeBodyTagElem)
 
         it "should call focusModeSingleLineOff if focusModeSingleLine is activated", ->
@@ -214,10 +214,10 @@ describe "FocusModeManager", ->
             focusMode.toggleFocusMode()
             expect(focusMode.registerCursorEventHandlers).toHaveBeenCalled()
 
-        it "should call focusAllCursorLines() when focusModeActivated is true", ->
+        it "should call focusTextSelections() when focusModeActivated is true", ->
             focusMode.focusModeActivated = false
             focusMode.toggleFocusMode()
-            expect(focusMode.focusAllCursorLines).toHaveBeenCalled()
+            expect(focusMode.focusTextSelections).toHaveBeenCalled()
 
         it "should call focusModeOn when focusModeActivated is false", ->
             spyOn(focusMode, "focusModeOn")
@@ -236,7 +236,7 @@ describe "FocusModeManager", ->
 
         beforeEach ->
             spyOn(focusMode, "registerCursorEventHandlers").andCallFake( -> )
-            spyOn(focusMode, "focusAllCursorLines").andCallFake( -> )
+            spyOn(focusMode, "focusTextSelections").andCallFake( -> )
 
             it "should set focusModeActivated to true", ->
                 focusMode.focusModeActivated = false
@@ -253,9 +253,9 @@ describe "FocusModeManager", ->
                 focusMode.focusModeOn(fakeBodyTagElem)
                 expect(focusMode.registerCursorEventHandlers).toHaveBeenCalled()
 
-            it "should call focusAllCursorLines()", ->
+            it "should call focusTextSelections()", ->
                 focusMode.focusModeOn(fakeBodyTagElem)
-                expect(focusMode.focusAllCursorLines).toHaveBeenCalled()
+                expect(focusMode.focusTextSelections).toHaveBeenCalled()
 
 
     describe "focusModeOff", ->
@@ -343,26 +343,64 @@ describe "FocusModeManager", ->
             )
 
 
-    describe "focusAllCursorLines ", ->
+    describe "focusTextSelections", ->
 
-        cursor = {}
-        activeTextEditor = {
-            id: "1"
-            getCursors: -> [cursor, cursor, cursor]
-        }
+        it "should do nothing if there are no atom workspace text editors", ->
+            spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn([])
+            spyOn(focusMode, "cacheFocusModeMarker")
+            focusMode.focusTextSelections()
+            expect(focusMode.cacheFocusModeMarker).not.toHaveBeenCalled()
 
-        beforeEach ->
-            spyOn(focusMode, "getActiveTextEditor").andCallFake( -> activeTextEditor)
-            spyOn(focusMode, "focusLine").andCallFake( -> )
+        it "should do nothing if the text editor has no selected ranges", ->
+            editor = {
+                getSelectedBufferRanges: ->
+            }
+            spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn(editor)
+            spyOn(editor, "getSelectedBufferRanges")
+            spyOn(focusMode, "cacheFocusModeMarker")
+            focusMode.focusTextSelections()
+            expect(editor.getSelectedBufferRanges).not.toHaveBeenCalled()
+            expect(focusMode.cacheFocusModeMarker).not.toHaveBeenCalled()
 
-        it "should call getActiveTextEditor()", ->
-            focusMode.focusAllCursorLines()
-            expect(focusMode.getActiveTextEditor).toHaveBeenCalled()
+        it "should call decorateMarker for each selected text range", ->
+            editor = {
+                id: "editor1"
+                getSelectedBufferRanges: ->
+                decorateMarker: ->
+            }
+            marker = {}
+            selectedRanges = [{row:10,col:30}, {row:20,col:0}, {row:21,col:0}]
 
-        it "should call focusLine() for each cursor in the active text editor", ->
-            focusMode.focusAllCursorLines()
-            expect(focusMode.focusLine).toHaveBeenCalledWith(cursor)
-            expect(focusMode.focusLine.callCount).toEqual(3)
+            spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn([editor])
+            spyOn(editor, "getSelectedBufferRanges").andReturn(selectedRanges)
+            spyOn(focusMode, "getBufferRangeMarker").andReturn(marker)
+            spyOn(editor, "decorateMarker")
+
+            focusMode.focusTextSelections()
+
+            expect(editor.decorateMarker).toHaveBeenCalledWith(
+                marker, type: 'line', class: focusMode.focusLineCssClass
+            )
+            expect(editor.decorateMarker.callCount).toEqual(selectedRanges.length)
+
+        it "should call cacheFocusModeMarker for each selected text range", ->
+            editor = {
+                id: "editor1"
+                getSelectedBufferRanges: ->
+                decorateMarker: ->
+            }
+            marker = {}
+            selectedRanges = [{row:10,col:30}, {row:20,col:0}, {row:21,col:0}]
+
+            spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn([editor])
+            spyOn(editor, "getSelectedBufferRanges").andReturn(selectedRanges)
+            spyOn(focusMode, "getBufferRangeMarker").andReturn(marker)
+            spyOn(focusMode, "cacheFocusModeMarker")
+
+            focusMode.focusTextSelections()
+
+            expect(focusMode.cacheFocusModeMarker).toHaveBeenCalledWith(editor.id, marker)
+            expect(focusMode.cacheFocusModeMarker.callCount).toEqual(selectedRanges.length)
 
 
     describe "removeFocusLineClass", ->
@@ -432,7 +470,7 @@ describe "FocusModeManager", ->
 
             spyOn(focusMode, "getBodyTagElement").andReturn(fakeBodyTagElem)
             spyOn(focusMode, "registerCursorEventHandlers").andReturn(subscriptions)
-            spyOn(focusMode, "focusAllCursorLines").andCallFake( -> )
+            spyOn(focusMode, "focusTextSelections").andCallFake( -> )
             spyOn(subscriptions, "dispose")
 
             # toggle focus mode on (to register subscribers)

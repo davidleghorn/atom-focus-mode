@@ -1,4 +1,7 @@
 
+## 0.3.0  (2015-12-23)
+* Enhanced to highlight any text selections across multiple editors when focus mode is activated
+
 ## 0.2.0  (2015-12-21)
 * Focus shadow mode feature added
 

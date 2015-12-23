@@ -98,7 +98,7 @@ class FocusModeManager
         @focusModeActivated = true
         @addCssClass(bodyElem, @focusModeBodyCssClass)
         @cursorEventSubscribers = @registerCursorEventHandlers()
-        @focusAllCursorLines()
+        @focusTextSelections()
 
 
     focusModeOff: (bodyElem) =>
@@ -107,6 +107,17 @@ class FocusModeManager
         @removeFocusLineClass()
         @focusModeMarkersCache = {}
         @cursorEventSubscribers.dispose()
+
+
+    focusTextSelections: =>
+        for textEditor in @getAtomWorkspaceTextEditors()
+            if textEditor
+                selectedRanges = textEditor.getSelectedBufferRanges()
+                if selectedRanges and selectedRanges.length > 0
+                    for range in selectedRanges
+                        marker = @getBufferRangeMarker(textEditor, range)
+                        textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+                        @cacheFocusModeMarker(textEditor.id, marker)
 
 
     toggleFocusModeSingleLine: =>
@@ -131,12 +142,6 @@ class FocusModeManager
         @removeCssClass(bodyElem, @focusModeBodyCssClass)
 
 
-    focusAllCursorLines: =>
-        textEditor = @getActiveTextEditor()
-        for cursor in textEditor.getCursors()
-            @focusLine(cursor)
-
-
     getAtomWorkspaceTextEditors: ->
         return atom.workspace.getTextEditors()
 
@@ -152,8 +157,6 @@ class FocusModeManager
                      marker = decoration.getMarker()
                      marker.destroy()
 
-
-    # =========== FOCUS SHADOW MODE START =========
 
     toggleFocusShadowMode: =>
         bodyTag = @getBodyTagElement()
@@ -253,9 +256,6 @@ class FocusModeManager
 
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
-
-
-    # =========== FOCUS SHADOW MODE END =========
 
 
     addCssClass: (elem, cssClass) ->
