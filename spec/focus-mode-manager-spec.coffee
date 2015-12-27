@@ -16,8 +16,25 @@ describe "FocusModeManager", ->
             expect(focusMode.focusLineCssClass).toEqual("focus-line")
             expect(focusMode.focusModeBodyCssClass).toEqual("focus-mode")
             expect(focusMode.focusModeShadowBodyClassName).toEqual("focus-mode-shadow")
-            expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(3)
-            expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(3)
+            expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
+            expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
+
+        it "should set shadow mode number of rows properties with values " +
+            "passed as constructor parameters", ->
+                focusMode = new FocusModeManager(4,3)
+                expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(4)
+                expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(3)
+
+        it "should set shadow mode number of rows properties to default values " +
+            "if no values are passed as constructor parameters", ->
+                expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
+                expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
+
+        it "should set shadow mode number of rows properties to default values " +
+            "if passed constructor parameter values are not numbers", ->
+                focusMode = new FocusModeManager("abc","de")
+                expect(focusMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
+                expect(focusMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
 
 
     describe "didAddCursor", ->
@@ -538,7 +555,7 @@ describe "FocusModeManager", ->
             it "should return expected end row", ->
                 cursorRow = 30
                 result = focusMode.getFocusShadowBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
-                expect(result).toEqual(33)
+                expect(result).toEqual(34)
 
             it "should return the last row number if the calculated end row exceeds total rows", ->
                 cursorRow = 53

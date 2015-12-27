@@ -1,10 +1,8 @@
 
-FocusMode = require '../lib/focus-mode'
+focusModePackage = require '../lib/focus-mode'
 FocusModeManager = require '../lib/focus-mode-manager'
 
 describe "FocusMode", ->
-
-    focusModePackage = FocusMode
 
     describe "activate", ->
 
@@ -25,7 +23,6 @@ describe "FocusMode", ->
 
         it "should call focus mode method toggleFocusMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
-            focusModePackage = FocusMode
             focusModePackage.activate()
 
             spyOn(focusModePackage.focusModeManager, "toggleFocusMode")
@@ -39,7 +36,6 @@ describe "FocusMode", ->
 
         it "should call focus mode method toggleFocusModeSingleLine()", ->
             workspaceElement = atom.views.getView(atom.workspace)
-            focusModePackage = FocusMode
             focusModePackage.activate()
 
             spyOn(focusModePackage.focusModeManager, "toggleFocusModeSingleLine")
@@ -53,7 +49,6 @@ describe "FocusMode", ->
 
         it "should call focus mode method toggleFocusShadowMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
-            focusModePackage = FocusMode
             focusModePackage.activate()
 
             spyOn(focusModePackage.focusModeManager, "toggleFocusShadowMode")
@@ -66,7 +61,6 @@ describe "FocusMode", ->
     describe "deactivate", ->
 
         it "should dispose subscribers", ->
-            focusModePackage = FocusMode
             focusModePackage.activate()
 
             spyOn(focusModePackage.subscriptions, "dispose")

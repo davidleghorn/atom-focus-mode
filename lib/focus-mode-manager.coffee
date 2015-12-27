@@ -7,16 +7,23 @@ class FocusModeManager
     focusModeShadowActivated = false
 
 
-    constructor: ->
+    constructor: (numOfShadowRowsBeforeCursor, numOfShadowRowsAfterCursor) ->
         @cursorEventSubscribers = null
         @focusModeMarkersCache = {}
         @focusShadowMarkerCache = {}
         @focusModeBodyCssClass = "focus-mode"
         @focusLineCssClass = "focus-line"
         @focusModeShadowBodyClassName = "focus-mode-shadow"
-        # TODO: set number of rows from config
-        @shadowModeNumberOfRowsBeforeCursor = 3
-        @shadowModeNumberOfRowsAfterCursor = 3
+
+        if not numOfShadowRowsBeforeCursor or window.isNaN(numOfShadowRowsBeforeCursor)
+            @shadowModeNumberOfRowsBeforeCursor = 2
+        else
+            @shadowModeNumberOfRowsBeforeCursor = numOfShadowRowsBeforeCursor
+
+        if not numOfShadowRowsAfterCursor or window.isNaN(numOfShadowRowsAfterCursor)
+            @shadowModeNumberOfRowsAfterCursor = 2
+        else
+            @shadowModeNumberOfRowsAfterCursor = numOfShadowRowsAfterCursor
 
 
     didAddCursor: (cursor) =>
@@ -180,7 +187,9 @@ class FocusModeManager
 
 
     getFocusShadowBufferEndRow: (cursorBufferRow, numOfRowsToShadow, bufferLineCount) =>
-        endRow = cursorBufferRow + numOfRowsToShadow
+        # We need +1 as when atom decorates a marker as type line, it doesn't
+        # include a line decoration for the endRow marker in a buffer range
+        endRow = cursorBufferRow + numOfRowsToShadow + 1
 
         if endRow > (bufferLineCount - 1)
             endRow = bufferLineCount - 1
