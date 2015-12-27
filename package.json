@@ -1,7 +1,7 @@
 {
   "name": "atom-focus-mode",
   "main": "./lib/focus-mode",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Fades editor content and highlights only the lines you are working on.",
   "activationCommands": {
     "atom-workspace": [
