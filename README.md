@@ -27,8 +27,8 @@ To toggle focus mode single line;
 
 
 ### focus shadow mode
-Fades all lines in the editor and highlights the cursor line and the three lines
-before and after the cursor line.
+Fades all lines in the editor and highlights the cursor line and the two lines
+before and after the cursor line. The number of lines to highlight before and after the cursor line can be configured via package settings.
 
 To toggle focus shadow mode;
 
