@@ -1,5 +1,5 @@
 
 'atom-workspace':
-  'ctrl-alt-o': 'focus-mode:toggle'
-  'ctrl-alt-i': 'focus-mode:toggle-single-line'
-  'ctrl-alt-u': 'focus-mode:toggle-shadow-mode'
+  'ctrl-alt-o': 'atom-focus-mode:toggle'
+  'ctrl-alt-i': 'atom-focus-mode:toggle-single-line'
+  'ctrl-alt-u': 'atom-focus-mode:toggle-shadow-mode'

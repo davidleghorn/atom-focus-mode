@@ -6,15 +6,15 @@
       'submenu': [
           {
             'label': 'Toggle Focus Mode'
-            'command': 'focus-mode:toggle'
+            'command': 'atom-focus-mode:toggle'
           }
           {
             'label': 'Toggle Focus Single Line'
-            'command': 'focus-mode:toggle-single-line'
+            'command': 'atom-focus-mode:toggle-single-line'
           }
           {
             'label': 'Toggle Focus Shadow Mode'
-            'command': 'focus-mode:toggle-shadow-mode'
+            'command': 'atom-focus-mode:toggle-shadow-mode'
           }
       ]
     }
@@ -27,15 +27,15 @@
       'submenu': [
         {
           'label': 'Toggle Focus Mode'
-          'command': 'focus-mode:toggle'
+          'command': 'atom-focus-mode:toggle'
         }
         {
           'label': 'Toggle Focus Single Line'
-          'command': 'focus-mode:toggle-single-line'
+          'command': 'atom-focus-mode:toggle-single-line'
         }
         {
           'label': 'Toggle Focus Shadow Mode'
-          'command': 'focus-mode:toggle-shadow-mode'
+          'command': 'atom-focus-mode:toggle-shadow-mode'
         }
       ]
     ]

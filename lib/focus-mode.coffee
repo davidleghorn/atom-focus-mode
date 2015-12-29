@@ -1,48 +1,71 @@
+FocusModeBase = require './focus-mode-base'
 
-{CompositeDisposable} = require 'atom'
-FocusModeManager = require './focus-mode-manager'
+class FocusMode extends FocusModeBase
 
-module.exports =
-
-    config:
-        focusShadowModeNumberOfLinesToHighlightAboveCursor:
-            type: 'integer'
-            default: 2
-            order: 1
-
-        focusShadowModeNumberOfLinesToHighlightBelowCursor:
-            type: 'integer'
-            default: 2
-            order: 2
+    constructor: ->
+        super("FocusMode")
+        @isActivated = false
+        @focusModeMarkersCache = {}
 
 
-    activate: (state) ->
-        numOfShadowRowsBeforeCursor = atom.config.get(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor'
-        )
-        numOfShadowRowsAfterCursor = atom.config.get(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightBelowCursor'
-        )
-
-        @focusModeManager = new FocusModeManager(
-            numOfShadowRowsBeforeCursor, numOfShadowRowsAfterCursor
-        )
-
-        @subscriptions = new CompositeDisposable()
-        @subscriptions.add atom.commands.add(
-            'atom-workspace',
-            'focus-mode:toggle': => @focusModeManager.toggleFocusMode()
-        )
-        @subscriptions.add atom.commands.add(
-            'atom-workspace',
-            'focus-mode:toggle-single-line': => @focusModeManager.toggleFocusModeSingleLine()
-        )
-        @subscriptions.add atom.commands.add(
-            'atom-workspace',
-            'focus-mode:toggle-shadow-mode': => @focusModeManager.toggleFocusShadowMode()
-        )
+    on: =>
+        @isActivated = true
+        @addCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
+        @focusTextSelections()
 
 
-    deactivate: ->
-        @subscriptions.dispose()
-        @focusModeManager.subscribersDispose()
+    off: =>
+        @isActivated = false
+        @removeCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
+        @removeFocusLineClass()
+        @focusModeMarkersCache = {}
+
+
+    focusLine: (cursor) =>
+        bufferRow = cursor.getBufferRow()
+        textEditor = @getActiveTextEditor()
+
+        return if @bufferRowIsAlreadyFocussed(textEditor.id, bufferRow)
+
+        @addFocusLineMarker(textEditor, bufferRow)
+
+
+    bufferRowIsAlreadyFocussed: (editorId, bufferRowNumber) =>
+        focusMarkers = @focusModeMarkersCache[editorId] or []
+        for marker in focusMarkers
+            range = marker.getBufferRange()
+            rowNumber = range.getRows()
+
+            if rowNumber[0] is bufferRowNumber
+                return true
+
+        return false
+
+
+    addFocusLineMarker: (textEditor, bufferRow) =>
+        range = [[bufferRow, 0], [bufferRow, 0]]
+        marker = textEditor.markBufferRange(range)
+        textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+        @cacheFocusModeMarker(textEditor.id, marker)
+
+
+    cacheFocusModeMarker: (editorId, marker) =>
+        if @focusModeMarkersCache[editorId]
+            @focusModeMarkersCache[editorId].push(marker)
+        else
+            @focusModeMarkersCache[editorId] = [marker]
+
+
+    focusTextSelections: =>
+        for textEditor in @getAtomWorkspaceTextEditors()
+            if textEditor
+                selectedRanges = textEditor.getSelectedBufferRanges()
+                if selectedRanges and selectedRanges.length > 0
+                    for range in selectedRanges
+                        marker = textEditor.markBufferRange(range)
+                        textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+                        @cacheFocusModeMarker(textEditor.id, marker)
+
+
+
+module.exports = FocusMode
