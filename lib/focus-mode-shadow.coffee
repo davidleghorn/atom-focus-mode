@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 FocusModeBase = require './focus-mode-base'
 
 class FocusShadowMode extends FocusModeBase
@@ -8,28 +9,27 @@ class FocusShadowMode extends FocusModeBase
         @isActivated = false
         @focusShadowMarkerCache = {}
         @focusModeShadowBodyClassName = "focus-mode-shadow"
-        @shadowModeNumberOfRowsBeforeCursor = @getNumberOfRowsToShadowBeforeCursor()
-        @shadowModeNumberOfRowsAfterCursor = @getNumberOfRowsToShadowAfterCursor()
-
-
-    getNumberOfRowsToShadowBeforeCursor: ->
-        numOfShadowRowsBeforeCursor = @getConfig(
+        @shadowModeNumberOfRowsBeforeCursor = @getConfig(
             'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor'
-        )
-        if not numOfShadowRowsBeforeCursor or window.isNaN(numOfShadowRowsBeforeCursor)
-            @shadowModeNumberOfRowsBeforeCursor = 2
-        else
-            @shadowModeNumberOfRowsBeforeCursor = numOfShadowRowsBeforeCursor
-
-
-    getNumberOfRowsToShadowAfterCursor: ->
-        numOfShadowRowsAfterCursor = @getConfig(
+        ) or 2
+        @shadowModeNumberOfRowsAfterCursor = @getConfig(
             'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightBelowCursor'
-        )
-        if not numOfShadowRowsAfterCursor or window.isNaN(numOfShadowRowsAfterCursor)
-            @shadowModeNumberOfRowsAfterCursor = 2
-        else
-            @shadowModeNumberOfRowsAfterCursor = numOfShadowRowsAfterCursor
+        ) or 2
+        @configSubscriptions = @registerConfigSubscriptions()
+
+
+    registerConfigSubscriptions: =>
+        configSubscriptions = new CompositeDisposable()
+        configSubscriptions.add(atom.config.observe(
+            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor',
+            (numberOfLines) => @shadowModeNumberOfRowsBeforeCursor = numberOfLines if numberOfLines?
+        ))
+        configSubscriptions.add(atom.config.observe(
+            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightBelowCursor',
+            (numberOfLines) => @shadowModeNumberOfRowsAfterCursor = numberOfLines if numberOfLines?
+        ))
+
+        return configSubscriptions
 
 
     on: =>
@@ -116,6 +116,10 @@ class FocusShadowMode extends FocusModeBase
 
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
+
+
+    dispose: =>
+        @configSubscriptions.dispose() if @configSubscriptions
 
 
 module.exports = FocusShadowMode

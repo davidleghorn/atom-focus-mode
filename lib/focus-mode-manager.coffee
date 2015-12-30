@@ -88,6 +88,7 @@ class FocusModeManager
 
     subscribersDispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+        @focusShadowMode.dispose()
 
 
 module.exports = FocusModeManager

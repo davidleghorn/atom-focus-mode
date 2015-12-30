@@ -1,14 +1,13 @@
+
 FocusShadowMode = require '../lib/focus-mode-shadow'
 
 
 describe "FocusShadowMode", ->
 
     focusShadowMode = null
-    bodyTagElem = {className: ""}
 
     beforeEach ->
         focusShadowMode = new FocusShadowMode()
-
 
     describe "constructor", ->
 
@@ -29,47 +28,8 @@ describe "FocusShadowMode", ->
             expect(focusShadowMode.removeCssClass).toBeDefined()
             expect(focusShadowMode.removeFocusLineClass).toBeDefined()
 
-
-    describe "getNumberOfRowsToShadowBeforeCursor", ->
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to config value when value is an integer", ->
-            valueFromConfig = 10
-            spyOn(focusShadowMode, "getConfig").andReturn(valueFromConfig)
-            focusShadowMode.getNumberOfRowsToShadowBeforeCursor()
-            expect(focusShadowMode.shadowModeNumberOfRowsBeforeCursor).toEqual(valueFromConfig)
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to default value " +
-            "when no value is returned from config", ->
-                spyOn(focusShadowMode, "getConfig").andReturn(null)
-                focusShadowMode.getNumberOfRowsToShadowBeforeCursor()
-                expect(focusShadowMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to default value " +
-            "when value is returned from config is not an number", ->
-                spyOn(focusShadowMode, "getConfig").andReturn("abcd")
-                focusShadowMode.getNumberOfRowsToShadowBeforeCursor()
-                expect(focusShadowMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
-
-
-    describe "getNumberOfRowsToShadowAfterCursor", ->
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to config value when value is an integer", ->
-            valueFromConfig = 5
-            spyOn(focusShadowMode, "getConfig").andReturn(valueFromConfig)
-            focusShadowMode.getNumberOfRowsToShadowAfterCursor()
-            expect(focusShadowMode.shadowModeNumberOfRowsAfterCursor).toEqual(valueFromConfig)
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to default value " +
-            "when no value is returned from config", ->
-                spyOn(focusShadowMode, "getConfig").andReturn(null)
-                focusShadowMode.getNumberOfRowsToShadowAfterCursor()
-                expect(focusShadowMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
-
-        it "should set shadowModeNumberOfRowsBeforeCursor to default value " +
-            "when value is returned from config is not an number", ->
-                spyOn(focusShadowMode, "getConfig").andReturn("abcd")
-                focusShadowMode.getNumberOfRowsToShadowAfterCursor()
-                expect(focusShadowMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
+        it "should set configSubscriptions", ->
+            expect(focusShadowMode.configSubscriptions).not.toBeNull()
 
 
     describe "on", ->
@@ -79,6 +39,7 @@ describe "FocusShadowMode", ->
             id: "editor1",
             getLastCursor: ->
         }
+        bodyTagElem = {className: ""}
 
         beforeEach ->
             spyOn(fakeTextEditor, "getLastCursor").andReturn(cursor)
@@ -109,6 +70,8 @@ describe "FocusShadowMode", ->
 
 
     describe "off", ->
+
+        bodyTagElem = {className: ""}
 
         beforeEach ->
             spyOn(focusShadowMode, "removeFocusModeShadowMarkers").andCallFake(->)

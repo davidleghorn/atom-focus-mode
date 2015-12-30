@@ -1,4 +1,9 @@
 
+## 0.5.0  (2015-12-30)
+* Implemented config observe so any changes to config values are immediately reflected.
+* Updated config json schema to include minimum values
+* Refactoring
+
 ## 0.4.0  (2015-12-27)
 * Added package settings to configure the number of rows to highlight in focus shadow mode
 

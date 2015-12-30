@@ -223,7 +223,6 @@ describe "FocusModeManager", ->
 
         it("should call cursorEventSubscribers dispose if there are cursorEventSubscribers", ->
             subscriptions = { dispose: -> }
-
             spyOn(focusModeManager, "registerCursorEventHandlers").andReturn(subscriptions)
             spyOn(subscriptions, "dispose")
 
@@ -233,4 +232,10 @@ describe "FocusModeManager", ->
 
             focusModeManager.subscribersDispose()
             expect(subscriptions.dispose).toHaveBeenCalled()
+        )
+
+        it("should call focusShadowMode.dispose()", ->
+            spyOn(focusModeManager.focusShadowMode, "dispose").andCallFake(->)
+            focusModeManager.subscribersDispose()
+            expect(focusModeManager.focusShadowMode.dispose).toHaveBeenCalled()
         )

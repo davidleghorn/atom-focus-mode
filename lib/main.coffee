@@ -8,17 +8,19 @@ module.exports =
         focusShadowModeNumberOfLinesToHighlightAboveCursor:
             type: 'integer'
             default: 2
+            minimum: 0
             order: 1
 
         focusShadowModeNumberOfLinesToHighlightBelowCursor:
             type: 'integer'
             default: 2
+            minimum: 0
             order: 2
 
 
     activate: (state) ->
         @focusModeManager = new FocusModeManager()
-        
+
         @subscriptions = new CompositeDisposable()
         @subscriptions.add atom.commands.add(
             'atom-workspace',
