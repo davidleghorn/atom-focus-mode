@@ -36,25 +36,25 @@ class FocusShadowMode extends FocusModeBase
         @isActivated = true
         textEditor = @getActiveTextEditor()
         cursor = textEditor.getLastCursor()
-        @focusModeShadowOnCursorMove(cursor)
+        @shadowModeOnCursorMove(cursor)
         @addCssClass(@getBodyTagElement(), @focusModeShadowBodyClassName)
 
 
     off: =>
         @isActivated = false
-        @removeFocusModeShadowMarkers()
+        @removeShadowModeMarkers()
         @focusShadowMarkerCache = {}
         @removeCssClass(@getBodyTagElement(), @focusModeShadowBodyClassName)
 
 
-    getFocusShadowBufferStartRow: (cursorBufferRow, numOfRowsToShadow) =>
+    getShadowModeBufferStartRow: (cursorBufferRow, numOfRowsToShadow) =>
         startRow = cursorBufferRow - numOfRowsToShadow
         startRow = 0 if startRow < 0
 
         return startRow
 
 
-    getFocusShadowBufferEndRow: (cursorBufferRow, numOfRowsToShadow, bufferLineCount) =>
+    getShadowModeBufferEndRow: (cursorBufferRow, numOfRowsToShadow, bufferLineCount) =>
         # We need +1 as when atom decorates a marker as type line, it doesn't
         # include a line decoration for the endRow marker in a buffer range
         endRow = cursorBufferRow + numOfRowsToShadow + 1
@@ -65,11 +65,11 @@ class FocusShadowMode extends FocusModeBase
         return endRow
 
 
-    getFocusModeShadowBufferRange: (cursorBufferRow, bufferLineCount) =>
-        startRow = @getFocusShadowBufferStartRow(
+    getShadowModeBufferRange: (cursorBufferRow, bufferLineCount) =>
+        startRow = @getShadowModeBufferStartRow(
             cursorBufferRow, @shadowModeNumberOfRowsBeforeCursor
         )
-        endRow = @getFocusShadowBufferEndRow(
+        endRow = @getShadowModeBufferEndRow(
             cursorBufferRow, @shadowModeNumberOfRowsAfterCursor, bufferLineCount
         )
 
@@ -78,7 +78,7 @@ class FocusShadowMode extends FocusModeBase
 
     createShadowModeMarker: (textEditor) =>
         cursorBufferPos = textEditor.getCursorBufferPosition()
-        shadowBufferRange = @getFocusModeShadowBufferRange(
+        shadowBufferRange = @getShadowModeBufferRange(
             cursorBufferPos.row, textEditor.getLineCount()
         )
         marker = textEditor.markBufferRange(shadowBufferRange)
@@ -87,13 +87,13 @@ class FocusShadowMode extends FocusModeBase
         return marker
 
 
-    removeFocusModeShadowMarkers: =>
+    removeShadowModeMarkers: =>
         for editor in @getAtomWorkspaceTextEditors()
             marker = @focusShadowMarkerCache[editor.id]
             marker.destroy() if marker
 
 
-    getFocusShadowMarkerForEditor: (editor) =>
+    getShadowModeMarkerForEditor: (editor) =>
         marker = @focusShadowMarkerCache[editor.id]
 
         if not marker
@@ -103,14 +103,14 @@ class FocusShadowMode extends FocusModeBase
         return marker
 
 
-    focusModeShadowOnCursorMove: (cursor) =>
+    shadowModeOnCursorMove: (cursor) =>
         editor = cursor.editor
         cursorRow = cursor.getBufferRow()
-        marker = @getFocusShadowMarkerForEditor(cursor.editor)
-        startRow = @getFocusShadowBufferStartRow(
+        marker = @getShadowModeMarkerForEditor(cursor.editor)
+        startRow = @getShadowModeBufferStartRow(
             cursorRow, @shadowModeNumberOfRowsBeforeCursor
         )
-        endRow = @getFocusShadowBufferEndRow(
+        endRow = @getShadowModeBufferEndRow(
             cursorRow, @shadowModeNumberOfRowsAfterCursor, editor.getLineCount()
         )
 

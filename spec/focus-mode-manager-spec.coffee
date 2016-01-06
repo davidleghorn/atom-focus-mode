@@ -86,11 +86,11 @@ describe "FocusModeManager", ->
             focusModeManager.toggleFocusMode()
             expect(focusModeManager.focusModeSingleLine.off).toHaveBeenCalled()
 
-        it "should call focusModeShadowOff() if isActivated is true", ->
-            spyOn(focusModeManager, "focusModeShadowOff").andCallFake(->)
+        it "should call focusShadowModeOff() if isActivated is true", ->
+            spyOn(focusModeManager, "focusShadowModeOff").andCallFake(->)
             focusModeManager.focusShadowMode.isActivated = true
             focusModeManager.toggleFocusMode()
-            expect(focusModeManager.focusModeShadowOff).toHaveBeenCalled()
+            expect(focusModeManager.focusShadowModeOff).toHaveBeenCalled()
 
         it "should call focusModeOff() when focusModeOff.isActivated is true", ->
             spyOn(focusModeManager, "focusModeOff").andCallFake(->)
@@ -145,11 +145,11 @@ describe "FocusModeManager", ->
             focusModeManager.toggleFocusModeSingleLine()
             expect(focusModeManager.focusModeOff).toHaveBeenCalled()
 
-        it "should call focusModeShadowOff() if isActivated is true", ->
-            spyOn(focusModeManager, "focusModeShadowOff").andCallFake(->)
+        it "should call focusShadowModeOff() if isActivated is true", ->
+            spyOn(focusModeManager, "focusShadowModeOff").andCallFake(->)
             focusModeManager.focusShadowMode.isActivated = true
             focusModeManager.toggleFocusModeSingleLine()
-            expect(focusModeManager.focusModeShadowOff).toHaveBeenCalled()
+            expect(focusModeManager.focusShadowModeOff).toHaveBeenCalled()
 
         it "should call focusModeSingleLine.off() when focusModeSingleLine.isActivated is true", ->
             spyOn(focusModeManager.focusModeSingleLine, "off").andCallFake(->)
@@ -172,7 +172,7 @@ describe "FocusModeManager", ->
             spyOn(focusModeManager, "registerCursorEventHandlers").andReturn(cursorEventSubscribers)
             spyOn(focusModeManager.focusModeSingleLine, "off").andCallFake(->)
             spyOn(focusModeManager, "focusModeOff").andCallFake(->)
-            spyOn(focusModeManager, "focusModeShadowOff").andCallFake(->)
+            spyOn(focusModeManager, "focusShadowModeOff").andCallFake(->)
             spyOn(focusModeManager.focusShadowMode, "on").andCallFake(->)
 
         it "should call focusModeOff() if focusMode is activated", ->
@@ -185,10 +185,10 @@ describe "FocusModeManager", ->
             focusModeManager.toggleFocusShadowMode()
             expect(focusModeManager.focusModeSingleLine.off).toHaveBeenCalled()
 
-        it "should call focusModeShadowOff() when focusShadowMode.isActivated", ->
+        it "should call focusShadowModeOff() when focusShadowMode.isActivated", ->
             focusModeManager.focusShadowMode.isActivated = true
             focusModeManager.toggleFocusShadowMode()
-            expect(focusModeManager.focusModeShadowOff).toHaveBeenCalled()
+            expect(focusModeManager.focusShadowModeOff).toHaveBeenCalled()
 
         it "should call focusShadowMode.on() when focusShadowMode.isActivated is false", ->
             focusModeManager.focusModeSingleLine.isActivated = false
@@ -201,7 +201,7 @@ describe "FocusModeManager", ->
             expect(focusModeManager.cursorEventSubscribers).toEqual(cursorEventSubscribers)
 
 
-    describe "focusModeShadowOff", ->
+    describe "focusShadowModeOff", ->
 
         cursorEventSubscribers = { dispose: -> }
 
@@ -211,11 +211,11 @@ describe "FocusModeManager", ->
             focusModeManager.cursorEventSubscribers = cursorEventSubscribers
 
         it "should call focusShadowMode.off()", ->
-            focusModeManager.focusModeShadowOff()
+            focusModeManager.focusShadowModeOff()
             expect(focusModeManager.focusShadowMode.off).toHaveBeenCalled()
 
         it "should call cursorEventSubscribers.dispose()", ->
-            focusModeManager.focusModeShadowOff()
+            focusModeManager.focusShadowModeOff()
             expect(cursorEventSubscribers.dispose).toHaveBeenCalled()
 
 

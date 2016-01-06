@@ -11,7 +11,7 @@ class FocusMode extends FocusModeBase
     on: =>
         @isActivated = true
         @addCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
-        @focusTextSelections()
+        @applyFocusModeToSelectedBufferRanges()
 
 
     off: =>
@@ -56,7 +56,7 @@ class FocusMode extends FocusModeBase
             @focusModeMarkersCache[editorId] = [marker]
 
 
-    focusTextSelections: =>
+    applyFocusModeToSelectedBufferRanges: =>
         for textEditor in @getAtomWorkspaceTextEditors()
             if textEditor
                 selectedRanges = textEditor.getSelectedBufferRanges()

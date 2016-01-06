@@ -44,7 +44,7 @@ describe "FocusShadowMode", ->
         beforeEach ->
             spyOn(fakeTextEditor, "getLastCursor").andReturn(cursor)
             spyOn(focusShadowMode, "getActiveTextEditor").andReturn(fakeTextEditor)
-            spyOn(focusShadowMode, "focusModeShadowOnCursorMove").andCallFake(->)
+            spyOn(focusShadowMode, "shadowModeOnCursorMove").andCallFake(->)
             spyOn(focusShadowMode, "addCssClass").andCallFake(->)
             spyOn(focusShadowMode, "getBodyTagElement").andReturn(bodyTagElem)
 
@@ -55,10 +55,10 @@ describe "FocusShadowMode", ->
             expect(focusShadowMode.isActivated).toEqual(true)
 
 
-        it "should call focusModeShadowOnCursorMove", ->
+        it "should call shadowModeOnCursorMove", ->
             focusShadowMode.isActivated = false
             focusShadowMode.on()
-            expect(focusShadowMode.focusModeShadowOnCursorMove).toHaveBeenCalledWith(cursor)
+            expect(focusShadowMode.shadowModeOnCursorMove).toHaveBeenCalledWith(cursor)
 
 
         it "should call addCssClass", ->
@@ -74,7 +74,7 @@ describe "FocusShadowMode", ->
         bodyTagElem = {className: ""}
 
         beforeEach ->
-            spyOn(focusShadowMode, "removeFocusModeShadowMarkers").andCallFake(->)
+            spyOn(focusShadowMode, "removeShadowModeMarkers").andCallFake(->)
             spyOn(focusShadowMode, "removeCssClass")
             spyOn(focusShadowMode, "getBodyTagElement").andReturn(bodyTagElem)
 
@@ -91,39 +91,39 @@ describe "FocusShadowMode", ->
             )
 
 
-    describe "getFocusShadowBufferStartRow", ->
+    describe "getShadowModeBufferStartRow", ->
 
         it "should return expected start row", ->
             cursorBufferRow = 5
             numOfRowsToShadow = 3
             startRow = 2
-            result = focusShadowMode.getFocusShadowBufferStartRow(cursorBufferRow, numOfRowsToShadow)
+            result = focusShadowMode.getShadowModeBufferStartRow(cursorBufferRow, numOfRowsToShadow)
             expect(result).toEqual(startRow)
 
         it "should return 0 if the calculated start row would be less than 0", ->
             cursorBufferRow = 2
             numOfRowsToShadow = 3
-            result = focusShadowMode.getFocusShadowBufferStartRow(cursorBufferRow, numOfRowsToShadow)
+            result = focusShadowMode.getShadowModeBufferStartRow(cursorBufferRow, numOfRowsToShadow)
             expect(result).toEqual(0)
 
 
-    describe "getFocusShadowBufferEndRow", ->
+    describe "getShadowModeBufferEndRow", ->
 
         numOfRowsToShadow = 3
         lineCount = 55
 
         it "should return expected end row", ->
             cursorRow = 30
-            result = focusShadowMode.getFocusShadowBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
+            result = focusShadowMode.getShadowModeBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
             expect(result).toEqual(34)
 
         it "should return the last row number if the calculated end row exceeds total rows", ->
             cursorRow = 53
-            result = focusShadowMode.getFocusShadowBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
+            result = focusShadowMode.getShadowModeBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
             expect(result).toEqual(54)
 
 
-    describe "getFocusModeShadowBufferRange", ->
+    describe "getShadowModeBufferRange", ->
 
         it "should return the expected buffer range", ->
             cursorRow = 33
@@ -131,10 +131,10 @@ describe "FocusShadowMode", ->
             startRow = 30
             endRow = 36
 
-            spyOn(focusShadowMode, "getFocusShadowBufferStartRow").andReturn(startRow)
-            spyOn(focusShadowMode, "getFocusShadowBufferEndRow").andReturn(endRow)
+            spyOn(focusShadowMode, "getShadowModeBufferStartRow").andReturn(startRow)
+            spyOn(focusShadowMode, "getShadowModeBufferEndRow").andReturn(endRow)
 
-            result = focusShadowMode.getFocusModeShadowBufferRange(cursorRow, lineCount)
+            result = focusShadowMode.getShadowModeBufferRange(cursorRow, lineCount)
 
             expect(result).toEqual([[startRow, 0], [endRow, 0]])
 
@@ -153,7 +153,7 @@ describe "FocusShadowMode", ->
 
         beforeEach ->
             spyOn(fakeTextEditor, "decorateMarker").andCallFake(->)
-            spyOn(focusShadowMode, "getFocusModeShadowBufferRange").andReturn({})
+            spyOn(focusShadowMode, "getShadowModeBufferRange").andReturn({})
             spyOn(fakeTextEditor, "markBufferRange").andReturn(marker)
 
         it "should call decorate marker", ->
@@ -167,7 +167,7 @@ describe "FocusShadowMode", ->
             expect(result).toEqual(marker)
 
 
-    describe "removeFocusModeShadowMarkers", ->
+    describe "removeShadowModeMarkers", ->
 
         marker1 = { destroy: -> }
         marker2 = { destroy: -> }
@@ -184,12 +184,12 @@ describe "FocusShadowMode", ->
             focusShadowMode.focusShadowMarkerCache = shadowMarkerCache
 
         it "should iterate over focusShadowMarkerCache and destroy each editors markers", ->
-            focusShadowMode.removeFocusModeShadowMarkers()
+            focusShadowMode.removeShadowModeMarkers()
             expect(marker1.destroy).toHaveBeenCalled()
             expect(marker2.destroy).toHaveBeenCalled()
 
 
-    describe "getFocusShadowMarkerForEditor", ->
+    describe "getShadowModeMarkerForEditor", ->
 
         marker1 = { id: "marker1", destroy: -> }
         marker2 = { id: "marker2", destroy: -> }
@@ -199,7 +199,7 @@ describe "FocusShadowMode", ->
         it "should return the cached marker for the passed editor", ->
             spyOn(focusShadowMode, "createShadowModeMarker")
             focusShadowMode.focusShadowMarkerCache = {"editor1": marker1}
-            result = focusShadowMode.getFocusShadowMarkerForEditor(editor1)
+            result = focusShadowMode.getShadowModeMarkerForEditor(editor1)
             expect(result).toEqual(marker1)
             expect(focusShadowMode.createShadowModeMarker).not.toHaveBeenCalled()
 
@@ -208,7 +208,7 @@ describe "FocusShadowMode", ->
                 spyOn(focusShadowMode, "createShadowModeMarker").andReturn(marker2)
 
                 focusShadowMode.focusShadowMarkerCache = {"editor1": marker1}
-                result = focusShadowMode.getFocusShadowMarkerForEditor(editor2)
+                result = focusShadowMode.getShadowModeMarkerForEditor(editor2)
 
                 expect(focusShadowMode.createShadowModeMarker).toHaveBeenCalledWith(editor2)
                 expect(result).toEqual(marker2)
@@ -218,7 +218,7 @@ describe "FocusShadowMode", ->
                 })
 
 
-    describe "focusModeShadowOnCursorMove", ->
+    describe "shadowModeOnCursorMove", ->
 
         lineCount = 35
         editor = {
@@ -237,14 +237,14 @@ describe "FocusShadowMode", ->
         endRow = 4
 
         beforeEach ->
-            spyOn(focusShadowMode, "getFocusShadowMarkerForEditor").andReturn(marker)
-            spyOn(focusShadowMode, "getFocusShadowBufferStartRow").andReturn(startRow)
-            spyOn(focusShadowMode, "getFocusShadowBufferEndRow").andReturn(endRow)
+            spyOn(focusShadowMode, "getShadowModeMarkerForEditor").andReturn(marker)
+            spyOn(focusShadowMode, "getShadowModeBufferStartRow").andReturn(startRow)
+            spyOn(focusShadowMode, "getShadowModeBufferEndRow").andReturn(endRow)
             spyOn(marker, "setTailBufferPosition").andCallFake(->)
             spyOn(marker, "setHeadBufferPosition").andCallFake(->)
 
         it "should update the markers head and tail buffer positions", ->
-            focusShadowMode.focusModeShadowOnCursorMove(cursor)
+            focusShadowMode.shadowModeOnCursorMove(cursor)
 
             expect(marker.setTailBufferPosition).toHaveBeenCalledWith([startRow, 0])
             expect(marker.setHeadBufferPosition).toHaveBeenCalledWith([endRow, 0])

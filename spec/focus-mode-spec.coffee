@@ -32,7 +32,7 @@ describe "FocusMode", ->
 
         beforeEach ->
             spyOn(focusMode, "addCssClass").andCallFake(->)
-            spyOn(focusMode, "focusTextSelections").andCallFake(->)
+            spyOn(focusMode, "applyFocusModeToSelectedBufferRanges").andCallFake(->)
 
         it "should set isActivated to true", ->
             focusMode.isActivated = false
@@ -46,10 +46,10 @@ describe "FocusMode", ->
                 bodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-        it "should call focusTextSelections", ->
+        it "should call applyFocusModeToSelectedBufferRanges", ->
             focusMode.isActivated = false
             focusMode.on()
-            expect(focusMode.focusTextSelections).toHaveBeenCalled()
+            expect(focusMode.applyFocusModeToSelectedBufferRanges).toHaveBeenCalled()
 
 
     describe "off", ->
@@ -211,7 +211,7 @@ describe "FocusMode", ->
             )
 
 
-    describe "focusTextSelections", ->
+    describe "applyFocusModeToSelectedBufferRanges", ->
 
         editor = {
             id: "editor1"
@@ -226,7 +226,7 @@ describe "FocusMode", ->
             spyOn(focusMode, "getAtomWorkspaceTextEditors").andReturn([])
             spyOn(focusMode, "cacheFocusModeMarker")
 
-            focusMode.focusTextSelections()
+            focusMode.applyFocusModeToSelectedBufferRanges()
             expect(focusMode.cacheFocusModeMarker).not.toHaveBeenCalled()
 
 
@@ -235,7 +235,7 @@ describe "FocusMode", ->
             spyOn(editor, "getSelectedBufferRanges")
             spyOn(focusMode, "cacheFocusModeMarker")
 
-            focusMode.focusTextSelections()
+            focusMode.applyFocusModeToSelectedBufferRanges()
             expect(editor.getSelectedBufferRanges).not.toHaveBeenCalled()
             expect(focusMode.cacheFocusModeMarker).not.toHaveBeenCalled()
 
@@ -246,7 +246,7 @@ describe "FocusMode", ->
             spyOn(editor, "markBufferRange").andReturn(marker)
             spyOn(editor, "decorateMarker")
 
-            focusMode.focusTextSelections()
+            focusMode.applyFocusModeToSelectedBufferRanges()
             expect(editor.decorateMarker).toHaveBeenCalledWith(
                 marker, type: 'line', class: focusMode.focusLineCssClass
             )
@@ -259,7 +259,7 @@ describe "FocusMode", ->
             spyOn(editor, "markBufferRange").andReturn(marker)
             spyOn(focusMode, "cacheFocusModeMarker")
 
-            focusMode.focusTextSelections()
+            focusMode.applyFocusModeToSelectedBufferRanges()
 
             expect(focusMode.cacheFocusModeMarker).toHaveBeenCalledWith(editor.id, marker)
             expect(focusMode.cacheFocusModeMarker.callCount).toEqual(selectedRanges.length)

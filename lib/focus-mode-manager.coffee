@@ -18,7 +18,7 @@ class FocusModeManager
             @focusMode.focusLine(cursor)
 
         if @focusShadowMode.isActivated
-            @focusShadowMode.focusModeShadowOnCursorMove(cursor)
+            @focusShadowMode.shadowModeOnCursorMove(cursor)
 
 
     didChangeCursorPosition: (obj) =>
@@ -26,12 +26,12 @@ class FocusModeManager
             @focusMode.focusLine(obj.cursor)
 
         if @focusShadowMode.isActivated
-            @focusShadowMode.focusModeShadowOnCursorMove(obj.cursor)
+            @focusShadowMode.shadowModeOnCursorMove(obj.cursor)
 
 
     toggleFocusMode: =>
         @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
-        @focusModeShadowOff() if @focusShadowMode.isActivated
+        @focusShadowModeOff() if @focusShadowMode.isActivated
 
         if @focusMode.isActivated
             @focusModeOff()
@@ -51,7 +51,7 @@ class FocusModeManager
 
     toggleFocusModeSingleLine: =>
         @focusModeOff() if @focusMode.isActivated
-        @focusModeShadowOff() if @focusShadowMode.isActivated
+        @focusShadowModeOff() if @focusShadowMode.isActivated
 
         if @focusModeSingleLine.isActivated
             @focusModeSingleLine.off()
@@ -64,13 +64,13 @@ class FocusModeManager
         @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
 
         if @focusShadowMode.isActivated
-            @focusModeShadowOff()
+            @focusShadowModeOff()
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
             @focusShadowMode.on()
 
 
-    focusModeShadowOff: =>
+    focusShadowModeOff: =>
         @focusShadowMode.off()
         @cursorEventSubscribers.dispose()
 
