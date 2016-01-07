@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 FocusModeBase = require './focus-mode-base'
 
 class FocusMode extends FocusModeBase
@@ -6,17 +7,42 @@ class FocusMode extends FocusModeBase
         super("FocusMode")
         @isActivated = false
         @focusModeMarkersCache = {}
+        # The @focusModeLineOpacityCssClass currently applied to the body tag
+        @appliedFocusModeLineOpacityCssClass = ""
+        @focusModeLineOpacityCssClass = @getFocusLineCssClass(
+            @getConfig('atom-focus-mode.focusModeLineOpacity')
+        )
+        @configSubscriptions = @registerConfigSubscriptions()
 
+
+    getFocusLineCssClass: (opacity) =>
+        if opacity is "55%" then return "line-55" else "line-100"
+
+
+    registerConfigSubscriptions: =>
+        configSubscriptions = new CompositeDisposable()
+        configSubscriptions.add(atom.config.observe(
+            'atom-focus-mode.focusModeLineOpacity',
+            (opacityConfigValue) =>
+                @focusModeLineOpacityCssClass = @getFocusLineCssClass(opacityConfigValue)
+        ))
+
+        return configSubscriptions
 
     on: =>
         @isActivated = true
-        @addCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
+        bodyTag = @getBodyTagElement()
+        @addCssClass(bodyTag, @focusModeBodyCssClass)
+        @addCssClass(bodyTag, @focusModeLineOpacityCssClass)
+        @appliedFocusModeLineOpacityCssClass = @focusModeLineOpacityCssClass
         @applyFocusModeToSelectedBufferRanges()
 
 
     off: =>
         @isActivated = false
-        @removeCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
+        bodyTag = @getBodyTagElement()
+        @removeCssClass(bodyTag, @focusModeBodyCssClass)
+        @removeCssClass(bodyTag, @appliedFocusModeLineOpacityCssClass)
         @removeFocusLineClass()
         @focusModeMarkersCache = {}
 
@@ -66,6 +92,9 @@ class FocusMode extends FocusModeBase
                         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
                         @cacheFocusModeMarker(textEditor.id, marker)
 
+
+    dispose: =>
+        @configSubscriptions.dispose() if @configSubscriptions
 
 
 module.exports = FocusMode

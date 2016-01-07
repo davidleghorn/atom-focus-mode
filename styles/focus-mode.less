@@ -1,5 +1,5 @@
 
-// focus-mode text editor styling
+// FOCUS MODE
 .focus-mode atom-text-editor::shadow
 {
     .line { opacity: 0.15; }
@@ -11,7 +11,19 @@
     }
 }
 
-// focus-mode-shadow text editor styling
+// focus-mode with focus-line 55% opacity
+.focus-mode.line-55 atom-text-editor::shadow
+{
+    .focus-line { opacity: 0.55; }
+
+    .line .comment,
+    .line.cursor-line {
+        opacity: 1;
+    }
+}
+
+
+// FOCUS SHADOW MODE
 .focus-mode-shadow atom-text-editor::shadow
 {
     .line { opacity: 0.15; }
@@ -30,7 +42,8 @@
     }
 }
 
-// gutter line number styling
+
+// LINE NUMBER STYLING
 .focus-mode atom-text-editor::shadow,
 .focus-mode-shadow atom-text-editor::shadow
 {
@@ -42,7 +55,8 @@
     }
 }
 
-// File browser styling
+
+// FILE BROWSER SIDEBAR STYLING
 .focus-mode .tool-panel,
 .focus-mode-shadow .tool-panel
 {

@@ -17,6 +17,13 @@ module.exports =
             minimum: 0
             order: 2
 
+        focusModeLineOpacity:
+            description: 'Opacity applied to focus mode highlighted lines'
+            type: 'string'
+            default: '100%'
+            enum: ['100%', '55%']
+            order: 3
+
 
     activate: (state) ->
         @focusModeManager = new FocusModeManager()

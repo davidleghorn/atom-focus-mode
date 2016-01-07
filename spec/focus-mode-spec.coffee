@@ -16,6 +16,7 @@ describe "FocusMode", ->
         it "should initialise properties with expected values", ->
             expect(focusMode.isActivated).toEqual(false)
             expect(focusMode.focusModeMarkersCache).toEqual({})
+            expect(focusMode.appliedFocusModeLineOpacityCssClass).toEqual("")
 
         it "should inherit from FocusModeBase", ->
             # test that focusShadowMode object contains methods from base class
@@ -39,12 +40,25 @@ describe "FocusMode", ->
             focusMode.on()
             expect(focusMode.isActivated).toEqual(true)
 
-        it "should call addCssClass", ->
+        it "should call addCssClass with focusModeBodyCssClass", ->
             focusMode.isActivated = false
             focusMode.on()
             expect(focusMode.addCssClass).toHaveBeenCalledWith(
                 bodyTagElem, focusMode.focusModeBodyCssClass
             )
+
+        it "should call addCssClass with focusModeLineOpacityCssClass", ->
+            focusMode.isActivated = false
+            focusMode.on()
+            expect(focusMode.addCssClass).toHaveBeenCalledWith(
+                bodyTagElem, focusMode.focusModeLineOpacityCssClass
+            )
+
+        it "should set appliedFocusModeLineOpacityCssClass to focusModeLineOpacityCssClass", ->
+            focusMode.isActivated = false
+            focusMode.appliedFocusModeLineOpacityCssClass = ""
+            focusMode.on()
+            expect(focusMode.appliedFocusModeLineOpacityCssClass).toEqual(focusMode.focusModeLineOpacityCssClass)
 
         it "should call applyFocusModeToSelectedBufferRanges", ->
             focusMode.isActivated = false
@@ -63,11 +77,18 @@ describe "FocusMode", ->
             focusMode.off()
             expect(focusMode.isActivated).toEqual(false)
 
-        it "should call removeCssClass", ->
+        it "should call removeCssClass with focusModeBodyCssClass", ->
             focusMode.isActivated = true
             focusMode.off()
             expect(focusMode.removeCssClass).toHaveBeenCalledWith(
                 bodyTagElem, focusMode.focusModeBodyCssClass
+            )
+
+        it "should call removeCssClass with appliedFocusModeLineOpacityCssClass", ->
+            focusMode.isActivated = true
+            focusMode.off()
+            expect(focusMode.removeCssClass).toHaveBeenCalledWith(
+                bodyTagElem, focusMode.appliedFocusModeLineOpacityCssClass
             )
 
         it "should call removeFocusLineClass", ->

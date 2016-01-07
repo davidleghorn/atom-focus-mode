@@ -1,4 +1,7 @@
 
+## 0.6.0  (2016-01-07)
+* Added package setting to configure focus mode highlighted line opacity
+
 ## 0.5.0  (2015-12-30)
 * Implemented config observe so any changes to config values are immediately reflected.
 * Updated config json schema to include minimum values
