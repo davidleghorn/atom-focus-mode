@@ -13,6 +13,6 @@
   "repository": "https://github.com/davidleghorn/atom-focus-mode",
   "license": "MIT",
   "engines": {
-    "atom": ">=1.0.0"
+    "atom": ">=1.13.0"
   }
 }

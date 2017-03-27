@@ -1,10 +1,10 @@
 
 // FOCUS MODE
-.focus-mode atom-text-editor::shadow
+.focus-mode atom-text-editor.editor
 {
     .line { opacity: 0.15; }
 
-    .line .comment,
+    .line .syntax--comment,
     .line.cursor-line,
     .focus-line {
         opacity: 1;
@@ -12,11 +12,11 @@
 }
 
 // focus-mode with focus-line 55% opacity
-.focus-mode.line-55 atom-text-editor::shadow
+.focus-mode.line-55 atom-text-editor.editor
 {
     .focus-line { opacity: 0.55; }
 
-    .line .comment,
+    .line .syntax--comment,
     .line.cursor-line {
         opacity: 1;
     }
@@ -24,19 +24,19 @@
 
 
 // FOCUS SHADOW MODE
-.focus-mode-shadow atom-text-editor::shadow
+.focus-mode-shadow atom-text-editor.editor
 {
     .line { opacity: 0.15; }
 
     // active cursor line
     .line.cursor-line,
-    .line.comment.cursor-line,
+    .line.syntax--comment.cursor-line,
     .focus-line.cursor-line {
         opacity: 1;
     }
 
     // shadow lines around main cursor line
-    .line.comment,
+    .line.syntax--comment,
     .focus-line {
         opacity: 0.55;
     }
@@ -44,8 +44,8 @@
 
 
 // LINE NUMBER STYLING
-.focus-mode atom-text-editor::shadow,
-.focus-mode-shadow atom-text-editor::shadow
+.focus-mode atom-text-editor.editor,
+.focus-mode-shadow atom-text-editor.editor
 {
     .line-number
     {
