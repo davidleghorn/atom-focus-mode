@@ -1,6 +1,7 @@
 
 // FOCUS MODE
-.focus-mode atom-text-editor.editor
+.focus-mode atom-text-editor.editor,
+.focus-mode-context atom-text-editor.editor
 {
     .line { opacity: 0.15; }
 
@@ -12,7 +13,8 @@
 }
 
 // focus-mode with focus-line 55% opacity
-.focus-mode.line-55 atom-text-editor.editor
+.focus-mode.line-55 atom-text-editor.editor,
+.focus-mode-context.line-55 atom-text-editor.editor
 {
     .focus-line { opacity: 0.55; }
 
@@ -45,7 +47,8 @@
 
 // LINE NUMBER STYLING
 .focus-mode atom-text-editor.editor,
-.focus-mode-shadow atom-text-editor.editor
+.focus-mode-shadow atom-text-editor.editor,
+.focus-mode-context atom-text-editor.editor
 {
     .line-number
     {
@@ -58,7 +61,8 @@
 
 // FILE BROWSER SIDEBAR STYLING
 .focus-mode .tool-panel,
-.focus-mode-shadow .tool-panel
+.focus-mode-shadow .tool-panel,
+.focus-mode-context .tool-panel
 {
     li span,
     .list-item::before {

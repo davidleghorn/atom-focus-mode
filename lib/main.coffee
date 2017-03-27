@@ -41,6 +41,10 @@ module.exports =
             'atom-workspace',
             'atom-focus-mode:toggle-shadow-mode': => @focusModeManager.toggleFocusShadowMode()
         )
+        @subscriptions.add atom.commands.add(
+            'atom-workspace',
+            'atom-focus-mode:toggle-context-mode': => @focusModeManager.toggleFocusContextMode()
+        )
 
 
     deactivate: ->

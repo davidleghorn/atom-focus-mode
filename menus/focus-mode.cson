@@ -16,6 +16,10 @@
             'label': 'Toggle Focus Shadow Mode'
             'command': 'atom-focus-mode:toggle-shadow-mode'
           }
+          {
+            'label': 'Toggle Focus Context Mode'
+            'command': 'atom-focus-mode:toggle-context-mode'
+          }
       ]
     }
   ]
@@ -36,6 +40,10 @@
         {
           'label': 'Toggle Focus Shadow Mode'
           'command': 'atom-focus-mode:toggle-shadow-mode'
+        }
+        {
+          'label': 'Toggle Focus Context Mode'
+          'command': 'atom-focus-mode:toggle-context-mode'
         }
       ]
     ]

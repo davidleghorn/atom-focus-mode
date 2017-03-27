@@ -7,7 +7,8 @@
     "atom-workspace": [
       "atom-focus-mode:toggle",
       "atom-focus-mode:toggle-single-line",
-      "atom-focus-mode:toggle-shadow-mode"
+      "atom-focus-mode:toggle-shadow-mode",
+      "atom-focus-mode:toggle-context-mode"
     ]
   },
   "repository": "https://github.com/davidleghorn/atom-focus-mode",
