@@ -1,4 +1,7 @@
 
+## 0.7.0  (2016-03-27)
+* Deprecated shadow DOM selectors removed
+
 ## 0.6.0  (2016-01-07)
 * Added package setting to configure focus mode highlighted line opacity
 
