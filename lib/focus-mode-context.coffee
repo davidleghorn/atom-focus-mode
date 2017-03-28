@@ -52,21 +52,25 @@ class FocusContextMode extends FocusModeBase
         return matchedBufferRowNumber
 
 
-    getContextModeBufferEndRow: (cursorBufferRow, editor) =>
+    getContextModeBufferEndRow: (methodStartRow, editor) =>
         bufferLineCount = editor.getLineCount()
         matchedBufferRowNumber = bufferLineCount # default to last row in file
-        rowIndex = cursorBufferRow
+        rowIndex = methodStartRow
+        startRowIndent = editor.indentationForBufferRow(methodStartRow)
+        console.log("methodStartRow row indentation = ", startRowIndent)
 
         while rowIndex <= bufferLineCount
+            rowIndex = rowIndex + 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             console.log("getContextModeBufferEndRow \nrowIndex = ", rowIndex, " row text = ", rowText)
-            if(@isMethodStartRow(rowText, editor))
+            if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= startRowIndent)
                 matchedBufferRowNumber = rowIndex
                 console.log("getContextModeBufferEndRow matched row = ", matchedBufferRowNumber)
                 break
-            else
-                rowIndex = rowIndex + 1
+            # else
+            #     rowIndex = rowIndex + 1
 
+        # return editor.previousNonBlankRow(matchedBufferRowNumber)
         return matchedBufferRowNumber - 1
 
 
@@ -75,7 +79,10 @@ class FocusContextMode extends FocusModeBase
         console.log("current buffer row = ", cursorBufferRow)
         startRow = @getContextModeBufferStartRow(cursorBufferRow, editor)
         console.log("getContextModeBufferRange startRow = ", startRow)
-        endRow = @getContextModeBufferEndRow(cursorBufferRow, editor)
+        # startRowIndent = editor.indentationForBufferRow(startRow)
+        # console.log("start row indentation = ", startRowIndent)
+        endRow = @getContextModeBufferEndRow(startRow, editor)
+        # endRow = @getContextModeBufferEndRow(cursorBufferRow, editor, startRowIndent)
         console.log("getContextModeBufferRange endRow = ", endRow)
 
         return [[startRow, 0], [endRow, 0]]
