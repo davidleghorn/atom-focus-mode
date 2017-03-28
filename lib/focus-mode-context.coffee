@@ -11,14 +11,12 @@ class FocusContextMode extends FocusModeBase
         @focusContextBodyClassName = "focus-mode-context"
         @configSubscriptions = null #@registerConfigSubscriptions()
 
-
     on: =>
         @isActivated = true
         textEditor = @getActiveTextEditor()
         cursor = textEditor.getLastCursor()
         @contextModeOnCursorMove(cursor)
         @addCssClass(@getBodyTagElement(), @focusContextBodyClassName)
-
 
     off: =>
         @isActivated = false
@@ -31,11 +29,10 @@ class FocusContextMode extends FocusModeBase
         fileType = @getFileTypeForEditor(editor)
         if(fileType is "coffee")
             return /:\s*\(.*\)\s*(=>|->)/.test(rowText)
+        else if(fileType is "py")
+            return /\s*def\s*.*\s*\(.*\)\s*:/.test(rowText)
         else
             console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
-
-    # python regex will be almost same, but no arrows at end and starts with "def "
-    # e.g. def qsort(L):
 
 
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
@@ -101,7 +98,6 @@ class FocusContextMode extends FocusModeBase
 
     getContextModeMarkerForEditor: (editor) =>
         marker = @focusContextMarkerCache[editor.id]
-
         if not marker
             marker = @createContextModeMarker(editor)
             @focusContextMarkerCache[editor.id] = marker
@@ -112,7 +108,6 @@ class FocusContextMode extends FocusModeBase
     getFileTypeForEditor: (editor) =>
         fileType = @editorFileTypeCache[editor.id]
         console.log("fileType for editor ", editor.id, " from cache = ", fileType)
-
         if not fileType
             splitFileName = editor.getTitle().split(".")
             fileType = if splitFileName.length > 1 then splitFileName[1] else ""
