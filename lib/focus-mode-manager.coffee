@@ -37,16 +37,6 @@ class FocusModeManager
             @focusContextMode.contextModeOnCursorMove(obj.cursor)
 
 
-    toggleFocusMode: =>
-        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
-        @focusShadowModeOff() if @focusShadowMode.isActivated
-
-        if @focusMode.isActivated
-            @focusModeOff()
-        else
-            @focusModeOn()
-
-
     focusModeOn: =>
         @focusMode.on()
         @cursorEventSubscribers = @registerCursorEventHandlers()
@@ -55,6 +45,27 @@ class FocusModeManager
     focusModeOff: =>
         @focusMode.off()
         @cursorEventSubscribers.dispose()
+
+
+    focusShadowModeOff: =>
+        @focusShadowMode.off()
+        @cursorEventSubscribers.dispose()
+
+
+    focusContextModeOff: =>
+        @focusContextMode.off()
+        @cursorEventSubscribers.dispose()
+
+
+    toggleFocusMode: =>
+        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
+        @focusShadowModeOff() if @focusShadowMode.isActivated
+        @focusContextModeOff() if @focusContextMode.isActivated
+
+        if @focusMode.isActivated
+            @focusModeOff()
+        else
+            @focusModeOn()
 
 
     toggleFocusModeSingleLine: =>
@@ -70,19 +81,14 @@ class FocusModeManager
 
     toggleFocusShadowMode: =>
         @focusModeOff() if @focusMode.isActivated
-        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
         @focusContextModeOff() if @focusContextMode.isActivated
+        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
 
         if @focusShadowMode.isActivated
             @focusShadowModeOff()
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
             @focusShadowMode.on()
-
-
-    focusShadowModeOff: =>
-        @focusShadowMode.off()
-        @cursorEventSubscribers.dispose()
 
 
     toggleFocusContextMode: =>
@@ -95,11 +101,6 @@ class FocusModeManager
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
             @focusContextMode.on()
-
-
-    focusContextModeOff: =>
-        @focusContextMode.off()
-        @cursorEventSubscribers.dispose()
 
 
     registerCursorEventHandlers: =>
