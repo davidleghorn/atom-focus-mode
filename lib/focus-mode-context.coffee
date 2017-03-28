@@ -9,7 +9,6 @@ class FocusContextMode extends FocusModeBase
         @focusContextMarkerCache = {}
         @editorFileTypeCache = {}
         @focusContextBodyClassName = "focus-mode-context"
-        @configSubscriptions = null #@registerConfigSubscriptions()
 
     on: =>
         @isActivated = true
@@ -24,34 +23,32 @@ class FocusContextMode extends FocusModeBase
         @focusContextMarkerCache = {}
         @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
 
-    # isCoffeeScriptMethodSignature: (rowText) ->
-    #     return /:\s*\(.*\)\s*(=>|->)/.test(rowText)
-    #
-    # isPythonMethodSignature: (rowText) ->
-    #     return /\s*def\s*.*\s*\(.*\)\s*:/.test(rowText)
+
+    isCoffeeScriptMethodSignature: (lineText) ->
+        return /:\s*\(.*\)\s*(=>|->)/.test(lineText)
+
+
+    isPythonMethodSignature: (lineText) ->
+        return /\s*def\s*.*\s*\(.*\)\s*:/.test(lineText)
+
 
     isJavascriptFunctionSignature: (rowText) ->
-        # return /^.*\s*function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
         return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
 
 
     lineIsClosingCurly: (lineText) ->
-        console.log("line text = ", lineText, " is a clsoing curly = ", /^\s*}\s*$/.test(lineText))
+        console.log("NEW line text = ", lineText, " is a clsoing curly = ", /^\s*}\s*$/.test(lineText))
         return /^\s*}.*/.test(lineText)
-        # return /^\s*}\s*;?\s*$/.test(lineText)
 
 
     isMethodStartRow: (rowText, editor) =>
-        fileType = @getFileTypeForEditor(editor)
-        if(fileType is "coffee")
-            return /:\s*\(.*\)\s*(=>|->)/.test(rowText)
-        else if(fileType is "py")
-            return /\s*def\s*.*\s*\(.*\)\s*:/.test(rowText)
-        else if(fileType is "js")
-            return @isJavascriptFunctionSignature(rowText)
-        else
-            console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
-            return false
+        switch @getFileTypeForEditor(editor)
+            when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
+            when "py" then return @isPythonMethodSignature(rowText)
+            when "js" then return @isJavascriptFunctionSignature(rowText)
+            else
+                console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
+                return false
 
 
     # Get method/function start line/buffer row
@@ -92,29 +89,21 @@ class FocusContextMode extends FocusModeBase
                     break
 
             else if(fileType is "js")
-                console.log(">>>>>>>>>>>>>>>>>>>> XXX js rowIndex = ", rowIndex)
                 # finds a closing curly on same level of indentation as function/method start row
                 if(editor.indentationForBufferRow(rowIndex) is startRowIndent and @lineIsClosingCurly(rowText))
                     matchedBufferRowNumber = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it decorated
                     break
 
-
         console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched row = ", matchedBufferRowNumber)
 
-        # return editor.previousNonBlankRow(matchedBufferRowNumber)
         return matchedBufferRowNumber
 
 
     getContextModeBufferRange: (bufferPosition, editor) =>
         cursorBufferRow = bufferPosition.row
-        console.log("current buffer row = ", cursorBufferRow)
         startRow = @getContextModeBufferStartRow(cursorBufferRow, editor)
-        console.log("getContextModeBufferRange startRow = ", startRow)
-        # startRowIndent = editor.indentationForBufferRow(startRow)
-        # console.log("start row indentation = ", startRowIndent)
         endRow = @getContextModeBufferEndRow(startRow, editor)
-        # endRow = @getContextModeBufferEndRow(cursorBufferRow, editor, startRowIndent)
-        console.log("getContextModeBufferRange startRow = ", startRow, " and endRow = ", endRow)
+        console.log("getContextModeBufferRange cursorBufferRow = ", cursorBufferRow, " startRow = ", startRow, " and endRow = ", endRow)
 
         return [[startRow, 0], [endRow, 0]]
 
@@ -171,17 +160,7 @@ class FocusContextMode extends FocusModeBase
         marker.setHeadBufferPosition([endRow, 0])
 
 
-    dispose: =>
-        @configSubscriptions.dispose() if @configSubscriptions
-
+    # dispose: =>
+    #     @configSubscriptions.dispose() if @configSubscriptions
 
 module.exports = FocusContextMode
-
-
-# isMethodDecoration: (rowText) =>
-#     return /\s*@\S*\s*/.test(rowText)
-#
-# if(@isMethodDecoration(editor.lineTextForBufferRow(rowIndex))) {
-#     # As line is a decorator, iterate forward to find next line matching a method signature
-#     return @getContextModeBufferEndRow(rowIndex, editor)
-# }
