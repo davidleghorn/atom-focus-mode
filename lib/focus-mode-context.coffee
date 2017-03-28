@@ -24,7 +24,6 @@ class FocusContextMode extends FocusModeBase
         @focusContextMarkerCache = {}
         @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
 
-
     # isCoffeeScriptMethodSignature: (rowText) ->
     #     return /:\s*\(.*\)\s*(=>|->)/.test(rowText)
     #
@@ -32,13 +31,14 @@ class FocusContextMode extends FocusModeBase
     #     return /\s*def\s*.*\s*\(.*\)\s*:/.test(rowText)
 
     isJavascriptFunctionSignature: (rowText) ->
-        # return /^.*\s+function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
-        return /^.*\s*function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
+        # return /^.*\s*function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
+        return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
 
 
     lineIsClosingCurly: (lineText) ->
         console.log("line text = ", lineText, " is a clsoing curly = ", /^\s*}\s*$/.test(lineText))
-        return /^\s*}\s*;?\s*$/.test(lineText)
+        return /^\s*}.*/.test(lineText)
+        # return /^\s*}\s*;?\s*$/.test(lineText)
 
 
     isMethodStartRow: (rowText, editor) =>
@@ -92,6 +92,7 @@ class FocusContextMode extends FocusModeBase
                     break
 
             else if(fileType is "js")
+                console.log(">>>>>>>>>>>>>>>>>>>> XXX js rowIndex = ", rowIndex)
                 # finds a closing curly on same level of indentation as function/method start row
                 if(editor.indentationForBufferRow(rowIndex) is startRowIndent and @lineIsClosingCurly(rowText))
                     matchedBufferRowNumber = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it decorated
@@ -113,7 +114,7 @@ class FocusContextMode extends FocusModeBase
         # console.log("start row indentation = ", startRowIndent)
         endRow = @getContextModeBufferEndRow(startRow, editor)
         # endRow = @getContextModeBufferEndRow(cursorBufferRow, editor, startRowIndent)
-        console.log("getContextModeBufferRange endRow = ", endRow)
+        console.log("getContextModeBufferRange startRow = ", startRow, " and endRow = ", endRow)
 
         return [[startRow, 0], [endRow, 0]]
 
