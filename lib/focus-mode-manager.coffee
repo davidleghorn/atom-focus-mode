@@ -91,7 +91,6 @@ class FocusModeManager
         @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
 
         if @focusContextMode.isActivated
-            console.log("toggleFocusContextMode @focusContextMode.isActivated = ", @focusContextMode.isActivated)
             @focusContextModeOff()
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
