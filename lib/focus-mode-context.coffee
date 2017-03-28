@@ -7,6 +7,7 @@ class FocusContextMode extends FocusModeBase
         super('FocusContextMode')
         @isActivated = false
         @focusContextMarkerCache = {}
+        @editorFileTypeCache = {}
         @focusContextBodyClassName = "focus-mode-context"
         @configSubscriptions = null #@registerConfigSubscriptions()
 
@@ -26,14 +27,12 @@ class FocusContextMode extends FocusModeBase
         @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
 
 
-    # TODO: more generic isMethodStart(language) which then applies the appropraite
-    # language regex ...e.g. json block where key is language and value will be regex
-    # Need to identify file/language type when mode activated or new file focussed
-    # could store in a cache - "editorId": "language" as per @focusContextMarkerCache approach
-    isMethodStartRow: (rowText) =>
-        regex = /:\s*\(.*\)\s*(=>|->)/
-        console.log("isMethodStartRow rowText = ", rowText, "\nIS MATCH = ", regex.test(rowText))
-        return regex.test(rowText)
+    isMethodStartRow: (rowText, editor) =>
+        fileType = @getFileTypeForEditor(editor)
+        if(fileType is "coffee")
+            return /:\s*\(.*\)\s*(=>|->)/.test(rowText)
+        else
+            console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
 
     # python regex will be almost same, but no arrows at end and starts with "def "
     # e.g. def qsort(L):
@@ -46,7 +45,7 @@ class FocusContextMode extends FocusModeBase
         while rowIndex >= 0
             rowText = editor.lineTextForBufferRow(rowIndex)
             console.log("rowIndex = ", rowIndex, " row text = ", rowText)
-            if(@isMethodStartRow(rowText))
+            if(@isMethodStartRow(rowText, editor))
                 matchedBufferRowNumber = rowIndex
                 console.log(">>>>>>>>was matched row = ", matchedBufferRowNumber)
                 break
@@ -64,7 +63,7 @@ class FocusContextMode extends FocusModeBase
         while rowIndex <= bufferLineCount
             rowText = editor.lineTextForBufferRow(rowIndex)
             console.log("getContextModeBufferEndRow \nrowIndex = ", rowIndex, " row text = ", rowText)
-            if(@isMethodStartRow(rowText))
+            if(@isMethodStartRow(rowText, editor))
                 matchedBufferRowNumber = rowIndex
                 console.log("getContextModeBufferEndRow matched row = ", matchedBufferRowNumber)
                 break
@@ -110,9 +109,24 @@ class FocusContextMode extends FocusModeBase
         return marker
 
 
+    getFileTypeForEditor: (editor) =>
+        fileType = @editorFileTypeCache[editor.id]
+        console.log("fileType for editor ", editor.id, " from cache = ", fileType)
+
+        if not fileType
+            splitFileName = editor.getTitle().split(".")
+            fileType = if splitFileName.length > 1 then splitFileName[1] else ""
+            @editorFileTypeCache[editor.id] = fileType
+            console.log("fileType for editor ", editor.id, " not in cache, fileType = ", fileType)
+
+        return fileType
+
+
     contextModeOnCursorMove: (cursor) =>
         editor = cursor.editor
         marker = @getContextModeMarkerForEditor(editor)
+        fileType = @getFileTypeForEditor(editor)
+        console.log("contextModeOnCursorMove fileType = ", fileType)
         bufferPosition = editor.getCursorBufferPosition()
         range = @getContextModeBufferRange(bufferPosition, editor)
         console.log("contextModeOnCursorMove range = ", range)
