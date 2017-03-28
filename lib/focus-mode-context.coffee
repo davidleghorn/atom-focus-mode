@@ -26,24 +26,29 @@ class FocusContextMode extends FocusModeBase
         @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
 
 
-    isCoffeeScriptMethodStart: (rowText) =>
+    # TODO: more generic isMethodStart(language) which then applies the appropraite
+    # language regex ...e.g. json block where key is language and value will be regex
+    # Need to identify file/language type when mode activated or new file focussed
+    # could store in a cache - "editorId": "language" as per @focusContextMarkerCache approach
+    isMethodStartRow: (rowText) =>
         regex = /:\s*\(.*\)\s*(=>|->)/
-        console.log("isCoffeeScriptMethodStart rowText = ", rowText, "\nIS MATCH = ", regex.test(rowText))
+        console.log("isMethodStartRow rowText = ", rowText, "\nIS MATCH = ", regex.test(rowText))
         return regex.test(rowText)
+
+    # python regex will be almost same, but no arrows at end and starts with "def "
+    # e.g. def qsort(L):
 
 
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
         matchedBufferRowNumber = 0 # default to first row in file
         rowIndex = cursorBufferRow
-        matched = false
 
-        while rowIndex >= 0 and !matched
+        while rowIndex >= 0
             rowText = editor.lineTextForBufferRow(rowIndex)
             console.log("rowIndex = ", rowIndex, " row text = ", rowText)
-            if(@isCoffeeScriptMethodStart(rowText))
-                matched = true
+            if(@isMethodStartRow(rowText))
                 matchedBufferRowNumber = rowIndex
-                console.log("was matched row = ", matchedBufferRowNumber)
+                console.log(">>>>>>>>was matched row = ", matchedBufferRowNumber)
                 break
             else
                 rowIndex = rowIndex - 1
@@ -51,15 +56,22 @@ class FocusContextMode extends FocusModeBase
         return matchedBufferRowNumber
 
 
-    getContextModeBufferEndRow: (cursorBufferRow, bufferLineCount) =>
-        # We need +1 as when atom decorates a marker as type line, it doesn't
-        # include a line decoration for the endRow marker in a buffer range
-        endRow = cursorBufferRow
+    getContextModeBufferEndRow: (cursorBufferRow, editor) =>
+        bufferLineCount = editor.getLineCount()
+        matchedBufferRowNumber = bufferLineCount # default to last row in file
+        rowIndex = cursorBufferRow
 
-        if endRow > (bufferLineCount - 1)
-            endRow = bufferLineCount - 1
+        while rowIndex <= bufferLineCount
+            rowText = editor.lineTextForBufferRow(rowIndex)
+            console.log("getContextModeBufferEndRow \nrowIndex = ", rowIndex, " row text = ", rowText)
+            if(@isMethodStartRow(rowText))
+                matchedBufferRowNumber = rowIndex
+                console.log("getContextModeBufferEndRow matched row = ", matchedBufferRowNumber)
+                break
+            else
+                rowIndex = rowIndex + 1
 
-        return endRow
+        return matchedBufferRowNumber - 1
 
 
     getContextModeBufferRange: (bufferPosition, editor) =>
@@ -67,15 +79,9 @@ class FocusContextMode extends FocusModeBase
         console.log("current buffer row = ", cursorBufferRow)
         startRow = @getContextModeBufferStartRow(cursorBufferRow, editor)
         console.log("getContextModeBufferRange startRow = ", startRow)
-        endRow = 150 #@getContextModeBufferEndRow(cursorBufferRow, bufferLineCount)
-        # console.log("buffer position = ", bufferPosition)
-        # descriptor = editor.scopeDescriptorForBufferPosition(bufferPosition)
-        # console.log("descriptor = ", descriptor)
-        # return [[startRow, 0], [endRow, 0]]
-        # # scope = ['source.js', 'meta.function.js', 'entity.name.function.js']
-        # scope = 'entity.name.function.js'
-        # range = editor.bufferRangeForScopeAtCursor("meta.method-call.js")
-        # console.log("range = ", range)
+        endRow = @getContextModeBufferEndRow(cursorBufferRow, editor)
+        console.log("getContextModeBufferRange endRow = ", endRow)
+
         return [[startRow, 0], [endRow, 0]]
 
 
@@ -106,13 +112,10 @@ class FocusContextMode extends FocusModeBase
 
     contextModeOnCursorMove: (cursor) =>
         editor = cursor.editor
-        # cursorRow = cursor.getBufferRow()
         marker = @getContextModeMarkerForEditor(editor)
         bufferPosition = editor.getCursorBufferPosition()
         range = @getContextModeBufferRange(bufferPosition, editor)
         console.log("contextModeOnCursorMove range = ", range)
-        # startRow = @getContextModeBufferStartRow(cursorRow)
-        # endRow = 150 #@getContextModeBufferEndRow(cursorRow, editor.getLineCount())
         startRow = range[0][0]
         endRow = range[1][0]
         console.log("startRow = ", startRow, " endRow = ", endRow)

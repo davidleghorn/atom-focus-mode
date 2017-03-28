@@ -1,7 +1,6 @@
 
 // FOCUS MODE
-.focus-mode atom-text-editor.editor,
-.focus-mode-context atom-text-editor.editor
+.focus-mode atom-text-editor.editor
 {
     .line { opacity: 0.15; }
 
@@ -26,7 +25,8 @@
 
 
 // FOCUS SHADOW MODE
-.focus-mode-shadow atom-text-editor.editor
+.focus-mode-shadow atom-text-editor.editor,
+.focus-mode-context atom-text-editor.editor
 {
     .line { opacity: 0.15; }
 
@@ -40,7 +40,7 @@
     // shadow lines around main cursor line
     .line.syntax--comment,
     .focus-line {
-        opacity: 0.55;
+        opacity: 0.65;
     }
 }
 
