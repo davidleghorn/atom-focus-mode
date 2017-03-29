@@ -23,54 +23,42 @@ class FocusContextMode extends FocusModeBase
         @focusContextMarkerCache = {}
         @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
 
-
     isCoffeeScriptMethodSignature: (lineText) ->
         return /:\s*\(.*\)\s*(=>|->)/.test(lineText)
 
-
     isPythonMethodSignature: (lineText) ->
         return /\s*def\s*.*\s*\(.*\)\s*:/.test(lineText)
-
 
     isJavascriptFunctionSignature: (rowText) ->
         return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
 
     isIfStatement: (lineText) ->
-        isIf = /^\s*if*\s*\({1}.*/.test(lineText)
-        console.log("lineText = ", lineText, " isIf = ", isIf)
-        return isIf
+        return /^\s*if*\s*\({1}.*/.test(lineText)
 
     isSwitchStatement: (lineText) ->
-        isSwitch = /^\s*switch*\s*\({1}.*/.test(lineText)
-        console.log("lineText = ", lineText, " isSwitch = ", isSwitch)
-        return isSwitch
+        return /^\s*switch*\s*\({1}.*/.test(lineText)
 
     isWhileStatement: (lineText) ->
-        iswhile = /^\s*while*\s*\({1}.*/.test(lineText)
-        console.log("lineText = ", lineText, " isWhile = ", iswhile)
-        return iswhile
+        return /^\s*while*\s*\({1}.*/.test(lineText)
 
     isEs6MethodSignature: (lineText) =>
-        es6MethodRegex = /^\s*[a-zA-Z0-9_-]*\s*\({1}.*\){1}\s*{\s*$/
-        # as regex will also match if, while and switch statements, test first that line is neither if nor switch
+        # es6 method regex will also match if, while and switch statements, test first if line is if/switch or while statement
         if (@isIfStatement(lineText) or @isSwitchStatement(lineText) or @isWhileStatement(lineText))
             return false
 
-        return es6MethodRegex.test(lineText)
-
+        return /^\s*[a-zA-Z0-9_-]*\s*\({1}.*\){1}\s*{\s*$/.test(lineText)
 
     lineIsClosingCurly: (lineText) ->
-        console.log("NEW line text = ", lineText, " is a clsoing curly = ", /^\s*}\s*$/.test(lineText))
         return /^\s*}.*/.test(lineText)
 
-
     isMethodStartRow: (rowText, editor) =>
-        switch @getFileTypeForEditor(editor)
+        fileType = @getFileTypeForEditor(editor)
+        switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
             when "js" then return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
-                console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
+                console.log("Context focus does not support file type ", fileType, " at the moment.")
                 return false
 
 
@@ -81,10 +69,8 @@ class FocusContextMode extends FocusModeBase
 
         while rowIndex >= 0
             rowText = editor.lineTextForBufferRow(rowIndex)
-            console.log("rowIndex = ", rowIndex, " row text = ", rowText)
             if(@isMethodStartRow(rowText, editor))
                 matchedBufferRowNumber = rowIndex
-                console.log(">>>>>>>>was matched row = ", matchedBufferRowNumber)
                 break
             else
                 rowIndex = rowIndex - 1
@@ -92,23 +78,21 @@ class FocusContextMode extends FocusModeBase
         return matchedBufferRowNumber
 
 
-    # Get method/function end line/buffer row
     getContextModeBufferEndRow: (methodStartRow, editor) =>
         bufferLineCount = editor.getLineCount()
         fileType = @getFileTypeForEditor(editor)
         matchedBufferRowNumber = bufferLineCount # default to last row in file
         rowIndex = methodStartRow
         startRowIndent = editor.indentationForBufferRow(methodStartRow)
-        console.log("methodStartRow row indentation = ", startRowIndent)
 
         while rowIndex <= bufferLineCount
             rowIndex = rowIndex + 1
             rowText = editor.lineTextForBufferRow(rowIndex)
 
             if(fileType is "coffee" or fileType is "py")
-                # finds end of method body by finding next method start or end of file, then moves back up 1 line
+                # finds end of method body by finding next method start or end of file
                 if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= startRowIndent)
-                    matchedBufferRowNumber = rowIndex # -1
+                    matchedBufferRowNumber = rowIndex
                     break
 
             else if(fileType is "js")
@@ -117,8 +101,7 @@ class FocusContextMode extends FocusModeBase
                     matchedBufferRowNumber = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it decorated
                     break
 
-        console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched row = ", matchedBufferRowNumber)
-
+        # console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched end row = ", matchedBufferRowNumber)
         return matchedBufferRowNumber
 
 
@@ -126,7 +109,7 @@ class FocusContextMode extends FocusModeBase
         cursorBufferRow = bufferPosition.row
         startRow = @getContextModeBufferStartRow(cursorBufferRow, editor)
         endRow = @getContextModeBufferEndRow(startRow, editor)
-        console.log("getContextModeBufferRange cursorBufferRow = ", cursorBufferRow, " startRow = ", startRow, " and endRow = ", endRow)
+        # console.log("getContextModeBufferRange cursorBufferRow = ", cursorBufferRow, " startRow = ", startRow, " and endRow = ", endRow)
 
         return [[startRow, 0], [endRow, 0]]
 
@@ -157,12 +140,10 @@ class FocusContextMode extends FocusModeBase
 
     getFileTypeForEditor: (editor) =>
         fileType = @editorFileTypeCache[editor.id]
-        console.log("fileType for editor ", editor.id, " from cache = ", fileType)
         if not fileType
             splitFileName = editor.getTitle().split(".")
             fileType = if splitFileName.length > 1 then splitFileName[1] else ""
             @editorFileTypeCache[editor.id] = fileType
-            console.log("fileType for editor ", editor.id, " not in cache, fileType = ", fileType)
 
         return fileType
 
@@ -170,20 +151,12 @@ class FocusContextMode extends FocusModeBase
     contextModeOnCursorMove: (cursor) =>
         editor = cursor.editor
         marker = @getContextModeMarkerForEditor(editor)
-        fileType = @getFileTypeForEditor(editor)
-        console.log("contextModeOnCursorMove fileType = ", fileType)
         bufferPosition = editor.getCursorBufferPosition()
         range = @getContextModeBufferRange(bufferPosition, editor)
-        console.log("contextModeOnCursorMove range = ", range)
         startRow = range[0][0]
         endRow = range[1][0]
-        console.log("startRow = ", startRow, " endRow = ", endRow)
-
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
 
-
-    # dispose: =>
-    #     @configSubscriptions.dispose() if @configSubscriptions
 
 module.exports = FocusContextMode
