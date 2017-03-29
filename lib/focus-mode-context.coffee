@@ -35,6 +35,29 @@ class FocusContextMode extends FocusModeBase
     isJavascriptFunctionSignature: (rowText) ->
         return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
 
+    isIfStatement: (lineText) ->
+        isIf = /^\s*if*\s*\({1}.*/.test(lineText)
+        console.log("lineText = ", lineText, " isIf = ", isIf)
+        return isIf
+
+    isSwitchStatement: (lineText) ->
+        isSwitch = /^\s*switch*\s*\({1}.*/.test(lineText)
+        console.log("lineText = ", lineText, " isSwitch = ", isSwitch)
+        return isSwitch
+
+    isWhileStatement: (lineText) ->
+        iswhile = /^\s*while*\s*\({1}.*/.test(lineText)
+        console.log("lineText = ", lineText, " isWhile = ", iswhile)
+        return iswhile
+
+    isEs6MethodSignature: (lineText) =>
+        es6MethodRegex = /^\s*[a-zA-Z0-9_-]*\s*\({1}.*\){1}\s*{\s*$/
+        # as regex will also match if, while and switch statements, test first that line is neither if nor switch
+        if (@isIfStatement(lineText) or @isSwitchStatement(lineText) or @isWhileStatement(lineText))
+            return false
+
+        return es6MethodRegex.test(lineText)
+
 
     lineIsClosingCurly: (lineText) ->
         console.log("NEW line text = ", lineText, " is a clsoing curly = ", /^\s*}\s*$/.test(lineText))
@@ -45,7 +68,7 @@ class FocusContextMode extends FocusModeBase
         switch @getFileTypeForEditor(editor)
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
-            when "js" then return @isJavascriptFunctionSignature(rowText)
+            when "js" then return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
                 console.log("isMethodStartRow FILE TYPE NOT MATCHED fileType = ", fileType)
                 return false
