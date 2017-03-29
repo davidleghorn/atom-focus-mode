@@ -64,6 +64,15 @@ class FocusContextMode extends FocusModeBase
     getAtomNotificationsInstance: ()->
         return atom.notifications
 
+    moveBackToFirstEmptyLine: (rowIndex, editor)->
+        index = rowIndex
+        while index > 0
+            index = index - 1
+            if(/^\s*$/.test(editor.lineTextForBufferRow(index)))
+                break;
+
+        # console.log("moveBackToFirstEmptyLine index = ", index, " and starting rowIndex was ", rowIndex)
+        return index
 
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
         matchedBufferRowNumber = 0 # default to first row in file
@@ -94,7 +103,8 @@ class FocusContextMode extends FocusModeBase
             if(fileType is "coffee" or fileType is "py")
                 # finds end of method body by finding next method start or end of file
                 if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= startRowIndent)
-                    matchedBufferRowNumber = rowIndex
+                    matchedBufferRowNumber = @moveBackToFirstEmptyLine(rowIndex, editor)
+                    # matchedBufferRowNumber = rowIndex
                     break
 
             else if(fileType is "js")
