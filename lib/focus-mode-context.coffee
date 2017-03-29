@@ -58,11 +58,13 @@ class FocusContextMode extends FocusModeBase
             when "py" then return @isPythonMethodSignature(rowText)
             when "js" then return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
-                console.log("Context focus does not support file type ", fileType, " at the moment.")
+                @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Context Focus mode.\n\nContext focus mode currently supports js, coffee and py file extensions.");
                 return false
 
+    getAtomNotificationsInstance: ()->
+        return atom.notifications
 
-    # Get method/function start line/buffer row
+
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
         matchedBufferRowNumber = 0 # default to first row in file
         rowIndex = cursorBufferRow
