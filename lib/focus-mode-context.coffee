@@ -110,6 +110,11 @@ class FocusContextMode extends FocusModeBase
             rowIndex = rowIndex - 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
+            # if a class start line is found stop here, this is enclosing scope
+            if(@isClassStartLine(rowText))
+                matchedBufferRowNumber = rowIndex
+                break
+
             if(@isMethodStartRow(rowText, editor))
                 if(fileType is "js" and closingCurlyRowIndents.indexOf(rowIndent) > -1)
                     # we matched a method/function start row but at incorrect (too deep) scope - continue moving up file lines
