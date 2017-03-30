@@ -58,6 +58,13 @@ class FocusContextMode extends FocusModeBase
         console.log("lineContainsOpeningCurly = ", /^.*}.*/.test(lineText)," lineText = ", lineText)
         return /^.*{.*/.test(lineText)
 
+    lineIsDecorator: (lineText) ->
+        console.log(">>>>> lineText = ", lineText, " isDecorator = ", /^\s*@{1}[a-zA-Z0-9_-]*\s*/.test(lineText))
+        return /^\s*@{1}[a-zA-Z0-9_-]*\s*/.test(lineText)
+
+    lineIsComment: (lineText) ->
+        console.log(">>>>> lineText = ", lineText, " is comment = ", /^\s*(#|\/\/|\/\*).*$/.test(lineText))
+        return /^\s*(#|\/\/|\/\*).*$/.test(lineText)
 
     isMethodStartRow: (rowText, editor) =>
         fileType = @getFileTypeForEditor(editor)
@@ -72,6 +79,17 @@ class FocusContextMode extends FocusModeBase
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Context Focus mode.\n\nContext focus mode currently supports js, coffee and py file extensions.");
                 return false
+
+    moveBackToFirstNonDecoratorOrCommentLine: (rowIndex, editor) =>
+        index = rowIndex
+        while index > 0
+            index = index - 1
+            lineText = editor.lineTextForBufferRow(index)
+            if(!@lineIsDecorator(lineText) and !@lineIsComment(lineText))
+                break;
+
+        console.log("first non decorator or comment row is index = ", index)
+        return index
 
     getAtomNotificationsInstance: ()->
         return atom.notifications
@@ -138,7 +156,11 @@ class FocusContextMode extends FocusModeBase
             if(fileType is "coffee" or fileType is "py")
                 # finds end of method body by finding next method start or end of file
                 if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= methodStartRowIndent)
-                    matchedBufferRowNumber = rowIndex # @moveBackToFirstEmptyLine(rowIndex, editor)
+                    matchedBufferRowNumber = rowIndex
+                    previousLineText = editor.lineTextForBufferRow(rowIndex - 1)
+                    if(@lineIsDecorator(previousLineText) or @lineIsComment(previousLineText))
+                        matchedBufferRowNumber = @moveBackToFirstNonDecoratorOrCommentLine(rowIndex, editor)
+                        console.log("MATCHED DECORATOR or comment moveBackToFirstNonDecoratorOrCommentLine = ", matchedBufferRowNumber)
                     break
 
             else if(fileType is "js")
