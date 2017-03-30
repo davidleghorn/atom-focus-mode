@@ -5,10 +5,10 @@
   "description": "Fades editor content and highlights only the lines you are working on.",
   "activationCommands": {
     "atom-workspace": [
-      "atom-focus-mode:toggle",
-      "atom-focus-mode:toggle-single-line",
-      "atom-focus-mode:toggle-shadow-mode",
-      "atom-focus-mode:toggle-context-mode"
+      "atom-focus-mode:toggle-cursor-focus",
+      "atom-focus-mode:toggle-single-line-focus",
+      "atom-focus-mode:toggle-shadow-focus",
+      "atom-focus-mode:toggle-context-focus"
     ]
   },
   "repository": "https://github.com/davidleghorn/atom-focus-mode",
