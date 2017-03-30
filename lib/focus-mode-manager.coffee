@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 
-FocusCursorMode = require './focus-mode'
+FocusCursorMode = require './focus-cursor-mode'
 FocusContextMode = require './focus-mode-context'
 FocusShadowMode = require './focus-mode-shadow'
 FocusSingleLineMode = require './focus-mode-single-line'
@@ -68,7 +68,7 @@ class FocusModeManager
             @focusCursorModeOn()
 
 
-    toggleFocusModeSingleLine: =>
+    toggleFocusSingleLineMode: =>
         @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusContextModeOff() if @focusContextMode.isActivated

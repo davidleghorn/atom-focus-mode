@@ -31,19 +31,19 @@ module.exports =
         @subscriptions = new CompositeDisposable()
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle': => @focusModeManager.toggleCursorFocusMode()
+            'atom-focus-mode:toggle-cursor-focus': => @focusModeManager.toggleCursorFocusMode()
         )
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle-single-line': => @focusModeManager.toggleFocusModeSingleLine()
+            'atom-focus-mode:toggle-single-line-focus': => @focusModeManager.toggleFocusSingleLineMode()
         )
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle-shadow-mode': => @focusModeManager.toggleFocusShadowMode()
+            'atom-focus-mode:toggle-shadow-focus': => @focusModeManager.toggleFocusShadowMode()
         )
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle-context-mode': => @focusModeManager.toggleFocusContextMode()
+            'atom-focus-mode:toggle-context-focus': => @focusModeManager.toggleFocusContextMode()
         )
 
 

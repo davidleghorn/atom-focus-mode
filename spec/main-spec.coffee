@@ -19,7 +19,7 @@ describe "Main", ->
             expect(focusModePackage.subscriptions.disposables.size).toEqual(4)
 
 
-    describe "when the 'atom-focus-mode:toggle' event is triggered", ->
+    describe "when the 'atom-focus-mode:toggle-cursor-focus' event is triggered", ->
 
         it "should call focus mode method toggleCursorFocusMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
@@ -27,25 +27,25 @@ describe "Main", ->
 
             spyOn(focusModePackage.focusModeManager, "toggleCursorFocusMode")
 
-            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle'
+            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle-cursor-focus'
 
             expect(focusModePackage.focusModeManager.toggleCursorFocusMode).toHaveBeenCalled()
 
 
-    describe "when the 'atom-focus-mode:toggle-single-line' event is triggered", ->
+    describe "when the 'atom-focus-mode:toggle-single-line-focus' event is triggered", ->
 
-        it "should call focus mode method toggleFocusModeSingleLine()", ->
+        it "should call focus mode method toggleFocusSingleLineMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
             focusModePackage.activate()
 
-            spyOn(focusModePackage.focusModeManager, "toggleFocusModeSingleLine")
+            spyOn(focusModePackage.focusModeManager, "toggleFocusSingleLineMode")
 
-            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle-single-line'
+            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle-single-line-focus'
 
-            expect(focusModePackage.focusModeManager.toggleFocusModeSingleLine).toHaveBeenCalled()
+            expect(focusModePackage.focusModeManager.toggleFocusSingleLineMode).toHaveBeenCalled()
 
 
-    describe "when the 'atom-focus-mode:toggle-shadow-mode' event is triggered", ->
+    describe "when the 'atom-focus-mode:toggle-shadow-focus' event is triggered", ->
 
         it "should call focus mode method toggleFocusShadowMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
@@ -53,7 +53,7 @@ describe "Main", ->
 
             spyOn(focusModePackage.focusModeManager, "toggleFocusShadowMode")
 
-            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle-shadow-mode'
+            atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle-shadow-focus'
 
             expect(focusModePackage.focusModeManager.toggleFocusShadowMode).toHaveBeenCalled()
 

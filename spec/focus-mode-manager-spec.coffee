@@ -1,8 +1,8 @@
 
 FocusModeManager = require '../lib/focus-mode-manager'
-FocusMode = require '../lib/focus-mode'
-FocusShadowMode = require '../lib/focus-mode-shadow'
-FocusModeSingleLine = require '../lib/focus-mode-single-line'
+# FocusMode = require '../lib/focus-cursor-mode'
+# FocusShadowMode = require '../lib/focus-mode-shadow'
+# FocusModeSingleLine = require '../lib/focus-mode-single-line'
 
 describe "FocusModeManager", ->
 
@@ -137,30 +137,30 @@ describe "FocusModeManager", ->
             expect(cursorEventSubscribers.dispose).toHaveBeenCalled()
 
 
-    describe "toggleFocusModeSingleLine", ->
+    describe "toggleFocusSingleLineMode", ->
 
         it "should call focusCursorModeOff() if focusCursorMode is activated", ->
             spyOn(focusModeManager, "focusCursorModeOff").andCallFake(->)
             focusModeManager.focusCursorMode.isActivated = true
-            focusModeManager.toggleFocusModeSingleLine()
+            focusModeManager.toggleFocusSingleLineMode()
             expect(focusModeManager.focusCursorModeOff).toHaveBeenCalled()
 
         it "should call focusShadowModeOff() if isActivated is true", ->
             spyOn(focusModeManager, "focusShadowModeOff").andCallFake(->)
             focusModeManager.focusShadowMode.isActivated = true
-            focusModeManager.toggleFocusModeSingleLine()
+            focusModeManager.toggleFocusSingleLineMode()
             expect(focusModeManager.focusShadowModeOff).toHaveBeenCalled()
 
         it "should call focusSingleLineMode.off() when focusSingleLineMode.isActivated is true", ->
             spyOn(focusModeManager.focusSingleLineMode, "off").andCallFake(->)
             focusModeManager.focusSingleLineMode.isActivated = true
-            focusModeManager.toggleFocusModeSingleLine()
+            focusModeManager.toggleFocusSingleLineMode()
             expect(focusModeManager.focusSingleLineMode.off).toHaveBeenCalled()
 
         it "should call focusSingleLineMode.on() when focusSingleLineMode.isActivated is false", ->
             spyOn(focusModeManager.focusSingleLineMode, "on").andCallFake(->)
             focusModeManager.focusSingleLineMode.isActivated = false
-            focusModeManager.toggleFocusModeSingleLine()
+            focusModeManager.toggleFocusSingleLineMode()
             expect(focusModeManager.focusSingleLineMode.on).toHaveBeenCalled()
 
 

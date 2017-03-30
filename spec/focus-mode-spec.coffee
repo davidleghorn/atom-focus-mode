@@ -1,13 +1,13 @@
-FocusMode = require '../lib/focus-mode'
+FocusCursorMode = require '../lib/focus-cursor-mode'
 
 
-describe "FocusMode", ->
+describe "FocusCursorMode", ->
 
     focusMode = null
     bodyTagElem = {className: ""}
 
     beforeEach ->
-        focusMode = new FocusMode()
+        focusMode = new FocusCursorMode()
         spyOn(focusMode, "getBodyTagElement").andReturn(bodyTagElem)
 
 
