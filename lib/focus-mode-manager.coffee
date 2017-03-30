@@ -1,23 +1,23 @@
 {CompositeDisposable} = require 'atom'
 
-FocusMode = require './focus-mode'
-FocusModeContext = require './focus-mode-context'
+FocusCursorMode = require './focus-mode'
+FocusContextMode = require './focus-mode-context'
 FocusShadowMode = require './focus-mode-shadow'
-FocusModeSingleLine = require './focus-mode-single-line'
+FocusSingleLineMode = require './focus-mode-single-line'
 
 class FocusModeManager
 
     constructor: ->
         @cursorEventSubscribers = null
-        @focusMode = new FocusMode()
+        @focusContextMode = new FocusContextMode()
+        @focusCursorMode = new FocusCursorMode()
         @focusShadowMode = new FocusShadowMode()
-        @focusModeSingleLine = new FocusModeSingleLine()
-        @focusContextMode = new FocusModeContext()
+        @focusSingleLineMode = new FocusSingleLineMode()
 
 
     didAddCursor: (cursor) =>
-        if @focusMode.isActivated
-            @focusMode.focusLine(cursor)
+        if @focusCursorMode.isActivated
+            @focusCursorMode.focusLine(cursor)
 
         if @focusShadowMode.isActivated
             @focusShadowMode.shadowModeOnCursorMove(cursor)
@@ -27,8 +27,8 @@ class FocusModeManager
 
 
     didChangeCursorPosition: (obj) =>
-        if @focusMode.isActivated
-            @focusMode.focusLine(obj.cursor)
+        if @focusCursorMode.isActivated
+            @focusCursorMode.focusLine(obj.cursor)
 
         if @focusShadowMode.isActivated
             @focusShadowMode.shadowModeOnCursorMove(obj.cursor)
@@ -37,13 +37,13 @@ class FocusModeManager
             @focusContextMode.contextModeOnCursorMove(obj.cursor)
 
 
-    focusModeOn: =>
-        @focusMode.on()
+    focusCursorModeOn: =>
+        @focusCursorMode.on()
         @cursorEventSubscribers = @registerCursorEventHandlers()
 
 
-    focusModeOff: =>
-        @focusMode.off()
+    focusCursorModeOff: =>
+        @focusCursorMode.off()
         @cursorEventSubscribers.dispose()
 
 
@@ -57,32 +57,32 @@ class FocusModeManager
         @cursorEventSubscribers.dispose()
 
 
-    toggleFocusMode: =>
-        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
+    toggleCursorFocusMode: =>
+        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusContextModeOff() if @focusContextMode.isActivated
 
-        if @focusMode.isActivated
-            @focusModeOff()
+        if @focusCursorMode.isActivated
+            @focusCursorModeOff()
         else
-            @focusModeOn()
+            @focusCursorModeOn()
 
 
     toggleFocusModeSingleLine: =>
-        @focusModeOff() if @focusMode.isActivated
+        @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusContextModeOff() if @focusContextMode.isActivated
 
-        if @focusModeSingleLine.isActivated
-            @focusModeSingleLine.off()
+        if @focusSingleLineMode.isActivated
+            @focusSingleLineMode.off()
         else
-            @focusModeSingleLine.on()
+            @focusSingleLineMode.on()
 
 
     toggleFocusShadowMode: =>
-        @focusModeOff() if @focusMode.isActivated
+        @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusContextModeOff() if @focusContextMode.isActivated
-        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
+        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
 
         if @focusShadowMode.isActivated
             @focusShadowModeOff()
@@ -92,9 +92,9 @@ class FocusModeManager
 
 
     toggleFocusContextMode: =>
-        @focusModeOff() if @focusMode.isActivated
+        @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
-        @focusModeSingleLine.off() if @focusModeSingleLine.isActivated
+        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
 
         if @focusContextMode.isActivated
             @focusContextModeOff()
@@ -116,7 +116,7 @@ class FocusModeManager
 
     subscribersDispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-        @focusMode.dispose()
+        @focusCursorMode.dispose()
         @focusShadowMode.dispose()
 
 

@@ -1,9 +1,9 @@
 FocusModeBase = require './focus-mode-base'
 
-class FocusModeSingleLine extends FocusModeBase
+class FocusSingleLineMode extends FocusModeBase
 
     constructor: ->
-        super("FocusModeSingleLine")
+        super("FocusSingleLineMode")
         @isActivated = false
 
     on: =>
@@ -15,4 +15,4 @@ class FocusModeSingleLine extends FocusModeBase
         @removeCssClass(@getBodyTagElement(), @focusModeBodyCssClass)
 
 
-module.exports = FocusModeSingleLine
+module.exports = FocusSingleLineMode

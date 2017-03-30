@@ -1,10 +1,10 @@
 {CompositeDisposable} = require 'atom'
 FocusModeBase = require './focus-mode-base'
 
-class FocusMode extends FocusModeBase
+class FocusCursorMode extends FocusModeBase
 
     constructor: ->
-        super("FocusMode")
+        super("FocusCursorMode")
         @isActivated = false
         @focusModeMarkersCache = {}
         # The @focusModeLineOpacityCssClass currently applied to the body tag
@@ -97,4 +97,4 @@ class FocusMode extends FocusModeBase
         @configSubscriptions.dispose() if @configSubscriptions
 
 
-module.exports = FocusMode
+module.exports = FocusCursorMode

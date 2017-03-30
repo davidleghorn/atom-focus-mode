@@ -12,24 +12,24 @@ describe "Main", ->
             expect(focusModePackage.focusModeManager).not.toBeNull()
             expect(focusModePackage.focusModeManager.constructor).toEqual(FocusModeManager)
 
-        it "should add two focus mode keyboard commands to subscriptions", ->
+        it "should add four focus mode keyboard commands to subscriptions", ->
             focusModePackage.activate()
 
             expect(focusModePackage.subscriptions).not.toBeNull()
-            expect(focusModePackage.subscriptions.disposables.size).toEqual(3)
+            expect(focusModePackage.subscriptions.disposables.size).toEqual(4)
 
 
     describe "when the 'atom-focus-mode:toggle' event is triggered", ->
 
-        it "should call focus mode method toggleFocusMode()", ->
+        it "should call focus mode method toggleCursorFocusMode()", ->
             workspaceElement = atom.views.getView(atom.workspace)
             focusModePackage.activate()
 
-            spyOn(focusModePackage.focusModeManager, "toggleFocusMode")
+            spyOn(focusModePackage.focusModeManager, "toggleCursorFocusMode")
 
             atom.commands.dispatch workspaceElement, 'atom-focus-mode:toggle'
 
-            expect(focusModePackage.focusModeManager.toggleFocusMode).toHaveBeenCalled()
+            expect(focusModePackage.focusModeManager.toggleCursorFocusMode).toHaveBeenCalled()
 
 
     describe "when the 'atom-focus-mode:toggle-single-line' event is triggered", ->

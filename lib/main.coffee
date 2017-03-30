@@ -31,7 +31,7 @@ module.exports =
         @subscriptions = new CompositeDisposable()
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle': => @focusModeManager.toggleFocusMode()
+            'atom-focus-mode:toggle': => @focusModeManager.toggleCursorFocusMode()
         )
         @subscriptions.add atom.commands.add(
             'atom-workspace',
