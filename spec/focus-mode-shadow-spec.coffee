@@ -1,5 +1,5 @@
 
-FocusShadowMode = require '../lib/focus-mode-shadow'
+FocusShadowMode = require '../lib/focus-shadow-mode'
 
 
 describe "FocusShadowMode", ->

@@ -1,7 +1,6 @@
 
 class FocusModeBase
 
-
     constructor: ->
         @focusLineCssClass = "focus-line"
         @focusModeBodyCssClass = "focus-mode"

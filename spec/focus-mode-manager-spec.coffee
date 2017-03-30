@@ -1,8 +1,5 @@
 
 FocusModeManager = require '../lib/focus-mode-manager'
-# FocusMode = require '../lib/focus-cursor-mode'
-# FocusShadowMode = require '../lib/focus-mode-shadow'
-# FocusModeSingleLine = require '../lib/focus-mode-single-line'
 
 describe "FocusModeManager", ->
 

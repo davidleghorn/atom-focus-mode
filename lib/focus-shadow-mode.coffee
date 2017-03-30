@@ -3,7 +3,6 @@ FocusModeBase = require './focus-mode-base'
 
 class FocusShadowMode extends FocusModeBase
 
-
     constructor: () ->
         super('FocusShadowMode')
         @isActivated = false
