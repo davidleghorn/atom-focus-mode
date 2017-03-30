@@ -138,9 +138,7 @@ class FocusContextMode extends FocusModeBase
             if(fileType is "coffee" or fileType is "py")
                 # finds end of method body by finding next method start or end of file
                 if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= methodStartRowIndent)
-                    # moving back up to an empty line ensures decorators or comments above the method are
-                    # not highlighted/included in the previous methods context
-                    matchedBufferRowNumber = @moveBackToFirstEmptyLine(rowIndex, editor)
+                    matchedBufferRowNumber = rowIndex # @moveBackToFirstEmptyLine(rowIndex, editor)
                     break
 
             else if(fileType is "js")
@@ -149,7 +147,7 @@ class FocusContextMode extends FocusModeBase
                     matchedBufferRowNumber = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it decorated
                     break
 
-        # console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched end row = ", matchedBufferRowNumber)
+        console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched end row = ", matchedBufferRowNumber)
         return matchedBufferRowNumber
 
 
