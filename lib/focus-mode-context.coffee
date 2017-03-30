@@ -64,7 +64,8 @@ class FocusContextMode extends FocusModeBase
         switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
-            when "js" then return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
+            when "js"
+                return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Context Focus mode.\n\nContext focus mode currently supports js, coffee and py file extensions.");
                 return false
@@ -93,6 +94,7 @@ class FocusContextMode extends FocusModeBase
         return index
 
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
+        fileType = @getFileTypeForEditor(editor)
         matchedBufferRowNumber = 0 # default to first row in file
         closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
@@ -101,17 +103,18 @@ class FocusContextMode extends FocusModeBase
             console.log("buffer row ", rowIndex, " is the method start line - exit")
             return rowIndex
 
-        while rowIndex >= 0
+        while rowIndex > 0
             rowIndex = rowIndex - 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
             if(@isMethodStartRow(rowText, editor))
-                if(closingCurlyRowIndents.indexOf(rowIndent) > -1)
+                if(fileType is "js" and closingCurlyRowIndents.indexOf(rowIndent) > -1)
+                    # we matched a method/function start row but at incorrect (too deep) scope - continue up file lines
                     continue
                 else
                     matchedBufferRowNumber = rowIndex
                     break
-            else if(@lineContainsClosingCurly(rowText))
+            else if(fileType is "js" and @lineContainsClosingCurly(rowText))
                 closingCurlyRowIndents.push(rowIndent)
 
         return matchedBufferRowNumber
@@ -122,22 +125,24 @@ class FocusContextMode extends FocusModeBase
         fileType = @getFileTypeForEditor(editor)
         matchedBufferRowNumber = bufferLineCount # default to last row in file
         rowIndex = methodStartRow
-        startRowIndent = editor.indentationForBufferRow(methodStartRow)
+        methodStartRowIndent = editor.indentationForBufferRow(methodStartRow)
 
-        while rowIndex <= bufferLineCount
+        while rowIndex < bufferLineCount
             rowIndex = rowIndex + 1
             rowText = editor.lineTextForBufferRow(rowIndex)
+            # rowIndent = editor.indentationForBufferRow(rowIndex)
 
             if(fileType is "coffee" or fileType is "py")
                 # finds end of method body by finding next method start or end of file
-                if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= startRowIndent)
+                if(@isMethodStartRow(rowText, editor) and editor.indentationForBufferRow(rowIndex) <= methodStartRowIndent)
+                    # moving back up to an empty line ensures decorators or comments above the method are
+                    # not highlighted/included in the previous methods context
                     matchedBufferRowNumber = @moveBackToFirstEmptyLine(rowIndex, editor)
-                    # matchedBufferRowNumber = rowIndex
                     break
 
             else if(fileType is "js")
                 # finds a closing curly on same level of indentation as function/method start row
-                if(editor.indentationForBufferRow(rowIndex) is startRowIndent and @lineIsClosingCurly(rowText))
+                if(editor.indentationForBufferRow(rowIndex) is methodStartRowIndent and @lineIsClosingCurly(rowText))
                     matchedBufferRowNumber = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it decorated
                     break
 
