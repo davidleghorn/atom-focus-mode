@@ -1,7 +1,7 @@
 {CompositeDisposable} = require 'atom'
 
 FocusCursorMode = require './focus-cursor-mode'
-FocusContextMode = require './focus-mode-context'
+FocusContextMode = require './focus-context-mode'
 FocusShadowMode = require './focus-shadow-mode'
 FocusSingleLineMode = require './focus-single-line-mode'
 
