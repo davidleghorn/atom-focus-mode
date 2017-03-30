@@ -94,31 +94,25 @@ class FocusContextMode extends FocusModeBase
 
     getContextModeBufferStartRow: (cursorBufferRow, editor) =>
         matchedBufferRowNumber = 0 # default to first row in file
+        closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
         # if the cursor row is the method start row, return row number and exit
         if(@isMethodStartRow(editor.lineTextForBufferRow(rowIndex), editor))
             console.log("buffer row ", rowIndex, " is the method start line - exit")
             return rowIndex
 
-        closingCurlyRowIndents = []
-
         while rowIndex >= 0
             rowIndex = rowIndex - 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
             if(@isMethodStartRow(rowText, editor))
-                matchedBufferRowNumber = rowIndex
-                break
+                if(closingCurlyRowIndents.indexOf(rowIndent) > -1)
+                    continue
+                else
+                    matchedBufferRowNumber = rowIndex
+                    break
             else if(@lineContainsClosingCurly(rowText))
                 closingCurlyRowIndents.push(rowIndent)
-            # else
-            #     rowIndex = rowIndex - 1
-
-        console.log("matched method indentation = ", rowIndent, " array of closing } indents is ", closingCurlyRowIndents)
-        if(closingCurlyRowIndents.indexOf(rowIndent) > -1)
-            # find closest "{" intead as matched method start had wrong scope
-            matchedBufferRowNumber = @findClosestOpeningCurly(cursorBufferRow, editor)
-            console.log("WRONG SCOPE, CLOSEST CURLY IS ROW NUMBER ", matchedBufferRowNumber)
 
         return matchedBufferRowNumber
 
