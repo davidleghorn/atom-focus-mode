@@ -3,7 +3,7 @@
 FocusCursorMode = require './focus-cursor-mode'
 FocusContextMode = require './focus-mode-context'
 FocusShadowMode = require './focus-shadow-mode'
-FocusSingleLineMode = require './focus-mode-single-line'
+FocusSingleLineMode = require './focus-single-line-mode'
 
 class FocusModeManager
 

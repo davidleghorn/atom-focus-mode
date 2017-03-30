@@ -1,4 +1,4 @@
-FocusModeSingleLine = require '../lib/focus-mode-single-line'
+FocusModeSingleLine = require '../lib/focus-single-line-mode'
 
 
 describe "FocusModeSingleLine", ->
