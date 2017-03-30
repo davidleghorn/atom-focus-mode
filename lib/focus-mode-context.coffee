@@ -47,7 +47,7 @@ class FocusContextMode extends FocusModeBase
     isEs6MethodSignature: (lineText) =>
         return /^\s*[a-zA-Z0-9_-]*\s*\({1}.*\){1}\s*{\s*$/.test(lineText)
 
-    lineIsClosingCurly: (lineText) ->
+    isClosingCurlyLine: (lineText) ->
         return /^\s*}.*/.test(lineText)
 
     lineContainsClosingCurly: (lineText) ->
@@ -100,32 +100,40 @@ class FocusContextMode extends FocusModeBase
         matchedBufferRowNumber = 0 # default to first row in file
         closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
-        rowText = editor.lineTextForBufferRow(rowIndex)
-        # if the cursor row is the method start row or a class start line return row number and exit
-        if(@isMethodStartRow(rowText, editor) or @isClassStartLine(rowText))
-            console.log("buffer row ", rowIndex, " is the method or class start line - exit")
+        cursorRowText = editor.lineTextForBufferRow(rowIndex)
+
+        # if the cursor row is a method or class start line, exit as this is the context start row
+        if(@isMethodStartRow(cursorRowText, editor) or @isClassStartLine(cursorRowText))
             return rowIndex
 
+        # prevents traversal up file and matching of previous method scope
+        # when cursor row is a python method decorator
+        if(fileType is "py" and @isDecoratorLine(cursorRowText))
+            return rowIndex
+
+        # start traversing up file looking for the cursor line's
+        # enclosing scope (method or class start line)
         while rowIndex > 0
             rowIndex = rowIndex - 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
-            # if a class start line is found stop here, this is enclosing scope
+
             if(@isClassStartLine(rowText))
                 matchedBufferRowNumber = rowIndex
                 break
 
             if(@isMethodStartRow(rowText, editor))
                 if(fileType is "js" and closingCurlyRowIndents.indexOf(rowIndent) > -1)
-                    # we matched a method/function start row but at incorrect (too deep) scope - continue moving up file lines
+                    # we matched a method/function start row but at an incorrect
+                    # (too deep) scope - continue moving up file lines
                     continue
                 else
                     matchedBufferRowNumber = rowIndex
                     break
+
             else if(fileType is "js" and @lineContainsClosingCurly(rowText))
                 closingCurlyRowIndents.push(rowIndent)
 
-        console.log("buffer start row = ", matchedBufferRowNumber)
         return matchedBufferRowNumber
 
 
@@ -148,16 +156,14 @@ class FocusContextMode extends FocusModeBase
                     previousLineText = editor.lineTextForBufferRow(rowIndex - 1)
                     if(@isDecoratorLine(previousLineText) or @isCommentLine(previousLineText))
                         bufferContextEndRow = @adjustBufferEndRow(rowIndex, editor)
-                        console.log("MATCHED DECORATOR or comment or class line ", rowText, " rowIndex = ", rowIndex, " >>>> adjustBufferEndRow = ", bufferContextEndRow)
                     break
 
             else if(fileType is "js")
                 # finds a closing curly on same level of indentation as function/method start row
-                if(editor.indentationForBufferRow(rowIndex) is methodStartRowIndent and @lineIsClosingCurly(rowText))
+                if(editor.indentationForBufferRow(rowIndex) is methodStartRowIndent and @isClosingCurlyLine(rowText))
                     bufferContextEndRow = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it included/decorated
                     break
 
-        # console.log("getContextModeBufferEndRow fileType is ", fileType, " and matched end row = ", bufferContextEndRow)
         return bufferContextEndRow
 
 
