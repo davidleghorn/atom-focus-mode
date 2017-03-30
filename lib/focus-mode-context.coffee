@@ -41,11 +41,10 @@ class FocusContextMode extends FocusModeBase
     isWhileStatement: (lineText) ->
         return /^\s*while*\s*\({1}.*/.test(lineText)
 
-    isEs6MethodSignature: (lineText) =>
-        # es6 method regex will also match if, while and switch statements, test first if line is if/switch or while statement
-        if (@isIfStatement(lineText) or @isSwitchStatement(lineText) or @isWhileStatement(lineText))
-            return false
+    isForStatement: (lineText) ->
+        return /^\s*for*\s*\({1}.*/.test(lineText)
 
+    isEs6MethodSignature: (lineText) =>
         return /^\s*[a-zA-Z0-9_-]*\s*\({1}.*\){1}\s*{\s*$/.test(lineText)
 
     lineIsClosingCurly: (lineText) ->
@@ -59,12 +58,16 @@ class FocusContextMode extends FocusModeBase
         console.log("lineContainsOpeningCurly = ", /^.*}.*/.test(lineText)," lineText = ", lineText)
         return /^.*{.*/.test(lineText)
 
+
     isMethodStartRow: (rowText, editor) =>
         fileType = @getFileTypeForEditor(editor)
         switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
             when "js"
+                if (@isIfStatement(rowText) or @isForStatement(rowText) or @isWhileStatement(rowText) or @isSwitchStatement(rowText))
+                    return false
+
                 return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Context Focus mode.\n\nContext focus mode currently supports js, coffee and py file extensions.");
