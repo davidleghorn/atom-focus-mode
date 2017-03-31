@@ -1,5 +1,9 @@
 
-## 0.7.0  (2016-03-27)
+## 0.8.0  (2017-04-01)
+* Added: "Scope Focus" feature - focus highlights class/method/function scopes in javascript, coffee script and python files
+* Changed: Menu options re-named and order changed
+
+## 0.7.0  (2017-03-27)
 * Deprecated shadow DOM selectors removed
 
 ## 0.6.0  (2016-01-07)
