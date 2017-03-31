@@ -18,6 +18,7 @@ Scope focus limitations:
 
 * Scope focus in javascript files requires correct indentation of code block closing curly braces.
 * Scope focus currently supports files with ".js", ".coffee" and ".py" file extensions. Compatibility with other file types to follow.
+* Does not focus scope lines when using multiple cursors.
 
 
 ### Cursor Focus
