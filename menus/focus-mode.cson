@@ -1,51 +1,51 @@
 
 'context-menu':
-  'atom-text-editor': [
-    {
-      'label': 'Focus Mode'
-      'submenu': [
-          {
-            'label': 'Toggle Focus Mode'
-            'command': 'atom-focus-mode:toggle-cursor-focus'
-          }
-          {
-            'label': 'Toggle Focus Single Line'
-            'command': 'atom-focus-mode:toggle-single-line-focus'
-          }
-          {
-            'label': 'Toggle Focus Shadow Mode'
-            'command': 'atom-focus-mode:toggle-shadow-focus'
-          }
-          {
-            'label': 'Toggle Focus Context Mode'
-            'command': 'atom-focus-mode:toggle-context-focus'
-          }
-      ]
-    }
-  ]
-'menu': [
-  {
-    'label': 'Packages'
-    'submenu': [
-      'label': 'Focus Mode'
-      'submenu': [
+    'atom-text-editor': [
         {
-          'label': 'Toggle Focus Mode'
-          'command': 'atom-focus-mode:toggle-cursor-focus'
+            'label': 'Focus Mode'
+            'submenu': [
+                {
+                    'label': 'Context Focus'
+                    'command': 'atom-focus-mode:toggle-context-focus'
+                }
+                {
+                    'label': 'Cursor Focus'
+                    'command': 'atom-focus-mode:toggle-cursor-focus'
+                }
+                {
+                    'label': 'Cursor Shadow Focus'
+                    'command': 'atom-focus-mode:toggle-shadow-focus'
+                }
+                {
+                    'label': 'Single Line Focus'
+                    'command': 'atom-focus-mode:toggle-single-line-focus'
+                }
+            ]
         }
-        {
-          'label': 'Toggle Focus Single Line'
-          'command': 'atom-focus-mode:toggle-single-line-focus'
-        }
-        {
-          'label': 'Toggle Focus Shadow Mode'
-          'command': 'atom-focus-mode:toggle-shadow-focus'
-        }
-        {
-          'label': 'Toggle Focus Context Mode'
-          'command': 'atom-focus-mode:toggle-context-focus'
-        }
-      ]
     ]
-  }
+'menu': [
+    {
+        'label': 'Packages'
+        'submenu': [
+            'label': 'Focus Mode'
+            'submenu': [
+                {
+                'label': 'Context Focus'
+                'command': 'atom-focus-mode:toggle-context-focus'
+                }
+                {
+                'label': 'Cursor Focus'
+                'command': 'atom-focus-mode:toggle-cursor-focus'
+                }
+                {
+                'label': 'Cursor Shadow Focus'
+                'command': 'atom-focus-mode:toggle-shadow-focus'
+                }
+                {
+                'label': 'Single Line Focus'
+                'command': 'atom-focus-mode:toggle-single-line-focus'
+                }
+            ]
+        ]
+    }
 ]
