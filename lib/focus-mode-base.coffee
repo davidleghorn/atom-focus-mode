@@ -3,7 +3,7 @@ class FocusModeBase
 
     constructor: ->
         @focusLineCssClass = "focus-line"
-        @focusModeBodyCssClass = "focus-mode"
+        @focusModeBodyCssClass = "focus-cursor-mode"
 
 
     getConfig: (key) ->

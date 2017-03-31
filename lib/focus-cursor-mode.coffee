@@ -7,8 +7,6 @@ class FocusCursorMode extends FocusModeBase
         super("FocusCursorMode")
         @isActivated = false
         @focusModeMarkersCache = {}
-        # The @focusModeLineOpacityCssClass currently applied to the body tag
-        @appliedFocusModeLineOpacityCssClass = ""
         @focusModeLineOpacityCssClass = @getFocusLineCssClass(
             @getConfig('atom-focus-mode.focusModeLineOpacity')
         )
@@ -34,7 +32,6 @@ class FocusCursorMode extends FocusModeBase
         bodyTag = @getBodyTagElement()
         @addCssClass(bodyTag, @focusModeBodyCssClass)
         @addCssClass(bodyTag, @focusModeLineOpacityCssClass)
-        @appliedFocusModeLineOpacityCssClass = @focusModeLineOpacityCssClass
         @applyFocusModeToSelectedBufferRanges()
 
 
@@ -42,7 +39,7 @@ class FocusCursorMode extends FocusModeBase
         @isActivated = false
         bodyTag = @getBodyTagElement()
         @removeCssClass(bodyTag, @focusModeBodyCssClass)
-        @removeCssClass(bodyTag, @appliedFocusModeLineOpacityCssClass)
+        @removeCssClass(bodyTag, @focusModeLineOpacityCssClass)
         @removeFocusLineClass()
         @focusModeMarkersCache = {}
 

@@ -8,7 +8,7 @@
       "atom-focus-mode:toggle-cursor-focus",
       "atom-focus-mode:toggle-single-line-focus",
       "atom-focus-mode:toggle-shadow-focus",
-      "atom-focus-mode:toggle-context-focus"
+      "atom-focus-mode:toggle-scope-focus"
     ]
   },
   "repository": "https://github.com/davidleghorn/atom-focus-mode",

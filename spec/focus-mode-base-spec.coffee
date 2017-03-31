@@ -13,14 +13,14 @@ describe "FocusModeBase", ->
 
         it "should initialise properties with expected values", ->
             expect(focusModeBase.focusLineCssClass).toEqual("focus-line")
-            expect(focusModeBase.focusModeBodyCssClass).toEqual("focus-mode")
+            expect(focusModeBase.focusModeBodyCssClass).toEqual("focus-cursor-mode")
 
 
     describe "constructor", ->
 
         it "should initialise properties with expected values", ->
             expect(focusModeBase.focusLineCssClass).toEqual("focus-line")
-            expect(focusModeBase.focusModeBodyCssClass).toEqual("focus-mode")
+            expect(focusModeBase.focusModeBodyCssClass).toEqual("focus-cursor-mode")
 
 
     describe "getConfig", ->

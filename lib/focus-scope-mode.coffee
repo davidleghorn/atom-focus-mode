@@ -1,27 +1,27 @@
 {CompositeDisposable} = require 'atom'
 FocusModeBase = require './focus-mode-base'
 
-class FocusContextMode extends FocusModeBase
+class FocusScopeMode extends FocusModeBase
 
     constructor: () ->
-        super('FocusContextMode')
+        super('FocusScopeMode')
         @isActivated = false
-        @focusContextMarkerCache = {}
+        @focusScopeMarkerCache = {}
         @editorFileTypeCache = {}
-        @focusContextBodyClassName = "focus-mode-context"
+        @focusScopeBodyClassName = "focus-scope-mode"
 
     on: =>
         @isActivated = true
         textEditor = @getActiveTextEditor()
         cursor = textEditor.getLastCursor()
-        @contextModeOnCursorMove(cursor)
-        @addCssClass(@getBodyTagElement(), @focusContextBodyClassName)
+        @scopeModeOnCursorMove(cursor)
+        @addCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
 
     off: =>
         @isActivated = false
-        @removeContextModeMarkers()
-        @focusContextMarkerCache = {}
-        @removeCssClass(@getBodyTagElement(), @focusContextBodyClassName)
+        @removeScopeModeMarkers()
+        @focusScopeMarkerCache = {}
+        @removeCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
 
     isCoffeeScriptMethodSignature: (lineText) ->
         return /:\s*\(.*\)\s*(=>|->)/.test(lineText)
@@ -69,7 +69,7 @@ class FocusContextMode extends FocusModeBase
         return atom.notifications
 
 
-    isMethodStartRow: (rowText, editor) =>
+    isMethodStartLine: (rowText, editor) =>
         fileType = @getFileTypeForEditor(editor)
         switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
@@ -80,7 +80,7 @@ class FocusContextMode extends FocusModeBase
 
                 return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
-                @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Context Focus mode.\n\nContext focus mode currently supports js, coffee and py file extensions.");
+                @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Scope Focus mode.\n\nScope focus mode currently supports js, coffee and py file extensions.");
                 return false
 
 
@@ -95,15 +95,15 @@ class FocusContextMode extends FocusModeBase
         return index
 
 
-    getContextModeBufferStartRow: (cursorBufferRow, editor) =>
+    getScopeModeBufferStartRow: (cursorBufferRow, editor) =>
         fileType = @getFileTypeForEditor(editor)
         matchedBufferRowNumber = 0 # default to first row in file
         closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
         cursorRowText = editor.lineTextForBufferRow(rowIndex)
 
-        # if the cursor row is a method or class start line, exit as this is the context start row
-        if(@isMethodStartRow(cursorRowText, editor) or @isClassStartLine(cursorRowText))
+        # if the cursor row is a method or class start line, exit as this is the scope start row
+        if(@isMethodStartLine(cursorRowText, editor) or @isClassStartLine(cursorRowText))
             return rowIndex
 
         # prevents traversal up file and matching of previous method scope
@@ -122,9 +122,9 @@ class FocusContextMode extends FocusModeBase
                 matchedBufferRowNumber = rowIndex
                 break
 
-            if(@isMethodStartRow(rowText, editor))
+            if(@isMethodStartLine(rowText, editor))
                 if(fileType is "js" and closingCurlyRowIndents.indexOf(rowIndent) > -1)
-                    # we matched a method/function start row but at an incorrect
+                    # we matched a method/function start line but at an incorrect
                     # (too deep) scope - continue moving up file lines
                     continue
                 else
@@ -137,12 +137,12 @@ class FocusContextMode extends FocusModeBase
         return matchedBufferRowNumber
 
 
-    getContextModeBufferEndRow: (methodStartRow, editor) =>
+    getScopeModeBufferEndRow: (scopeStartRow, editor) =>
         bufferRowCount = editor.getLineCount() - 1
         fileType = @getFileTypeForEditor(editor)
-        bufferContextEndRow = bufferRowCount # default to last row in buffer
-        rowIndex = methodStartRow
-        methodStartRowIndent = editor.indentationForBufferRow(methodStartRow)
+        bufferScopeEndRow = bufferRowCount # default to last row in buffer
+        rowIndex = scopeStartRow
+        scopeStartRowIndent = editor.indentationForBufferRow(scopeStartRow)
 
         while rowIndex < bufferRowCount
             rowIndex = rowIndex + 1
@@ -150,52 +150,49 @@ class FocusContextMode extends FocusModeBase
             rowIndent = editor.indentationForBufferRow(rowIndex)
 
             if(fileType is "coffee" or fileType is "py")
-                # finds end of method body by finding next method start or end of file
-                if((@isMethodStartRow(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= methodStartRowIndent)
-                    bufferContextEndRow = rowIndex
+                if((@isMethodStartLine(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= scopeStartRowIndent)
+                    bufferScopeEndRow = rowIndex
                     previousLineText = editor.lineTextForBufferRow(rowIndex - 1)
                     if(@isDecoratorLine(previousLineText) or @isCommentLine(previousLineText))
-                        bufferContextEndRow = @adjustBufferEndRow(rowIndex, editor)
+                        bufferScopeEndRow = @adjustBufferEndRow(rowIndex, editor)
                     break
 
             else if(fileType is "js")
-                # finds a closing curly on same level of indentation as function/method start row
-                if(editor.indentationForBufferRow(rowIndex) is methodStartRowIndent and @isClosingCurlyLine(rowText))
-                    bufferContextEndRow = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it included/decorated
+                if(editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isClosingCurlyLine(rowText))
+                    bufferScopeEndRow = rowIndex + 1 # +1 as buffer range end row isn't included in range and we also want it included/decorated
                     break
 
-        return bufferContextEndRow
+        return bufferScopeEndRow
 
 
-    getContextModeBufferRange: (bufferPosition, editor) =>
+    getScopeModeBufferRange: (bufferPosition, editor) =>
         cursorBufferRow = bufferPosition.row
-        startRow = @getContextModeBufferStartRow(cursorBufferRow, editor)
-        endRow = @getContextModeBufferEndRow(startRow, editor)
-        # console.log("getContextModeBufferRange cursorBufferRow = ", cursorBufferRow, " startRow = ", startRow, " and endRow = ", endRow)
+        startRow = @getScopeModeBufferStartRow(cursorBufferRow, editor)
+        endRow = @getScopeModeBufferEndRow(startRow, editor)
 
         return [[startRow, 0], [endRow, 0]]
 
 
-    createContextModeMarker: (textEditor) =>
+    createScopeModeMarker: (textEditor) =>
         bufferPosition = textEditor.getCursorBufferPosition()
-        contextBufferRange = @getContextModeBufferRange(bufferPosition, textEditor)
-        marker = textEditor.markBufferRange(contextBufferRange)
+        scopeBufferRange = @getScopeModeBufferRange(bufferPosition, textEditor)
+        marker = textEditor.markBufferRange(scopeBufferRange)
         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
 
         return marker
 
 
-    removeContextModeMarkers: =>
+    removeScopeModeMarkers: =>
         for editor in @getAtomWorkspaceTextEditors()
-            marker = @focusContextMarkerCache[editor.id]
+            marker = @focusScopeMarkerCache[editor.id]
             marker.destroy() if marker
 
 
-    getContextModeMarkerForEditor: (editor) =>
-        marker = @focusContextMarkerCache[editor.id]
+    getScopeModeMarkerForEditor: (editor) =>
+        marker = @focusScopeMarkerCache[editor.id]
         if not marker
-            marker = @createContextModeMarker(editor)
-            @focusContextMarkerCache[editor.id] = marker
+            marker = @createScopeModeMarker(editor)
+            @focusScopeMarkerCache[editor.id] = marker
 
         return marker
 
@@ -210,15 +207,15 @@ class FocusContextMode extends FocusModeBase
         return fileType
 
 
-    contextModeOnCursorMove: (cursor) =>
+    scopeModeOnCursorMove: (cursor) =>
         editor = cursor.editor
-        marker = @getContextModeMarkerForEditor(editor)
+        marker = @getScopeModeMarkerForEditor(editor)
         bufferPosition = editor.getCursorBufferPosition()
-        range = @getContextModeBufferRange(bufferPosition, editor)
+        range = @getScopeModeBufferRange(bufferPosition, editor)
         startRow = range[0][0]
         endRow = range[1][0]
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
 
 
-module.exports = FocusContextMode
+module.exports = FocusScopeMode

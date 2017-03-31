@@ -5,8 +5,8 @@
             'label': 'Focus Mode'
             'submenu': [
                 {
-                    'label': 'Context Focus'
-                    'command': 'atom-focus-mode:toggle-context-focus'
+                    'label': 'Scope Focus'
+                    'command': 'atom-focus-mode:toggle-scope-focus'
                 }
                 {
                     'label': 'Cursor Focus'
@@ -30,8 +30,8 @@
             'label': 'Focus Mode'
             'submenu': [
                 {
-                'label': 'Context Focus'
-                'command': 'atom-focus-mode:toggle-context-focus'
+                'label': 'Scope Focus'
+                'command': 'atom-focus-mode:toggle-scope-focus'
                 }
                 {
                 'label': 'Cursor Focus'

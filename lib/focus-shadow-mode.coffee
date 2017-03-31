@@ -7,7 +7,7 @@ class FocusShadowMode extends FocusModeBase
         super('FocusShadowMode')
         @isActivated = false
         @focusShadowMarkerCache = {}
-        @focusModeShadowBodyClassName = "focus-mode-shadow"
+        @focusModeShadowBodyClassName = "focus-shadow-mode"
         @shadowModeNumberOfRowsBeforeCursor = @getConfig(
             'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor'
         ) or 2

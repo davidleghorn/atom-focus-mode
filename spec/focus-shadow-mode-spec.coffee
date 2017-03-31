@@ -14,7 +14,7 @@ describe "FocusShadowMode", ->
         it "should initialise properties with expected values", ->
             expect(focusShadowMode.isActivated).toEqual(false)
             expect(focusShadowMode.focusShadowMarkerCache).toEqual({})
-            expect(focusShadowMode.focusModeShadowBodyClassName).toEqual("focus-mode-shadow")
+            expect(focusShadowMode.focusModeShadowBodyClassName).toEqual("focus-shadow-mode")
             expect(focusShadowMode.shadowModeNumberOfRowsBeforeCursor).toEqual(2)
             expect(focusShadowMode.shadowModeNumberOfRowsAfterCursor).toEqual(2)
 

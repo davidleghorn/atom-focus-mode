@@ -3,4 +3,4 @@
   'ctrl-alt-o': 'atom-focus-mode:toggle-cursor-focus'
   'ctrl-alt-i': 'atom-focus-mode:toggle-single-line-focus'
   'ctrl-alt-u': 'atom-focus-mode:toggle-shadow-focus'
-  'ctrl-alt-p': 'atom-focus-mode:toggle-context-focus'
+  'ctrl-alt-p': 'atom-focus-mode:toggle-scope-focus'

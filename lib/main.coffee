@@ -43,7 +43,7 @@ module.exports =
         )
         @subscriptions.add atom.commands.add(
             'atom-workspace',
-            'atom-focus-mode:toggle-context-focus': => @focusModeManager.toggleFocusContextMode()
+            'atom-focus-mode:toggle-scope-focus': => @focusModeManager.toggleFocusScopeMode()
         )
 
 

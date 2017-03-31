@@ -16,7 +16,6 @@ describe "FocusCursorMode", ->
         it "should initialise properties with expected values", ->
             expect(focusMode.isActivated).toEqual(false)
             expect(focusMode.focusModeMarkersCache).toEqual({})
-            expect(focusMode.appliedFocusModeLineOpacityCssClass).toEqual("")
 
         it "should inherit from FocusModeBase", ->
             # test that focusShadowMode object contains methods from base class
@@ -54,12 +53,6 @@ describe "FocusCursorMode", ->
                 bodyTagElem, focusMode.focusModeLineOpacityCssClass
             )
 
-        it "should set appliedFocusModeLineOpacityCssClass to focusModeLineOpacityCssClass", ->
-            focusMode.isActivated = false
-            focusMode.appliedFocusModeLineOpacityCssClass = ""
-            focusMode.on()
-            expect(focusMode.appliedFocusModeLineOpacityCssClass).toEqual(focusMode.focusModeLineOpacityCssClass)
-
         it "should call applyFocusModeToSelectedBufferRanges", ->
             focusMode.isActivated = false
             focusMode.on()
@@ -84,11 +77,11 @@ describe "FocusCursorMode", ->
                 bodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-        it "should call removeCssClass with appliedFocusModeLineOpacityCssClass", ->
+        it "should call removeCssClass with focusLineCssClass", ->
             focusMode.isActivated = true
             focusMode.off()
             expect(focusMode.removeCssClass).toHaveBeenCalledWith(
-                bodyTagElem, focusMode.appliedFocusModeLineOpacityCssClass
+                bodyTagElem, focusMode.focusModeBodyCssClass
             )
 
         it "should call removeFocusLineClass", ->
