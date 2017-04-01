@@ -38,6 +38,7 @@ class FocusModeManager
 
 
     focusCursorModeOn: =>
+        atom.setFullScreen(true)
         @focusCursorMode.on()
         @cursorEventSubscribers = @registerCursorEventHandlers()
 
@@ -45,16 +46,22 @@ class FocusModeManager
     focusCursorModeOff: =>
         @focusCursorMode.off()
         @cursorEventSubscribers.dispose()
+        if(atom.isFullScreen())
+            atom.setFullScreen(false)
 
 
     focusShadowModeOff: =>
         @focusShadowMode.off()
         @cursorEventSubscribers.dispose()
+        if(atom.isFullScreen())
+            atom.setFullScreen(false)
 
 
     focusScopeModeOff: =>
         @focusScopeMode.off()
         @cursorEventSubscribers.dispose()
+        if(atom.isFullScreen())
+            atom.setFullScreen(false)
 
 
     toggleCursorFocusMode: =>
@@ -75,8 +82,11 @@ class FocusModeManager
 
         if @focusSingleLineMode.isActivated
             @focusSingleLineMode.off()
+            if @focusShadowMode.isActivated
+                @focusShadowModeOff()
         else
             @focusSingleLineMode.on()
+            atom.setFullScreen(true)
 
 
     toggleFocusShadowMode: =>
@@ -89,6 +99,7 @@ class FocusModeManager
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
             @focusShadowMode.on()
+            atom.setFullScreen(true)
 
 
     toggleFocusScopeMode: =>
@@ -101,6 +112,7 @@ class FocusModeManager
         else
             @cursorEventSubscribers = @registerCursorEventHandlers()
             @focusScopeMode.on()
+            atom.setFullScreen(true)
 
 
     registerCursorEventHandlers: =>
