@@ -60,7 +60,7 @@ module.exports =
             properties:
                 lineOpacity:
                     title: 'Opacity applied to Cursor Focus mode highlighted lines'
-                    type: 'enum'
+                    type: 'string'
                     default: '55%'
                     enum: ['55%','100%']
 
