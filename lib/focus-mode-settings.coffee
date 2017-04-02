@@ -23,6 +23,10 @@ class FocusModeSettings extends FocusModeBase
                 "activated": @getConfig('atom-focus-mode.whenFocusModeIsActivated.hideLineNumbers') or false,
                 "cssClass": "afm-no-line-numbers"
             },
+            "hideLineWrapGuide": {
+                "activated": @getConfig('atom-focus-mode.whenFocusModeIsActivated.hideLineWrapGuide') or false,
+                "cssClass": "afm-no-wrap-guide"
+            },
             "useLargeFontSize": {
                 "activated": @getConfig('atom-focus-mode.whenFocusModeIsActivated.useLargeFontSize') or false,
                 "cssClass": "afm-larger-font"
@@ -60,6 +64,10 @@ class FocusModeSettings extends FocusModeBase
         configSubscribers.add(atom.config.observe(
             'atom-focus-mode.whenFocusModeIsActivated.hideLineNumbers',
             (value) => @applyConfigSetting("hideLineNumbers", value)
+        ))
+        configSubscribers.add(atom.config.observe(
+            'atom-focus-mode.whenFocusModeIsActivated.hideLineWrapGuide',
+            (value) => @applyConfigSetting("hideLineWrapGuide", value)
         ))
         configSubscribers.add(atom.config.observe(
             'atom-focus-mode.whenFocusModeIsActivated.useLargeFontSize',

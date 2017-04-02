@@ -29,6 +29,10 @@ module.exports =
                     title: "Hide Line Numbers"
                     type: 'boolean'
                     default: true
+                hideLineWrapGuide:
+                    title: "Hide Line Length Guide"
+                    type: 'boolean'
+                    default: true
                 useLargeFontSize:
                     title: "Use Large Font Size"
                     type: 'boolean'
@@ -59,7 +63,6 @@ module.exports =
                     type: 'string'
                     default: '55%'
                     enum: ['55%','100%']
-
 
 
     activate: (state) ->
