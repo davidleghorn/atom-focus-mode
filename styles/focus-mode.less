@@ -11,11 +11,11 @@
     }
 }
 
-// focus-cursor-mode with focus-line 55% opacity
+// focus-cursor-mode with focus-line 65% opacity
 .focus-cursor-mode.line-55 atom-text-editor.editor,
 .focus-scope-mode.line-55 atom-text-editor.editor
 {
-    .focus-line { opacity: 0.55; }
+    .focus-line { opacity: 0.65; }
 
     .line .syntax--comment,
     .line.cursor-line {
@@ -46,24 +46,37 @@
 
 
 // LINE NUMBER STYLING
-.focus-cursor-mode atom-text-editor.editor,
-.focus-shadow-mode atom-text-editor.editor,
-.focus-scope-mode atom-text-editor.editor
-{
-    border: 0;
-
-    .line-number
-    {
-        opacity: 0.2;
-
-        &.cursor-line {opacity: 0.6;}
-    }
-}
+// .focus-cursor-mode atom-text-editor.editor,
+// .focus-shadow-mode atom-text-editor.editor,
+// .focus-scope-mode atom-text-editor.editor
+// {
+//     border: 0;
+//
+//     .line-number
+//     {
+//         opacity: 0.2;
+//
+//         &.cursor-line {opacity: 0.6;}
+//     }
+// }
 
 .focus-cursor-mode,
 .focus-shadow-mode,
 .focus-scope-mode
 {
+    atom-text-editor.editor {
+        border: 0;
+
+        .line-number {
+            opacity: 0.2;
+            &.cursor-line {opacity: 0.6;}
+        }
+
+        .wrap-guide {
+            opacity: 0.4;
+        }
+    }
+
     .tool-panel {
 
         li span,
@@ -91,12 +104,8 @@
             border: 0;
 
             &.editor {
-                padding: 20px 0 20px 80px;
+                padding: 20px 0 20px 8%;
                 border: 0;
-            }
-
-            .wrap-guide {
-                opacity: 0.3;
             }
         }
 

@@ -5,9 +5,17 @@ FocusModeManager = require './focus-mode-manager'
 module.exports =
 
     config:
+
+        cursorFocusModeLineOpacity:
+            description: 'Opacity applied to cursor focus mode highlighted lines'
+            type: 'string'
+            default: '55%'
+            enum: ['55%','100%']
+            order: 1
+
          whenFocusModeIsActivated:
             type: 'object'
-            order: 1
+            order: 2
             properties:
                 enterFullScreen:
                     title: "Enter Full Screen"
@@ -40,7 +48,7 @@ module.exports =
 
         focusShadowMode:
             type: 'object'
-            order: 2
+            order: 3
             properties:
                 numberOfLinesToHighlightAboveCursor:
                     title: "Number of lines to highlight above cursor"
@@ -53,16 +61,6 @@ module.exports =
                     type: 'integer'
                     default: 2
                     minimum: 0
-
-        cursorFocusMode:
-            type: 'object'
-            order: 3
-            properties:
-                lineOpacity:
-                    title: 'Opacity applied to Cursor Focus mode highlighted lines'
-                    type: 'string'
-                    default: '55%'
-                    enum: ['55%','100%']
 
 
     activate: (state) ->
