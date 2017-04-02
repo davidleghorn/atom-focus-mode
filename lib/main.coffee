@@ -60,7 +60,7 @@ module.exports =
             properties:
                 lineOpacity:
                     title: 'Opacity applied to Cursor Focus mode highlighted lines'
-                    type: 'string'
+                    type: 'enum'
                     default: '55%'
                     enum: ['55%','100%']
 
@@ -84,6 +84,10 @@ module.exports =
         @subscriptions.add atom.commands.add(
             'atom-workspace',
             'atom-focus-mode:toggle-scope-focus': => @focusModeManager.toggleFocusScopeMode()
+        )
+        @subscriptions.add atom.commands.add(
+            'atom-workspace',
+            'atom-focus-mode:exit': => @focusModeManager.exitFocusMode()
         )
 
 

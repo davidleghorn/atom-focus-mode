@@ -20,6 +20,10 @@
                     'label': 'Single Line Focus'
                     'command': 'atom-focus-mode:toggle-single-line-focus'
                 }
+                {
+                    'label': 'Exit'
+                    'command': 'atom-focus-mode:exit'
+                }
             ]
         }
     ]
@@ -44,6 +48,10 @@
                 {
                 'label': 'Single Line Focus'
                 'command': 'atom-focus-mode:toggle-single-line-focus'
+                }
+                {
+                    'label': 'Exit'
+                    'command': 'atom-focus-mode:exit'
                 }
             ]
         ]

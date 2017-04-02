@@ -108,6 +108,12 @@ class FocusModeManager
         @cursorEventSubscribers.dispose()
 
 
+    exitFocusMode: =>
+        @turnOffAnyActivatedFocusModes()
+        @exitFullScreen()
+        @cursorEventSubscribers.dispose()
+
+
     registerCursorEventHandlers: =>
         self = @
         subscriptions = new CompositeDisposable
