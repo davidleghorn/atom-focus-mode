@@ -5,24 +5,45 @@ FocusModeManager = require './focus-mode-manager'
 module.exports =
 
     config:
-        focusShadowModeNumberOfLinesToHighlightAboveCursor:
-            type: 'integer'
-            default: 2
-            minimum: 0
-            order: 1
-
-        focusShadowModeNumberOfLinesToHighlightBelowCursor:
-            type: 'integer'
-            default: 2
-            minimum: 0
-            order: 2
 
         focusModeLineOpacity:
             description: 'Opacity applied to focus mode highlighted lines'
             type: 'string'
             default: '100%'
             enum: ['100%', '55%']
-            order: 3
+
+        focusShadowModeNumberOfLinesToHighlightAboveCursor:
+            type: 'integer'
+            default: 2
+            minimum: 0
+
+        focusShadowModeNumberOfLinesToHighlightBelowCursor:
+            type: 'integer'
+            default: 2
+            minimum: 0
+
+         whenFocusModeIsActivated:
+            type: 'object'
+            properties:
+                enterFullScreen:
+                    description: "Full Screen"
+                    type: 'boolean'
+                    default: true
+                hideSidePanels:
+                    type: 'boolean'
+                    default: true
+                hideTabBar:
+                    type: 'boolean'
+                    default: true
+                hideFooterBar:
+                    type: 'boolean'
+                    default: true
+                hideLineNumbers:
+                    type: 'boolean'
+                    default: true
+                useLargeFontSize:
+                    type: 'boolean'
+                    default: true
 
 
     activate: (state) ->

@@ -24,12 +24,12 @@ class FocusModeBase
 
     addCssClass: (elem, cssClass) ->
         classNameValue = elem.className
-        elem.className = classNameValue + " " + cssClass
+        if (classNameValue.indexOf(cssClass) is -1)
+            elem.className = classNameValue + " " + cssClass
 
 
     removeCssClass: (elem, cssClass) ->
-        classNameValue = elem.className
-        elem.className = classNameValue.replace(" " + cssClass, "")
+        elem.className = elem.className.replace(new RegExp("\\s*" + cssClass, "g"), "");
 
 
     removeFocusLineClass: =>

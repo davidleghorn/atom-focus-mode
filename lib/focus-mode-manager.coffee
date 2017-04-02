@@ -1,5 +1,6 @@
 {CompositeDisposable} = require 'atom'
 
+FocusModeSettings = require './focus-mode-settings'
 FocusCursorMode = require './focus-cursor-mode'
 FocusScopeMode = require './focus-scope-mode'
 FocusShadowMode = require './focus-shadow-mode'
@@ -13,6 +14,7 @@ class FocusModeManager
         @focusCursorMode = new FocusCursorMode()
         @focusShadowMode = new FocusShadowMode()
         @focusSingleLineMode = new FocusSingleLineMode()
+        @focusModeSettings = new FocusModeSettings()
 
 
     didAddCursor: (cursor) =>
@@ -37,82 +39,73 @@ class FocusModeManager
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
 
+    toggleCursorFocusMode: =>
+        if @focusCursorMode.isActivated
+            @focusCursorModeOff()
+            @exitFullScreen()
+        else
+            @focusCursorModeOn()
+            @setFullScreen()
+
+
     focusCursorModeOn: =>
-        atom.setFullScreen(true)
-        @focusCursorMode.on()
+        @turnOffAnyActivatedFocusModes()
         @cursorEventSubscribers = @registerCursorEventHandlers()
+        @focusCursorMode.on()
 
 
     focusCursorModeOff: =>
         @focusCursorMode.off()
         @cursorEventSubscribers.dispose()
-        if(atom.isFullScreen())
-            atom.setFullScreen(false)
+
+
+    toggleFocusSingleLineMode: =>
+        if @focusSingleLineMode.isActivated
+            @focusSingleLineMode.off()
+            @exitFullScreen()
+        else
+            @turnOffAnyActivatedFocusModes()
+            @focusSingleLineMode.on()
+            @setFullScreen()
+
+
+    toggleFocusShadowMode: =>
+        if @focusShadowMode.isActivated
+            @focusShadowModeOff()
+            @exitFullScreen()
+        else
+            @focusShadowModeOn()
+            @setFullScreen()
 
 
     focusShadowModeOff: =>
         @focusShadowMode.off()
         @cursorEventSubscribers.dispose()
-        if(atom.isFullScreen())
-            atom.setFullScreen(false)
 
+
+    focusShadowModeOn: =>
+        @turnOffAnyActivatedFocusModes()
+        @cursorEventSubscribers = @registerCursorEventHandlers()
+        @focusShadowMode.on()
+
+
+    toggleFocusScopeMode: =>
+        if @focusScopeMode.isActivated
+            @focusScopeModeOff()
+            @exitFullScreen()
+        else
+            @focusScopeModeOn()
+            @setFullScreen()
+
+
+    focusScopeModeOn: =>
+        @turnOffAnyActivatedFocusModes()
+        @cursorEventSubscribers = @registerCursorEventHandlers()
+        @focusScopeMode.on()
 
     focusScopeModeOff: =>
         @focusScopeMode.off()
         @cursorEventSubscribers.dispose()
-        if(atom.isFullScreen())
-            atom.setFullScreen(false)
-
-
-    toggleCursorFocusMode: =>
-        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-        @focusShadowModeOff() if @focusShadowMode.isActivated
-        @focusScopeModeOff() if @focusScopeMode.isActivated
-
-        if @focusCursorMode.isActivated
-            @focusCursorModeOff()
-        else
-            @focusCursorModeOn()
-
-
-    toggleFocusSingleLineMode: =>
-        @focusCursorModeOff() if @focusCursorMode.isActivated
-        @focusShadowModeOff() if @focusShadowMode.isActivated
-        @focusScopeModeOff() if @focusScopeMode.isActivated
-
-        if @focusSingleLineMode.isActivated
-            @focusSingleLineMode.off()
-            if @focusShadowMode.isActivated
-                @focusShadowModeOff()
-        else
-            @focusSingleLineMode.on()
-            atom.setFullScreen(true)
-
-
-    toggleFocusShadowMode: =>
-        @focusCursorModeOff() if @focusCursorMode.isActivated
-        @focusScopeModeOff() if @focusScopeMode.isActivated
-        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-
-        if @focusShadowMode.isActivated
-            @focusShadowModeOff()
-        else
-            @cursorEventSubscribers = @registerCursorEventHandlers()
-            @focusShadowMode.on()
-            atom.setFullScreen(true)
-
-
-    toggleFocusScopeMode: =>
-        @focusCursorModeOff() if @focusCursorMode.isActivated
-        @focusShadowModeOff() if @focusShadowMode.isActivated
-        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-
-        if @focusScopeMode.isActivated
-            @focusScopeModeOff()
-        else
-            @cursorEventSubscribers = @registerCursorEventHandlers()
-            @focusScopeMode.on()
-            atom.setFullScreen(true)
 
 
     registerCursorEventHandlers: =>
@@ -124,6 +117,23 @@ class FocusModeManager
             subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
 
         return subscriptions
+
+
+    setFullScreen: =>
+        if (@focusModeSettings.fullScreen)
+            atom.setFullScreen(true)
+
+
+    exitFullScreen: =>
+        if(@focusModeSettings.fullScreen)
+            atom.setFullScreen(false)
+
+
+    turnOffAnyActivatedFocusModes: ()=>
+        @focusScopeModeOff() if @focusScopeMode.isActivated
+        @focusCursorModeOff() if @focusCursorMode.isActivated
+        @focusShadowModeOff() if @focusShadowMode.isActivated
+        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
 
 
     subscribersDispose: =>
