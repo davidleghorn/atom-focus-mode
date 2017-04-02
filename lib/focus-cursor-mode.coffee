@@ -8,7 +8,7 @@ class FocusCursorMode extends FocusModeBase
         @isActivated = false
         @focusModeMarkersCache = {}
         @focusModeLineOpacityCssClass = @getFocusLineCssClass(
-            @getConfig('atom-focus-mode.focusModeLineOpacity')
+            @getConfig('atom-focus-mode.cursorFocusMode.lineOpacity')
         )
         @configSubscriptions = @registerConfigSubscriptions()
 
@@ -20,7 +20,7 @@ class FocusCursorMode extends FocusModeBase
     registerConfigSubscriptions: =>
         configSubscriptions = new CompositeDisposable()
         configSubscriptions.add(atom.config.observe(
-            'atom-focus-mode.focusModeLineOpacity',
+            'atom-focus-mode.cursorFocusMode.lineOpacity',
             (opacityConfigValue) =>
                 @focusModeLineOpacityCssClass = @getFocusLineCssClass(opacityConfigValue)
         ))

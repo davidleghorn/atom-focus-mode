@@ -5,45 +5,61 @@ FocusModeManager = require './focus-mode-manager'
 module.exports =
 
     config:
-
-        focusModeLineOpacity:
-            description: 'Opacity applied to focus mode highlighted lines'
-            type: 'string'
-            default: '100%'
-            enum: ['100%', '55%']
-
-        focusShadowModeNumberOfLinesToHighlightAboveCursor:
-            type: 'integer'
-            default: 2
-            minimum: 0
-
-        focusShadowModeNumberOfLinesToHighlightBelowCursor:
-            type: 'integer'
-            default: 2
-            minimum: 0
-
          whenFocusModeIsActivated:
             type: 'object'
+            order: 1
             properties:
                 enterFullScreen:
-                    description: "Full Screen"
+                    title: "Enter Full Screen"
                     type: 'boolean'
                     default: true
                 hideSidePanels:
+                    title: "Hide Side Panels"
                     type: 'boolean'
                     default: true
                 hideTabBar:
+                    title: "Hide Tab Bar"
                     type: 'boolean'
                     default: true
                 hideFooterBar:
+                    title: "Hide Footer Bar"
                     type: 'boolean'
                     default: true
                 hideLineNumbers:
+                    title: "Hide Line Numbers"
                     type: 'boolean'
                     default: true
                 useLargeFontSize:
+                    title: "Use Large Font Size"
                     type: 'boolean'
                     default: true
+
+        focusShadowMode:
+            type: 'object'
+            order: 2
+            properties:
+                numberOfLinesToHighlightAboveCursor:
+                    title: "Number of lines to highlight above cursor"
+                    type: 'integer'
+                    default: 2
+                    minimum: 0
+
+                numberOfLinesToHighlightBelowCursor:
+                    title: "Number of lines to highlight below cursor"
+                    type: 'integer'
+                    default: 2
+                    minimum: 0
+
+        cursorFocusMode:
+            type: 'object'
+            order: 3
+            properties:
+                lineOpacity:
+                    title: 'Opacity applied to Cursor Focus mode highlighted lines'
+                    type: 'string'
+                    default: '55%'
+                    enum: ['55%','100%']
+
 
 
     activate: (state) ->

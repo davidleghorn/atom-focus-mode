@@ -28,7 +28,6 @@ class FocusModeSettings extends FocusModeBase
                 "cssClass": "afm-larger-font"
             }
         }
-        console.log("Focus mode config = ", @config)
         @applyConfigSettings()
         @configSubscribers = @registerConfigSubscribers()
 
@@ -71,9 +70,8 @@ class FocusModeSettings extends FocusModeBase
 
 
     applyConfigSetting: (configKey, value) =>
-        console.log("configKey = ", configKey, " value = ", value, " initially set as ", @config[configKey].activated)
         @config[configKey].activated = value
-        console.log("configKey = ", configKey, " value = ", value, " now set as ", @config[configKey].activated)
+
         if (@config[configKey].activated)
             @addCssClass(@getBodyTagElement(), @config[configKey].cssClass)
         else

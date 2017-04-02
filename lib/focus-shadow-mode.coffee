@@ -9,10 +9,10 @@ class FocusShadowMode extends FocusModeBase
         @focusShadowMarkerCache = {}
         @focusModeShadowBodyClassName = "focus-shadow-mode"
         @shadowModeNumberOfRowsBeforeCursor = @getConfig(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor'
+            'atom-focus-mode.focusShadowMode.numberOfLinesToHighlightAboveCursor'
         ) or 2
         @shadowModeNumberOfRowsAfterCursor = @getConfig(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightBelowCursor'
+            'atom-focus-mode.focusShadowMode.numberOfLinesToHighlightBelowCursor'
         ) or 2
         @configSubscriptions = @registerConfigSubscriptions()
 
@@ -20,11 +20,11 @@ class FocusShadowMode extends FocusModeBase
     registerConfigSubscriptions: =>
         configSubscriptions = new CompositeDisposable()
         configSubscriptions.add(atom.config.observe(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightAboveCursor',
+            'atom-focus-mode.focusShadowMode.numberOfLinesToHighlightAboveCursor',
             (numberOfLines) => @shadowModeNumberOfRowsBeforeCursor = numberOfLines if numberOfLines?
         ))
         configSubscriptions.add(atom.config.observe(
-            'atom-focus-mode.focusShadowModeNumberOfLinesToHighlightBelowCursor',
+            'atom-focus-mode.focusShadowMode.numberOfLinesToHighlightBelowCursor',
             (numberOfLines) => @shadowModeNumberOfRowsAfterCursor = numberOfLines if numberOfLines?
         ))
 
