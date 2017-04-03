@@ -1,48 +1,49 @@
 
 // FOCUS MODE
-.focus-cursor-mode atom-text-editor.editor
-{
-    .line { opacity: 0.15;}
-
-    .line .syntax--comment,
-    .line.cursor-line,
-    .focus-line {
-        opacity: 1;
-    }
-}
+// .focus-cursor-mode atom-text-editor.editor
+// {
+//     .line { opacity: 0.15;}
+//
+//     .line .syntax--comment,
+//     .line.cursor-line,
+//     .focus-line {
+//         opacity: 1;
+//     }
+// }
 
 // focus-cursor-mode with focus-line 65% opacity
-.focus-cursor-mode.line-55 atom-text-editor.editor,
-.focus-scope-mode.line-55 atom-text-editor.editor
-{
-    .focus-line { opacity: 0.65; }
-
-    .line .syntax--comment,
-    .line.cursor-line {
-        opacity: 1;
-    }
-}
+// .focus-cursor-mode.line-65 atom-text-editor.editor,
+// .focus-scope-mode.line-65 atom-text-editor.editor
+// {
+//     .focus-line { opacity: 0.65; }
+//
+//     .line .syntax--comment,
+//     .line.cursor-line {
+//         opacity: 1;
+//     }
+// }
 
 
 // FOCUS SHADOW MODE
-.focus-shadow-mode atom-text-editor.editor,
-.focus-scope-mode atom-text-editor.editor
-{
-    .line { opacity: 0.15; }
-
-    // active cursor line
-    .line.cursor-line,
-    .line.syntax--comment.cursor-line,
-    .focus-line.cursor-line {
-        opacity: 1;
-    }
-
-    // shadow lines around main cursor line
-    .line.syntax--comment,
-    .focus-line {
-        opacity: 0.65;
-    }
-}
+// .focus-shadow-mode atom-text-editor.editor,
+// .focus-scope-mode atom-text-editor.editor
+// {
+//     .line { opacity: 0.15; }
+//
+//     // active cursor line
+//     .line.cursor-line,
+//     .line.syntax--comment.cursor-line,
+//     // .line .syntax--comment, // comments are too low opacity otherwise?
+//     .focus-line.cursor-line {
+//         opacity: 1;
+//     }
+//
+//     // previously focussed lines, shadow lines or context lines around main cursor line
+//     .line.syntax--comment,
+//     .focus-line {
+//         opacity: 0.65;
+//     }
+// }
 
 
 // LINE NUMBER STYLING
@@ -67,18 +68,37 @@
     atom-text-editor.editor {
         border: 0;
 
+        .line { opacity: 0.15; }
+
+        .line.syntax--comment,
+        .focus-line {
+            opacity: 0.65;
+        }
+
+        // previously focussed lines when user selects 100%
+
+        // active cursor line
+        .line.cursor-line,
+        .line.syntax--comment.cursor-line,
+        // .line .syntax--comment, // comments are too low opacity otherwise?
+        .focus-line.cursor-line {
+            opacity: 1;
+        }
+
+        // gutter line numbers
         .line-number {
             opacity: 0.2;
             &.cursor-line {opacity: 0.6;}
         }
 
+        // line length/wrap guide
         .wrap-guide {
             opacity: 0.4;
         }
     }
 
+    // left tool panel that contains file explorer
     .tool-panel {
-
         li span,
         .list-item::before {
             opacity: 0.25;
@@ -89,9 +109,7 @@
         li:hover span {opacity: 1;}
     }
 
-    // ***********************
-    // Configuration settings
-    // ***********************
+    // Styling for Package Settings
 
     &.afm-no-side-panels {
 
@@ -153,5 +171,16 @@
             }
         }
     }
+}
 
+// when user selects previously focussed line opacity 100% from config options
+.focus-cursor-mode.line-100
+{
+    atom-text-editor.editor {
+        .focus-line,
+        .line .syntax--comment,
+        .line.cursor-line {
+            opacity: 1;
+        }
+    }
 }
