@@ -39,11 +39,11 @@ module.exports =
                 hideLineWrapGuide:
                     title: "Hide Line Length Guide"
                     type: 'boolean'
-                    default: true
+                    default: false
                 useLargeFontSize:
                     title: "Use Large Font Size"
                     type: 'boolean'
-                    default: true
+                    default: false
 
         focusShadowMode:
             type: 'object'
