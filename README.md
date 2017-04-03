@@ -5,7 +5,7 @@
 
 ### Focus Modes
 
-Activate/de-activate focus modes - main atom menu bar ***Packages > Focus Mode***, or ***Right click menu > Focus Mode*** or use ***key bindings***.
+To activate/de-activate a focus mode - main atom menu bar ***Packages > Focus Mode***, or ***Right click menu > Focus Mode*** or use ***key bindings***.
 
 | Focus Mode          | Description                            | Key bindings  |
 | --------------------|----------------------------------------|-------------- |
@@ -32,6 +32,15 @@ You can change the key bindings used by Focus Mode via Atom > Preferences > Keyb
 | Use large font size             | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)    |
 | Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode |
 | Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode |
+
+### Screenshots
+
+####Before
+
+
+####After (Scope Focus mode)
+
+
 
 ### Notes
 

@@ -24,10 +24,10 @@ class FocusScopeMode extends FocusModeBase
         @removeCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
 
     isCoffeeScriptMethodSignature: (lineText) ->
-        return /:\s*\(.*\)\s*(=>|->)/.test(lineText)
+        return /:\s*\(?.*\)?\s*(=>|->)/.test(lineText)
 
     isPythonMethodSignature: (lineText) ->
-        return /\s*def\s*.*\s*\(.*\)\s*:/.test(lineText)
+        return /\s*def\s*.*\s*\(?.*\)?\s*:/.test(lineText)
 
     isJavascriptFunctionSignature: (rowText) ->
         return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
