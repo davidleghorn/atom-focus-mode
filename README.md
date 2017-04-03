@@ -1,7 +1,7 @@
 # atom-focus-mode
 
-* **Helps you focus on only the lines of code you are working with, all other lines are faded into the background**
-* **Hides panels/tabs/bars and enters full screen mode for distraction free coding** (configurable via package settings)
+**Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
+Hides panels/tabs/bars and enters full screen mode for distraction free coding** (configurable via package settings).
 
 ***Activate/de-activate a focus mode *** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
 
@@ -11,7 +11,7 @@
 | Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl + alt + o` |
 | Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl + alt + u` |
 | Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl + alt + i` |
-| Exit Focus Mode     | Press esc key<br>Select the focus mode option again (using menu or key bindings)<br>`Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
+| Exit                | To exit a focus mode, press `esc` key, or `select the focus mode again` (using menu or key bindings), or <br>`Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
 
 You can change the key bindings used by Focus Mode via Atom > Preferences > Keybindings.
 
@@ -35,14 +35,14 @@ You can change the key bindings used by Focus Mode via Atom > Preferences > Keyb
 
 ### Notes
 
+**Scope Focus mode**
+
+* Currently supports files with ".js", ".coffee" and ".py" file extensions (more file types to follow).
+* In javascript files requires correct indentation of code block closing curly braces.
+* Does not focus scope when using multiple cursors.
+
 **To configure focus mode as per version 0.8 and earlier**
 
 In package settings:
 * Set "Cursor Focus Mode Line Opacity" option to "100%"
 * Set all options in the "When Focus Mode is Activated" section to false (not checked)
-
-**Scope Focus mode notes:**
-
-* Scope focus currently supports files with ".js", ".coffee" and ".py" file extensions (more file types to follow).
-* Scope focus in javascript files requires correct indentation of code block closing curly braces.
-* Does not focus scope when using multiple cursors.
