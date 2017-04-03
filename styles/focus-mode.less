@@ -1,66 +1,4 @@
 
-// FOCUS MODE
-// .focus-cursor-mode atom-text-editor.editor
-// {
-//     .line { opacity: 0.15;}
-//
-//     .line .syntax--comment,
-//     .line.cursor-line,
-//     .focus-line {
-//         opacity: 1;
-//     }
-// }
-
-// focus-cursor-mode with focus-line 65% opacity
-// .focus-cursor-mode.line-65 atom-text-editor.editor,
-// .focus-scope-mode.line-65 atom-text-editor.editor
-// {
-//     .focus-line { opacity: 0.65; }
-//
-//     .line .syntax--comment,
-//     .line.cursor-line {
-//         opacity: 1;
-//     }
-// }
-
-
-// FOCUS SHADOW MODE
-// .focus-shadow-mode atom-text-editor.editor,
-// .focus-scope-mode atom-text-editor.editor
-// {
-//     .line { opacity: 0.15; }
-//
-//     // active cursor line
-//     .line.cursor-line,
-//     .line.syntax--comment.cursor-line,
-//     // .line .syntax--comment, // comments are too low opacity otherwise?
-//     .focus-line.cursor-line {
-//         opacity: 1;
-//     }
-//
-//     // previously focussed lines, shadow lines or context lines around main cursor line
-//     .line.syntax--comment,
-//     .focus-line {
-//         opacity: 0.65;
-//     }
-// }
-
-
-// LINE NUMBER STYLING
-// .focus-cursor-mode atom-text-editor.editor,
-// .focus-shadow-mode atom-text-editor.editor,
-// .focus-scope-mode atom-text-editor.editor
-// {
-//     border: 0;
-//
-//     .line-number
-//     {
-//         opacity: 0.2;
-//
-//         &.cursor-line {opacity: 0.6;}
-//     }
-// }
-
 .focus-cursor-mode,
 .focus-shadow-mode,
 .focus-scope-mode
@@ -74,8 +12,6 @@
         .focus-line {
             opacity: 0.65;
         }
-
-        // previously focussed lines when user selects 100%
 
         // active cursor line
         .line.cursor-line,
@@ -95,6 +31,7 @@
         .wrap-guide {
             opacity: 0.4;
         }
+
     }
 
     // left tool panel that contains file explorer
@@ -173,7 +110,7 @@
     }
 }
 
-// when user selects previously focussed line opacity 100% from config options
+// when user selects focus mode line opacity 100% from package config settings
 .focus-cursor-mode.line-100
 {
     atom-text-editor.editor {
