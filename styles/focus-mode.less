@@ -3,7 +3,7 @@
 .focus-shadow-mode,
 .focus-scope-mode
 {
-    .fullscreen.atom-pane-container {
+    .fullscreen atom-pane-container {
         padding-top: 0;
     }
 
@@ -20,14 +20,13 @@
         // active cursor line
         .line.cursor-line,
         .line.syntax--comment.cursor-line,
-        // .line .syntax--comment, // comments are too low opacity otherwise?
         .focus-line.cursor-line {
             opacity: 1;
         }
 
         // gutter line numbers
         .line-number {
-            opacity: 0.2;
+            opacity: 0.3;
             &.cursor-line {opacity: 0.6;}
         }
 
@@ -63,7 +62,7 @@
             border: 0;
 
             &.editor {
-                padding: 20px 0 20px 6%;
+                padding: 20px 0 20px 8%;
                 border: 0;
             }
         }
@@ -92,6 +91,10 @@
         atom-pane .tab-bar {
             display: none;
         }
+
+        atom-pane-container {
+            padding-top: 0;
+        }
     }
 
     &.afm-no-wrap-guide {
@@ -112,10 +115,12 @@
             }
         }
     }
+
 }
 
 // when user selects focus mode line opacity 100% from package config settings
 .focus-cursor-mode.line-100
+// .focus-scope-mode.line-100 // TODO
 {
     atom-text-editor.editor {
         .focus-line,

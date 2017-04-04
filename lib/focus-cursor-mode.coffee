@@ -14,7 +14,7 @@ class FocusCursorMode extends FocusModeBase
 
 
     getFocusLineCssClass: (opacity) =>
-        if opacity is "65%" then return "line-65" else "line-100"
+        if opacity is "100%" then return "line-100" else "line-65"
 
 
     registerConfigSubscriptions: =>
