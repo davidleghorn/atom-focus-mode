@@ -3,6 +3,8 @@
 Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
 Hides editor panels and enters full screen mode for distraction free coding.
 
+![Focus cursor mode screenshot](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-mode.png)
+
 **Toggle focus modes** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
 
 | Focus Mode          | Description                            | Key bindings  |
@@ -44,3 +46,9 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 In package settings:
 * Set "Cursor Focus Mode Line Opacity" option to "100%"
 * Set all options in the "When Focus Mode is Activated" section to false (not checked)
+
+### Screenshots
+
+**Scope focus mode**
+
+![Focus scope mode screenshot](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/scope-focus.png)
