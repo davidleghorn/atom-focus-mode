@@ -6,7 +6,7 @@ module.exports =
 
     config:
 
-        cursorFocusModeLineOpacity:
+        focusModeLineOpacity:
             type: 'string'
             default: '65%'
             enum: ['65%','100%']

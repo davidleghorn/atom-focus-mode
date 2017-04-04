@@ -73,6 +73,10 @@ class FocusModeSettings extends FocusModeBase
             'atom-focus-mode.whenFocusModeIsActivated.useLargeFontSize',
             (value) => @applyConfigSetting("useLargeFontSize", value)
         ))
+        configSubscribers.add(atom.config.observe(
+            'atom-focus-mode.focusModeLineOpacity',
+            (value) => @applyFocusLineCssClass(value)
+        ))
 
         return configSubscribers
 
@@ -84,6 +88,13 @@ class FocusModeSettings extends FocusModeBase
             @addCssClass(@getBodyTagElement(), @config[configKey].cssClass)
         else
             @removeCssClass(@getBodyTagElement(), @config[configKey].cssClass)
+
+
+    applyFocusLineCssClass: (opacityValue) =>
+        if (opacityValue is "100%")
+            @addCssClass(@getBodyTagElement(), "line-100")
+        else
+            @removeCssClass(@getBodyTagElement(), "line-100")
 
 
     dispose: =>

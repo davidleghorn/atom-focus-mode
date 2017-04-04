@@ -19,7 +19,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 
 | Setting                         | Default | Description |
 |---------------------------------|---------|-------------|
-| Cursor Focus Mode Line Opacity  | 65%   | Line opacity applied to any cursor focus mode highlighted lines. Options 65% or 100% |
+| Focus Mode Line Opacity  | 65%   | Line opacity applied to any focus mode highlighted lines (options 65% or 100%) |
 | Enter Full Screen               | true  | When focus mode is activated enter full screen mode |
 | Hide Footer Bar                 | true  | When focus mode is activated hide editor footer bar |
 | Hide Line Numbers               | true  | When focus mode is activated hide editor line numbers |

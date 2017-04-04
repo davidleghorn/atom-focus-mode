@@ -7,31 +7,11 @@ class FocusCursorMode extends FocusModeBase
         super("FocusCursorMode")
         @isActivated = false
         @focusModeMarkersCache = {}
-        @focusModeLineOpacityCssClass = @getFocusLineCssClass(
-            @getConfig('atom-focus-mode.cursorFocusModeLineOpacity')
-        )
-        @configSubscriptions = @registerConfigSubscriptions()
-
-
-    getFocusLineCssClass: (opacity) =>
-        if opacity is "100%" then return "line-100" else "line-65"
-
-
-    registerConfigSubscriptions: =>
-        configSubscriptions = new CompositeDisposable()
-        configSubscriptions.add(atom.config.observe(
-            'atom-focus-mode.cursorFocusModeLineOpacity',
-            (opacityConfigValue) =>
-                @focusModeLineOpacityCssClass = @getFocusLineCssClass(opacityConfigValue)
-        ))
-
-        return configSubscriptions
 
     on: =>
         @isActivated = true
         bodyTag = @getBodyTagElement()
         @addCssClass(bodyTag, @focusModeBodyCssClass)
-        @addCssClass(bodyTag, @focusModeLineOpacityCssClass)
         @applyFocusModeToSelectedBufferRanges()
 
 
@@ -39,7 +19,6 @@ class FocusCursorMode extends FocusModeBase
         @isActivated = false
         bodyTag = @getBodyTagElement()
         @removeCssClass(bodyTag, @focusModeBodyCssClass)
-        @removeCssClass(bodyTag, @focusModeLineOpacityCssClass)
         @removeFocusLineClass()
         @focusModeMarkersCache = {}
 
@@ -88,10 +67,6 @@ class FocusCursorMode extends FocusModeBase
                         marker = textEditor.markBufferRange(range)
                         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
                         @cacheFocusModeMarker(textEditor.id, marker)
-
-
-    dispose: =>
-        @configSubscriptions.dispose() if @configSubscriptions
 
 
 module.exports = FocusCursorMode

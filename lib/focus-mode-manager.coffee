@@ -144,7 +144,6 @@ class FocusModeManager
 
     subscribersDispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-        @focusCursorMode.dispose()
         @focusShadowMode.dispose()
 
 

@@ -46,13 +46,6 @@ describe "FocusCursorMode", ->
                 bodyTagElem, focusMode.focusModeBodyCssClass
             )
 
-        it "should call addCssClass with focusModeLineOpacityCssClass", ->
-            focusMode.isActivated = false
-            focusMode.on()
-            expect(focusMode.addCssClass).toHaveBeenCalledWith(
-                bodyTagElem, focusMode.focusModeLineOpacityCssClass
-            )
-
         it "should call applyFocusModeToSelectedBufferRanges", ->
             focusMode.isActivated = false
             focusMode.on()
