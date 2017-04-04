@@ -1,9 +1,9 @@
 # atom-focus-mode
 
 Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
-Hides panels/tabs/bars and enters full screen mode for distraction free coding (configurable via package settings).
+Hides editor panels and enters full screen mode for distraction free coding.
 
-**Activate/de-activate focus modes** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
+**Toggle focus modes** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
 
 | Focus Mode          | Description                            | Key bindings  |
 | --------------------|----------------------------------------|-------------- |
@@ -11,9 +11,9 @@ Hides panels/tabs/bars and enters full screen mode for distraction free coding (
 | Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o` |
 | Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u` |
 | Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i` |
-| Exit                | To exit a focus mode, press `esc` key, or `select the focus mode again` (using menu or key bindings), or <br>`Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
+| Exit                | To exit a focus mode, press `esc` key, or<br/>`select the focus mode again` (using menu or key bindings), or <br>`Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
 
-You can change the key bindings used by Focus Mode via Atom > Preferences > Keybindings.
+To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`.
 
 ### Package settings
 
