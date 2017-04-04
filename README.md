@@ -63,7 +63,7 @@ In package settings:
 **Cursor shadow focus mode**
  highlights the cursor line and 2 lines above and below the cursor line (configurable)
 
- ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/cursor-shadow.png)
+ ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-shadow.png)
 
 **Single line focus mode**
  highlights any line(s) that have cursor focus
