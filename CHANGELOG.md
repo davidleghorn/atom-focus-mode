@@ -1,4 +1,9 @@
 
+## 0.9.0  (2017-04-04)
+* Added: new package configuration settings.
+* Changed: Focus mode now enters full screen and hides editor panels, bars and tabs when a focus mode is activated (configurable via package settings).
+* Enhanced: Focus mode highlighted line opacity now also applies to scope focus mode. Highlighted line opacity can be configured to 65% or 100% via package settings.
+
 ## 0.8.0  (2017-03-31)
 * Added: "Scope Focus" feature - focus highlights class/method/function scopes in javascript, coffee script and python files
 * Changed: Menu options re-named and order changed
