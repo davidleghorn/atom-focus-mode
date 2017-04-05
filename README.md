@@ -3,7 +3,7 @@
 Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
 Hides editor panels and enters full screen mode for distraction free coding.
 
-![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-mode.png)
+![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/intro-image.png)
 
 **Toggle focus modes** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
 
@@ -52,20 +52,20 @@ In package settings:
 **Scope focus mode**
  highlights lines inside the method/function/class scope that the cursor was placed inside
 
-![Scope focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/scope-focus.png)
+![Scope focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/scope-focus.png)
 
 
 **Cursor focus mode**
  highlights any lines you placed the cursor on or selected with your mouse
 
- ![Cursor focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/cursor-focus.png)
+ ![Cursor focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/cursor-focus.png)
 
 **Cursor shadow focus mode**
  highlights the cursor line and 2 lines above and below the cursor line (configurable)
 
- ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-shadow.png)
+ ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/cursor-shadow-focus.png)
 
 **Single line focus mode**
  highlights any line(s) that have cursor focus
 
- ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/single-line-focus.png)
+ ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/single-line-focus.png)
