@@ -56,7 +56,7 @@ class FocusModeManager
 
     focusCursorModeOff: =>
         @focusCursorMode.off()
-        @cursorEventSubscribers.dispose()
+        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
     toggleFocusSingleLineMode: =>
@@ -80,7 +80,7 @@ class FocusModeManager
 
     focusShadowModeOff: =>
         @focusShadowMode.off()
-        @cursorEventSubscribers.dispose()
+        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
     focusShadowModeOn: =>
@@ -105,13 +105,13 @@ class FocusModeManager
 
     focusScopeModeOff: =>
         @focusScopeMode.off()
-        @cursorEventSubscribers.dispose()
+        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
     exitFocusMode: =>
         @turnOffAnyActivatedFocusModes()
         @exitFullScreen()
-        @cursorEventSubscribers.dispose()
+        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
     registerCursorEventHandlers: =>

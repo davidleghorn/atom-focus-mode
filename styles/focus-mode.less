@@ -131,12 +131,13 @@
     }
 }
 
-// css to set fullscreen gutter bg colour same as editor bg colour
+// improves default atom theme styling when side panels hidden
+// by setting gutter bg colour same as editor bg colour
 .focus-cursor-mode,
 .focus-shadow-mode,
 .focus-scope-mode
 {
-    &.fullscreen {
+    &.afm-no-side-panels {
         atom-workspace.theme-atom-dark-syntax {
             .gutter {
                 // important required as we need to over ride bg colour applied via an inline style
