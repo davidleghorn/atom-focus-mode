@@ -5,7 +5,10 @@ Hides editor panels and enters full screen mode for distraction free coding.
 
 ![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/intro-image.png)
 
-**Toggle focus modes** via atom menu bar `Packages > Focus Mode`, or `Right click menu > Focus Mode` or using `key bindings`.
+**To activate/de-activate focus modes:**
+* atom menu bar `Packages > Focus Mode`
+* `Right click menu > Focus Mode`
+* Use key bindings (see table below)
 
 | Focus Mode          | Description                            | Key bindings  |
 | --------------------|----------------------------------------|-------------- |
@@ -13,7 +16,7 @@ Hides editor panels and enters full screen mode for distraction free coding.
 | Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o` |
 | Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u` |
 | Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i` |
-| Exit                | To exit a focus mode, press `esc` key, or<br/>Select the focus mode again (using menu or key bindings), or <br>`Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
+| Exit                | To exit a focus mode, press `esc` key or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
 
 To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`.
 
@@ -38,7 +41,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 **Scope Focus mode**
 
 * Currently supports files with ".js", ".coffee" and ".py" file extensions (more file types to follow).
-* In javascript files requires correct indentation of code block closing curly braces.
+* Requires correct indentation of code block closing curly braces.
 * Does not focus scope when using multiple cursors.
 
 **To configure focus mode as per version 0.8 and earlier**
@@ -49,23 +52,23 @@ In package settings:
 
 ### Screenshots
 
-**Scope focus mode**
- highlights lines inside the method/function/class scope that the cursor was placed inside
+**Scope focus mode**<br/>
+ Highlights lines inside the method/function/class scope that the cursor was placed inside
 
 ![Scope focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/scope-focus.png)
 
 
-**Cursor focus mode**
- highlights any lines you placed the cursor on or selected with your mouse
+**Cursor focus mode**<br/>
+ Highlights any lines you placed the cursor on or selected with your mouse
 
  ![Cursor focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/cursor-focus.png)
 
-**Cursor shadow focus mode**
- highlights the cursor line and 2 lines above and below the cursor line (configurable)
+**Cursor shadow focus mode**<br/>
+ Highlights the cursor line and 2 lines above and below the cursor line (configurable)
 
  ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/cursor-shadow-focus.png)
 
-**Single line focus mode**
- highlights any line(s) that have cursor focus
+**Single line focus mode**<br/>
+ Highlights any line(s) that have cursor focus
 
  ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/single-line-focus.png)
