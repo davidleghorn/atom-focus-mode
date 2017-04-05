@@ -10,15 +10,15 @@ Hides editor panels and enters full screen mode for distraction free coding.
 * `Right click menu > Focus Mode`
 * Use key bindings (see table below)
 
-| Focus Mode          | Description                            | Key bindings  |
-| --------------------|----------------------------------------|-------------- |
-| Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside. | `ctrl+alt+p` |
-| Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o` |
-| Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u` |
-| Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i` |
-| Exit                | To exit a focus mode, press `esc` key or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`            |
+Focus Mode          | Description                            
+--------------------|----------------------------------------|
+Scope Focus<br/>`ctrl+alt+p`| Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.
+Cursor Focus<br/>`ctrl+alt+o` | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse
+Cursor Shadow Focus<br/>`ctrl+alt+u` | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings)
+Single Line Focus<br/>`ctrl+alt+i` | Focus highlights the single line(s) that have cursor focus
+Exit<br/>`esc`      | To exit a focus mode, press `esc` key or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit`
 
-To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`.
+To change the key bindings used by Focus Mode, Atom > Preferences > Keybindings.
 
 ### Package settings
 
