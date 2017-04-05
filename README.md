@@ -3,7 +3,7 @@
 Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
 Hides editor panels and enters full screen mode for distraction free coding.
 
-![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/intro-image.png)
+![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/focus-mode.png)
 
 **To activate/de-activate focus modes:**
 * atom menu bar `Packages > Focus Mode`
@@ -72,3 +72,5 @@ In package settings:
  Highlights any line(s) that have cursor focus
 
  ![Cursor shadow focus mode with focus mode line opacity set at 65%](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/new-screenshots/screenshots/single-line-focus.png)
+
+ Screenshots are using the atom theme [nord-atom-ui](https://atom.io/themes/nord-atom-ui)
