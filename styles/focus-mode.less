@@ -26,7 +26,7 @@
 
         // gutter line numbers
         .line-number {
-            opacity: 0.3;
+            opacity: 0.25;
             &.cursor-line {opacity: 0.6;}
         }
 
@@ -127,6 +127,37 @@
         .line .syntax--comment,
         .line.cursor-line {
             opacity: 1;
+        }
+    }
+}
+
+// css to set fullscreen gutter bg colour same as editor bg colour
+.focus-cursor-mode,
+.focus-shadow-mode,
+.focus-scope-mode
+{
+    &.fullscreen {
+        atom-workspace.theme-atom-dark-syntax {
+            .gutter {
+                // important required as we need to over ride bg colour applied via an inline style
+                background-color: rgb(29, 31, 33) !important;
+            }
+            .line-number {
+                opacity: 0.15;
+            }
+        }
+        atom-workspace.theme-solarized-dark-syntax {
+            .gutter {
+                background-color: #002b36 !important;
+            }
+            .line-number {
+                opacity: 0.15;
+            }
+        }
+        atom-workspace.theme-solarized-light-syntax {
+            .gutter {
+                background-color: #fdf6e3 !important;
+            }
         }
     }
 }
