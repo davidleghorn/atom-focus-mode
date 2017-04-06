@@ -15,5 +15,12 @@
   "license": "MIT",
   "engines": {
     "atom": ">=1.13.0"
-  }
+},
+"keywords": [
+    "distraction free",
+    "focus",
+    "writing",
+    "editing",
+    "productivity"
+  ]
 }
