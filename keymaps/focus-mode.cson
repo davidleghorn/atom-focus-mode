@@ -4,4 +4,4 @@
     'ctrl-alt-i': 'atom-focus-mode:toggle-single-line-focus'
     'ctrl-alt-u': 'atom-focus-mode:toggle-shadow-focus'
     'ctrl-alt-p': 'atom-focus-mode:toggle-scope-focus'
-    'escape': 'atom-focus-mode:exit'
+    'ctrl-alt-cmd': 'atom-focus-mode:exit'

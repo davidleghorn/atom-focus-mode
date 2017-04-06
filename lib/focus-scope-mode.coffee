@@ -65,9 +65,6 @@ class FocusScopeMode extends FocusModeBase
     isClassStartLine: (lineText) ->
         return /^\s*class\s+.*$/.test(lineText)
 
-    getAtomNotificationsInstance: ()->
-        return atom.notifications
-
 
     isMethodStartLine: (rowText, editor) =>
         fileType = @getFileTypeForEditor(editor)
@@ -80,7 +77,6 @@ class FocusScopeMode extends FocusModeBase
 
                 return @isJavascriptFunctionSignature(rowText) or @isEs6MethodSignature(rowText)
             else
-                @getAtomNotificationsInstance().addInfo("Sorry, " + fileType + " files are not supported by Scope Focus mode.\n\nScope focus mode currently supports js, coffee and py file extensions.");
                 return false
 
 

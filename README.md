@@ -16,7 +16,7 @@ Scope Focus         | Automatically focus highlights lines inside the method/fun
 Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o`
 Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u`
 Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i`
-Exit    | To exit a focus mode, press `esc` key or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `esc`
+Exit    | To exit a focus mode, press `ctrl+alt+cmd` keys or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `ctrl+alt+cmd`
 
 To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`.
 

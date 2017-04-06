@@ -16,6 +16,22 @@ class FocusModeManager
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
 
+    getAtomNotificationsInstance: ()->
+        return atom.notifications
+
+
+    getActiveTextEditor: ->
+        return atom.workspace.getActiveTextEditor()
+
+
+    getActiveEditorFileType: () =>
+        editor = @getActiveTextEditor()
+        if editor
+            splitFileName = editor.getTitle().split(".")
+            return if splitFileName.length > 1 then splitFileName[1] else ""
+
+        return ""
+
 
     didAddCursor: (cursor) =>
         if @focusCursorMode.isActivated
@@ -94,8 +110,12 @@ class FocusModeManager
             @focusScopeModeOff()
             @exitFullScreen()
         else
-            @focusScopeModeOn()
-            @setFullScreen()
+            fileType = @getActiveEditorFileType()
+            if (['js', 'py', 'coffee'].indexOf(fileType) > -1)
+                @focusScopeModeOn()
+                @setFullScreen()
+            else
+                @getAtomNotificationsInstance().addInfo("Sorry, file type " + fileType + " is not currently supported by Scope Focus mode. All other focus modes will work with this file.");
 
 
     focusScopeModeOn: =>
