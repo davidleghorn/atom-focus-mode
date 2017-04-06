@@ -1,8 +1,8 @@
 
 ## 0.10.0  (2017-04-06)
-* Breaking change: keyboard shortcut to exit focus mode is now ctrl-alt-cmd instead of esc (escape key binding interfered with atom default esc key functionality).
-* Changed: Activating scope focus mode now warns if file type is incompatible before opening scope focus mode.
-* Enhancement: Styling of gutter in default atom themes updated so that gutter background colour matches editor background colour when focus mode is activated and editor side panels are hidden.
+* Breaking change: keyboard shortcut to exit focus mode is now ctrl-alt-cmd instead of esc key.
+* Change: Activating scope focus mode now warns if file type is incompatible before opening scope focus mode.
+* Enhancement: Atom theme gutter background colour now matches editor background colour when focus mode is activated and editor side panels are hidden.
 
 ## 0.9.0  (2017-04-04)
 * Added: new package configuration settings.
