@@ -111,7 +111,7 @@ class FocusModeManager
             @exitFullScreen()
         else
             fileType = @getActiveEditorFileType()
-            if (['js', 'py', 'coffee'].indexOf(fileType) > -1)
+            if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
                 @focusScopeModeOn()
                 @setFullScreen()
             else

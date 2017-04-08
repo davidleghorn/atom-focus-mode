@@ -162,9 +162,18 @@ class FocusScopeMode extends FocusModeBase
 
 
     getScopeModeBufferRange: (bufferPosition, editor) =>
-        cursorBufferRow = bufferPosition.row
-        startRow = @getScopeModeBufferStartRow(cursorBufferRow, editor)
-        endRow = @getScopeModeBufferEndRow(startRow, editor)
+        fileType = @getFileTypeForEditor(editor)
+        startRow = 0
+        endRow = editor.getLineCount() - 1
+        if (['md', 'txt'].indexOf(fileType) > -1)
+            paragraphRange = editor.getCurrentParagraphBufferRange()
+            if paragraphRange
+                startRow = paragraphRange.start.row
+                endRow = paragraphRange.end.row + 1
+        else
+            cursorBufferRow = bufferPosition.row
+            startRow = @getScopeModeBufferStartRow(cursorBufferRow, editor)
+            endRow = @getScopeModeBufferEndRow(startRow, editor)
 
         return [[startRow, 0], [endRow, 0]]
 
