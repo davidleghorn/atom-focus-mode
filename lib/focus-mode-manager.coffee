@@ -15,14 +15,15 @@ class FocusModeManager
         @focusShadowMode = new FocusShadowMode()
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
+        # type writer
+        @keyupEventHandler = (e)=> @onKeyUp(e)
+        @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
+        @screenCenterRow = @getScreenCenter()
 
-    getAtomNotificationsInstance: ()->
-        return atom.notifications
-
+    # -----------atom editor -----------
 
     getActiveTextEditor: ->
         return atom.workspace.getActiveTextEditor()
-
 
     getActiveEditorFileType: () =>
         editor = @getActiveTextEditor()
@@ -31,6 +32,31 @@ class FocusModeManager
             return if splitFileName.length > 1 then splitFileName[1] else ""
 
         return ""
+
+    getAtomNotificationsInstance: ()->
+        return atom.notifications
+
+    # -------- package config settings -------
+
+    setFullScreen: =>
+        if (@focusModeSettings.fullScreen)
+            atom.setFullScreen(true)
+
+    exitFullScreen: =>
+        if(@focusModeSettings.fullScreen)
+            atom.setFullScreen(false)
+
+    # ------------- adding and moving cursors -----------
+
+    registerCursorEventHandlers: =>
+        self = @
+        subscriptions = new CompositeDisposable
+
+        atom.workspace.observeTextEditors (editor) ->
+            subscriptions.add editor.onDidAddCursor(self.didAddCursor)
+            subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
+
+        return subscriptions
 
 
     didAddCursor: (cursor) =>
@@ -55,49 +81,57 @@ class FocusModeManager
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
 
+    # ----------------- focus cursor mode ---------------
+
     toggleCursorFocusMode: =>
         if @focusCursorMode.isActivated
             @focusCursorModeOff()
             @exitFullScreen()
+            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
         else
             @focusCursorModeOn()
             @setFullScreen()
-
+            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
 
     focusCursorModeOn: =>
         @turnOffAnyActivatedFocusModes()
         @cursorEventSubscribers = @registerCursorEventHandlers()
         @focusCursorMode.on()
 
-
     focusCursorModeOff: =>
         @focusCursorMode.off()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
+    # ----------------- focus single line mode ---------------
+
     toggleFocusSingleLineMode: =>
         if @focusSingleLineMode.isActivated
             @focusSingleLineMode.off()
             @exitFullScreen()
+            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
         else
             @turnOffAnyActivatedFocusModes()
             @focusSingleLineMode.on()
             @setFullScreen()
+            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
 
+
+    # ----------------- focus shadow mode ---------------
 
     toggleFocusShadowMode: =>
         if @focusShadowMode.isActivated
             @focusShadowModeOff()
             @exitFullScreen()
+            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
         else
             @focusShadowModeOn()
             @setFullScreen()
-
+            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
 
     focusShadowModeOff: =>
         @focusShadowMode.off()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-
 
     focusShadowModeOn: =>
         @turnOffAnyActivatedFocusModes()
@@ -105,18 +139,21 @@ class FocusModeManager
         @focusShadowMode.on()
 
 
+    # ----------------- focus scope mode ---------------
+
     toggleFocusScopeMode: =>
         if @focusScopeMode.isActivated
             @focusScopeModeOff()
             @exitFullScreen()
+            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
         else
             fileType = @getActiveEditorFileType()
             if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
                 @focusScopeModeOn()
                 @setFullScreen()
+                @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, file type " + fileType + " is not currently supported by Scope Focus mode. All other focus modes will work with this file.");
-
 
     focusScopeModeOn: =>
         @turnOffAnyActivatedFocusModes()
@@ -128,39 +165,56 @@ class FocusModeManager
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
+    # ---------------- general for all focus modes --------------
+
     exitFocusMode: =>
         @turnOffAnyActivatedFocusModes()
         @exitFullScreen()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-
-
-    registerCursorEventHandlers: =>
-        self = @
-        subscriptions = new CompositeDisposable
-
-        atom.workspace.observeTextEditors (editor) ->
-            subscriptions.add editor.onDidAddCursor(self.didAddCursor)
-            subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
-
-        return subscriptions
-
-
-    setFullScreen: =>
-        if (@focusModeSettings.fullScreen)
-            atom.setFullScreen(true)
-
-
-    exitFullScreen: =>
-        if(@focusModeSettings.fullScreen)
-            atom.setFullScreen(false)
-
+        @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
 
     turnOffAnyActivatedFocusModes: ()=>
         @focusScopeModeOff() if @focusScopeMode.isActivated
         @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
+        @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
 
+
+    # ---------------- type writer centered cursor mode -----------------
+
+    typeWriterModeSettingIsActivated: ()->
+        return true  # TODO read from settings config object
+
+    typeWriterModeOn: ()=>
+        atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
+        # slight timeout in case activating focus mode has moved editor to full screen or hidden tabs
+        funcCall = ()=> @screenCenterRow = @getScreenCenter()
+        window.setTimeout(funcCall, 500) # small wait for screen to go full screen
+        console.log("++++++ adding keyup event handler")
+        document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
+
+    typeWriterModeOff: ()=>
+        atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
+        console.log("------ removing keyup event handler")
+        document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
+
+    onKeyUp: (e)=>
+        console.log("UP Key up e = ", e)
+        @centerCursor()
+
+    centerCursor: ()=>
+        editor = @getActiveTextEditor()
+        cursor = editor.getCursorScreenPosition()
+        if cursor.row > @screenCenterRow
+            console.log("Manager cursor row = ", cursor.row, " screen center row = ", @screenCenterRow)
+            editor.setScrollTop(editor.getLineHeightInPixels() * (cursor.row - @screenCenterRow))
+
+    getScreenCenter: () ->
+        editor = @getActiveTextEditor()
+        return Math.floor(editor.getRowsPerPage() / 2)
+
+    # -------------- clean up -----------
 
     subscribersDispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
