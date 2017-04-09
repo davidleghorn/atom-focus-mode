@@ -11,6 +11,8 @@ class FocusScopeMode extends FocusModeBase
         @focusScopeBodyClassName = "focus-scope-mode"
         # TODO: via factory function and facory func can be in base class
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
+        @screenCenterRow = @getScreenCenter()
+        console.log("constructor and @screenCenterRow = ", @screenCenterRow)
 
     on: =>
         @isActivated = true
@@ -18,7 +20,10 @@ class FocusScopeMode extends FocusModeBase
         cursor = textEditor.getLastCursor()
         @scopeModeOnCursorMove(cursor)
         @addCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
-        atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting # NEW TYPEWRITER MODE
+        # NEW TYPEWRITER MODE
+        atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
+        funcCall = ()=> @screenCenterRow = @getScreenCenter()
+        window.setTimeout(funcCall, 500) # small wait for screen to go full screen
 
     off: =>
         @isActivated = false
@@ -27,6 +32,10 @@ class FocusScopeMode extends FocusModeBase
         @removeCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
         # TODO: THIS SCROLL STUFF NEEDS TO BE IN HELPER OR MANAGER CLASS AS COULD BE USED BY ALL MODES?
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting) # NEW TYPEWRITER MODE
+
+    getScreenCenter: () ->
+        editor = @getActiveTextEditor()
+        return Math.floor(editor.getRowsPerPage() / 2)
 
     isCoffeeScriptMethodSignature: (lineText) ->
         return /:\s*\(?.*\)?\s*(=>|->)/.test(lineText)
@@ -226,15 +235,15 @@ class FocusScopeMode extends FocusModeBase
         endRow = range[1][0]
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
+        # NEW TYPEWRITER MODE
         # TODO: IF USER WANTS CENTERED TYPE WRITER EFFECT - READ FROM CONFIG
-        @centerCursor(editor, cursor)  # NEW TYPEWRITER MODE
+        @centerCursor(editor, cursor)
 
     # NEW TYPEWRITER MODE
     centerCursor: (editor, cursor)=>
-        screenCenterRow = Math.floor(editor.getRowsPerPage() / 2)
         cursor = editor.getCursorScreenPosition()
-        editor.setScrollTop(editor.getLineHeightInPixels() * (cursor.row - screenCenterRow))
-
-
+        if cursor.row > @screenCenterRow
+            console.log("v3 cursor row = ", cursor.row, " screen center row = ", @screenCenterRow)
+            editor.setScrollTop(editor.getLineHeightInPixels() * (cursor.row - @screenCenterRow))
 
 module.exports = FocusScopeMode
