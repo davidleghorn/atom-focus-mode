@@ -18,7 +18,7 @@ class FocusModeManager
         # type writer
         @keyupEventHandler = (e)=> @onKeyUp(e)
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
-        @screenCenterRow = @getScreenCenter()
+        @screenCenterRow = @getScreenCenterRow()
 
     # -----------atom editor -----------
 
@@ -83,7 +83,7 @@ class FocusModeManager
 
         if @typeWriterModeSettingIsActivated()
             console.log("is on")
-            @centerCursor(obj.cursor.editor, obj.cursor)
+            @centerCursor(obj.cursor)
 
 
     # ----------------- focus cursor mode ---------------
@@ -92,11 +92,11 @@ class FocusModeManager
         if @focusCursorMode.isActivated
             @focusCursorModeOff()
             @exitFullScreen()
-            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
         else
             @focusCursorModeOn()
             @setFullScreen()
-            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeActivate() if @typeWriterModeSettingIsActivated()
 
     focusCursorModeOn: =>
         @turnOffAnyActivatedFocusModes()
@@ -114,12 +114,12 @@ class FocusModeManager
         if @focusSingleLineMode.isActivated
             @focusSingleLineMode.off()
             @exitFullScreen()
-            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
         else
             @turnOffAnyActivatedFocusModes()
             @focusSingleLineMode.on()
             @setFullScreen()
-            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeActivate() if @typeWriterModeSettingIsActivated()
 
 
     # ----------------- focus shadow mode ---------------
@@ -128,11 +128,11 @@ class FocusModeManager
         if @focusShadowMode.isActivated
             @focusShadowModeOff()
             @exitFullScreen()
-            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
         else
             @focusShadowModeOn()
             @setFullScreen()
-            @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeActivate() if @typeWriterModeSettingIsActivated()
 
     focusShadowModeOff: =>
         @focusShadowMode.off()
@@ -150,13 +150,13 @@ class FocusModeManager
         if @focusScopeMode.isActivated
             @focusScopeModeOff()
             @exitFullScreen()
-            @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
         else
             fileType = @getActiveEditorFileType()
             if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
                 @focusScopeModeOn()
                 @setFullScreen()
-                @typeWriterModeOn() if @typeWriterModeSettingIsActivated()
+                @typeWriterModeActivate() if @typeWriterModeSettingIsActivated()
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, file type " + fileType + " is not currently supported by Scope Focus mode. All other focus modes will work with this file.");
 
@@ -176,14 +176,14 @@ class FocusModeManager
         @turnOffAnyActivatedFocusModes()
         @exitFullScreen()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-        @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+        @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
 
     turnOffAnyActivatedFocusModes: ()=>
         @focusScopeModeOff() if @focusScopeMode.isActivated
         @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-        @typeWriterModeOff() if @typeWriterModeSettingIsActivated()
+        @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
 
 
     # ---------------- type writer centered cursor mode -----------------
@@ -191,38 +191,43 @@ class FocusModeManager
     typeWriterModeSettingIsActivated: ()->
         return true  # TODO read from package settings config object
 
-    typeWriterModeOn: ()=>
+    typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        console.log("before timeout and screen center row = ", @screenCenterRow)
+        @screenCenterRow = @getScreenCenterRow()
+        console.log("type writer on and screen center row = ", @screenCenterRow)
+        # console.log("before timeout and screen center row = ", @screenCenterRow)
         # slight timeout in case activating focus mode has moved editor to full screen or hidden tabs
-        funcCall = ()=> @screenCenterRow = @getScreenCenter()
-        window.setTimeout(funcCall, 500) # small wait for screen to go full screen
+        # funcCall = ()=> @screenCenterRow = @getScreenCenterRow()
+        # window.setTimeout(funcCall, 1000) # small wait for screen to go full screen
         # console.log("DO NOTHING - NOT ++++++ adding keyup event handler")
         # document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
         # document.querySelector("body").addEventListener("click", @keyupEventHandler)
 
-    typeWriterModeOff: ()=>
-        console.log("typeWriterModeOff DO NOTHING with event handlers")
+    typeWriterModeDeactivate: ()=>
+        console.log("typeWriterModeDeactivate DO NOTHING with event handlers")
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
         # console.log("------ removing keyup event handler")
         # document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
         # document.querySelector("body").removeEventListener("click", @keyupEventHandler)
 
-    onKeyUp: (e)=>
-        console.log("Should not see this 2UP Key up e = ", e)
-        @centerCursor()
+    # onKeyUp: (e)=>
+    #     console.log("Should not see this 2UP Key up e = ", e)
+    #     @centerCursor()
 
-    centerCursor: (editor, cursor)=>
-        console.log("Cursor move version editor = ", editor, " cursor = ", cursor)
-        editor = @getActiveTextEditor()
-        cursor = editor.getCursorScreenPosition()
-        if cursor.row > @screenCenterRow
-            console.log("Manager cursor row = ", cursor.row, " screen center row = ", @screenCenterRow)
-            editor.setScrollTop(editor.getLineHeightInPixels() * (cursor.row - @screenCenterRow))
+    centerCursor: (cursor)=>
+        console.log("Cursor move version cursor = ", cursor)
+        editor = cursor.editor
+        cursorPoint = cursor.getScreenPosition()
+        @screenCenterRow = @getScreenCenterRow()
+        if cursorPoint.row >= @screenCenterRow
+            console.log("Manager cursorPoint row = ", cursorPoint.row, " screen center row = ", @screenCenterRow)
+            editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - @screenCenterRow))
 
-    getScreenCenter: () ->
+    getScreenCenterRow: () ->
         editor = @getActiveTextEditor()
-        return Math.floor(editor.getRowsPerPage() / 2)
+        console.log("get screen center, rows per page = ", editor.getRowsPerPage(), " center -2 = ", Math.floor(editor.getRowsPerPage() / 2) - 2)
+        # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
+        return Math.floor(editor.getRowsPerPage() / 2) - 2
 
     # -------------- clean up -----------
 

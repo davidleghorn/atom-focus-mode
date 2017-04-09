@@ -16,7 +16,7 @@ class FocusShadowMode extends FocusModeBase
         ) or 2
         @configSubscriptions = @registerConfigSubscriptions()
 
-
+    # TODO: move to focus-mode-settings class and read here via settingsObj.numberOfLinesToHighlightAboveCursor
     registerConfigSubscriptions: =>
         configSubscriptions = new CompositeDisposable()
         configSubscriptions.add(atom.config.observe(
