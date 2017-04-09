@@ -15,10 +15,8 @@ class FocusModeManager
         @focusShadowMode = new FocusShadowMode()
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
-        # type writer
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
         @screenCenterRow = @getScreenCenterRow()
-        @mouseTextSelectionInProgress = false
 
     # -----------atom editor -----------
 
@@ -195,7 +193,6 @@ class FocusModeManager
 
     typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        # @screenCenterRow = @getScreenCenterRow()
         editor = @getActiveTextEditor()
         @centerCursorRow(editor.getLastCursor())
         document.querySelector("body").addEventListener("mousedown", @onmouseDown)
@@ -218,7 +215,7 @@ class FocusModeManager
         editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
         screenCenterRow = @getScreenCenterRow()
-        if cursorPoint.row >= @screenCenterRow
+        if cursorPoint.row >= screenCenterRow
             editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
 
     getScreenCenterRow: () ->
