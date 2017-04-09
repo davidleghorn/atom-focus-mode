@@ -6,6 +6,7 @@ class FocusModeSettings extends FocusModeBase
     constructor: ->
         super('FocusModeSettings')
         @fullScreen = @getConfig('atom-focus-mode.whenFocusModeIsActivated.enterFullScreen') or false
+        @useTypeWriterMode = @getConfig('atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode') or false
         @config = {
             "hideSidePanels": {
                 "activated": @getConfig('atom-focus-mode.whenFocusModeIsActivated.hideSidePanels') or false,
@@ -48,6 +49,10 @@ class FocusModeSettings extends FocusModeBase
         configSubscribers.add(atom.config.observe(
             'atom-focus-mode.whenFocusModeIsActivated.enterFullScreen',
             (value) => @fullScreen = value if value?
+        ))
+        configSubscribers.add(atom.config.observe(
+            'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode',
+            (value) => @useTypeWriterMode = value if value?
         ))
         configSubscribers.add(atom.config.observe(
             'atom-focus-mode.whenFocusModeIsActivated.hideSidePanels',

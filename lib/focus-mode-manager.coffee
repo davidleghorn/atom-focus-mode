@@ -191,11 +191,11 @@ class FocusModeManager
     # ---------------- type writer centered cursor mode -----------------
 
     typeWriterModeSettingIsActivated: ()->
-        return true  # TODO read from package settings config object
+        return @focusModeSettings.useTypeWriterMode
 
     typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        @screenCenterRow = @getScreenCenterRow()
+        # @screenCenterRow = @getScreenCenterRow()
         editor = @getActiveTextEditor()
         @centerCursorRow(editor.getLastCursor())
         document.querySelector("body").addEventListener("mousedown", @onmouseDown)
@@ -217,9 +217,9 @@ class FocusModeManager
     centerCursorRow: (cursor)=>
         editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
-        # @screenCenterRow = @getScreenCenterRow()
+        screenCenterRow = @getScreenCenterRow()
         if cursorPoint.row >= @screenCenterRow
-            editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - @screenCenterRow))
+            editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
 
     getScreenCenterRow: () ->
         editor = @getActiveTextEditor()

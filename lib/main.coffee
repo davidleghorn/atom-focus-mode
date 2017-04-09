@@ -44,6 +44,10 @@ module.exports =
                     title: "Use Large Font Size"
                     type: 'boolean'
                     default: false
+                useTypeWriterMode:
+                    title: "Use type writer mode (vertically center cursor)"
+                    type: 'boolean'
+                    default: false
 
         focusShadowMode:
             type: 'object'
