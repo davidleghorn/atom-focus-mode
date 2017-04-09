@@ -194,11 +194,13 @@ class FocusModeManager
         window.setTimeout(funcCall, 500) # small wait for screen to go full screen
         console.log("++++++ adding keyup event handler")
         document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
+        document.querySelector("body").addEventListener("click", @keyupEventHandler)
 
     typeWriterModeOff: ()=>
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
         console.log("------ removing keyup event handler")
         document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
+        document.querySelector("body").removeEventListener("click", @keyupEventHandler)
 
     onKeyUp: (e)=>
         console.log("2UP Key up e = ", e)
