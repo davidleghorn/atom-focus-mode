@@ -71,6 +71,7 @@ class FocusModeManager
 
 
     didChangeCursorPosition: (obj) =>
+        console.log("didChamgePos and obj param = ", obj)
         if @focusCursorMode.isActivated
             @focusCursorMode.focusLine(obj.cursor)
 
@@ -79,6 +80,10 @@ class FocusModeManager
 
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
+
+        if @typeWriterModeSettingIsActivated()
+            console.log("is on")
+            @centerCursor(obj.cursor.editor, obj.cursor)
 
 
     # ----------------- focus cursor mode ---------------
@@ -192,21 +197,23 @@ class FocusModeManager
         # slight timeout in case activating focus mode has moved editor to full screen or hidden tabs
         funcCall = ()=> @screenCenterRow = @getScreenCenter()
         window.setTimeout(funcCall, 500) # small wait for screen to go full screen
-        console.log("++++++ adding keyup event handler")
-        document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
-        document.querySelector("body").addEventListener("click", @keyupEventHandler)
+        # console.log("DO NOTHING - NOT ++++++ adding keyup event handler")
+        # document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
+        # document.querySelector("body").addEventListener("click", @keyupEventHandler)
 
     typeWriterModeOff: ()=>
+        console.log("typeWriterModeOff DO NOTHING with event handlers")
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
-        console.log("------ removing keyup event handler")
-        document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
-        document.querySelector("body").removeEventListener("click", @keyupEventHandler)
+        # console.log("------ removing keyup event handler")
+        # document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
+        # document.querySelector("body").removeEventListener("click", @keyupEventHandler)
 
     onKeyUp: (e)=>
-        console.log("2UP Key up e = ", e)
+        console.log("Should not see this 2UP Key up e = ", e)
         @centerCursor()
 
-    centerCursor: ()=>
+    centerCursor: (editor, cursor)=>
+        console.log("Cursor move version editor = ", editor, " cursor = ", cursor)
         editor = @getActiveTextEditor()
         cursor = editor.getCursorScreenPosition()
         if cursor.row > @screenCenterRow
