@@ -16,9 +16,9 @@ class FocusModeManager
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
         # type writer
-        @keyupEventHandler = (e)=> @onKeyUp(e)
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
         @screenCenterRow = @getScreenCenterRow()
+        @mouseTextSelectionInProgress = false
 
     # -----------atom editor -----------
 
@@ -69,9 +69,11 @@ class FocusModeManager
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(cursor)
 
+        if @typeWriterModeSettingIsActivated() and @mouseTextSelectionInProgress is false
+            @centerCursorRow(obj.cursor)
+
 
     didChangeCursorPosition: (obj) =>
-        console.log("didChamgePos and obj param = ", obj)
         if @focusCursorMode.isActivated
             @focusCursorMode.focusLine(obj.cursor)
 
@@ -81,9 +83,9 @@ class FocusModeManager
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
-        if @typeWriterModeSettingIsActivated()
-            console.log("is on")
-            @centerCursor(obj.cursor)
+        if @typeWriterModeSettingIsActivated() and @mouseTextSelectionInProgress is false
+            console.log("is on, @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
+            @centerCursorRow(obj.cursor)
 
 
     # ----------------- focus cursor mode ---------------
@@ -194,38 +196,33 @@ class FocusModeManager
     typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
         @screenCenterRow = @getScreenCenterRow()
-        console.log("type writer on and screen center row = ", @screenCenterRow)
-        # console.log("before timeout and screen center row = ", @screenCenterRow)
-        # slight timeout in case activating focus mode has moved editor to full screen or hidden tabs
-        # funcCall = ()=> @screenCenterRow = @getScreenCenterRow()
-        # window.setTimeout(funcCall, 1000) # small wait for screen to go full screen
-        # console.log("DO NOTHING - NOT ++++++ adding keyup event handler")
-        # document.querySelector("body").addEventListener("keyup", @keyupEventHandler)
-        # document.querySelector("body").addEventListener("click", @keyupEventHandler)
+        editor = @getActiveTextEditor()
+        @centerCursorRow(editor.getLastCursor())
+        document.querySelector("body").addEventListener("mousedown", @onmouseDown)
+        document.querySelector("body").addEventListener("mouseup", @onmouseUp)
 
     typeWriterModeDeactivate: ()=>
-        console.log("typeWriterModeDeactivate DO NOTHING with event handlers")
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
-        # console.log("------ removing keyup event handler")
-        # document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
-        # document.querySelector("body").removeEventListener("click", @keyupEventHandler)
+        document.querySelector("body").removeEventListener("mousedown", @onmouseDown)
+        document.querySelector("body").removeEventListener("mouseup", @onmouseUp)
 
-    # onKeyUp: (e)=>
-    #     console.log("Should not see this 2UP Key up e = ", e)
-    #     @centerCursor()
+    onmouseDown: (e)=>
+        @mouseTextSelectionInProgress = true
+        console.log("mouseis down @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
 
-    centerCursor: (cursor)=>
-        console.log("Cursor move version cursor = ", cursor)
-        editor = cursor.editor
+    onmouseUp: (e)=>
+        @mouseTextSelectionInProgress = false
+        console.log("mouse up e = ", @mouseTextSelectionInProgress)
+
+    centerCursorRow: (cursor)=>
+        editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
-        @screenCenterRow = @getScreenCenterRow()
+        # @screenCenterRow = @getScreenCenterRow()
         if cursorPoint.row >= @screenCenterRow
-            console.log("Manager cursorPoint row = ", cursorPoint.row, " screen center row = ", @screenCenterRow)
             editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - @screenCenterRow))
 
     getScreenCenterRow: () ->
         editor = @getActiveTextEditor()
-        console.log("get screen center, rows per page = ", editor.getRowsPerPage(), " center -2 = ", Math.floor(editor.getRowsPerPage() / 2) - 2)
         # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
         return Math.floor(editor.getRowsPerPage() / 2) - 2
 
