@@ -184,10 +184,11 @@ class FocusModeManager
     # ---------------- type writer centered cursor mode -----------------
 
     typeWriterModeSettingIsActivated: ()->
-        return true  # TODO read from settings config object
+        return true  # TODO read from package settings config object
 
     typeWriterModeOn: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
+        console.log("before timeout and screen center row = ", @screenCenterRow)
         # slight timeout in case activating focus mode has moved editor to full screen or hidden tabs
         funcCall = ()=> @screenCenterRow = @getScreenCenter()
         window.setTimeout(funcCall, 500) # small wait for screen to go full screen
@@ -200,7 +201,7 @@ class FocusModeManager
         document.querySelector("body").removeEventListener("keyup", @keyupEventHandler)
 
     onKeyUp: (e)=>
-        console.log("UP Key up e = ", e)
+        console.log("2UP Key up e = ", e)
         @centerCursor()
 
     centerCursor: ()=>
