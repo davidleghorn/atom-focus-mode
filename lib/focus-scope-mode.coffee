@@ -9,6 +9,8 @@ class FocusScopeMode extends FocusModeBase
         @focusScopeMarkerCache = {}
         @editorFileTypeCache = {}
         @focusScopeBodyClassName = "focus-scope-mode"
+        # TODO: via factory function and facory func can be in base class
+        @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
 
     on: =>
         @isActivated = true
@@ -16,12 +18,15 @@ class FocusScopeMode extends FocusModeBase
         cursor = textEditor.getLastCursor()
         @scopeModeOnCursorMove(cursor)
         @addCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
+        atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting # NEW TYPEWRITER MODE
 
     off: =>
         @isActivated = false
         @removeScopeModeMarkers()
         @focusScopeMarkerCache = {}
         @removeCssClass(@getBodyTagElement(), @focusScopeBodyClassName)
+        # TODO: THIS SCROLL STUFF NEEDS TO BE IN HELPER OR MANAGER CLASS AS COULD BE USED BY ALL MODES?
+        atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting) # NEW TYPEWRITER MODE
 
     isCoffeeScriptMethodSignature: (lineText) ->
         return /:\s*\(?.*\)?\s*(=>|->)/.test(lineText)
@@ -221,6 +226,15 @@ class FocusScopeMode extends FocusModeBase
         endRow = range[1][0]
         marker.setTailBufferPosition([startRow, 0])
         marker.setHeadBufferPosition([endRow, 0])
+        # TODO: IF USER WANTS CENTERED TYPE WRITER EFFECT - READ FROM CONFIG
+        @centerCursor(editor, cursor)  # NEW TYPEWRITER MODE
+
+    # NEW TYPEWRITER MODE
+    centerCursor: (editor, cursor)=>
+        screenCenterRow = Math.floor(editor.getRowsPerPage() / 2)
+        cursor = editor.getCursorScreenPosition()
+        editor.setScrollTop(editor.getLineHeightInPixels() * (cursor.row - screenCenterRow))
+
 
 
 module.exports = FocusScopeMode
