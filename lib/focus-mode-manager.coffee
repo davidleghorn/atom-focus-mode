@@ -30,7 +30,6 @@ class FocusModeManager
 
         return ""
 
-
     # -------- package config settings -------
 
     setFullScreen: =>
@@ -88,7 +87,7 @@ class FocusModeManager
         if @focusCursorMode.isActivated
             @focusCursorModeOff()
             @exitFullScreen()
-            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() # if @typeWriterModeSettingIsActivated()
         else
             @focusCursorModeOn()
             @setFullScreen()
@@ -110,7 +109,7 @@ class FocusModeManager
         if @focusSingleLineMode.isActivated
             @focusSingleLineMode.off()
             @exitFullScreen()
-            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() # if @typeWriterModeSettingIsActivated()
         else
             @turnOffAnyActivatedFocusModes()
             @focusSingleLineMode.on()
@@ -124,7 +123,7 @@ class FocusModeManager
         if @focusShadowMode.isActivated
             @focusShadowModeOff()
             @exitFullScreen()
-            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate() # if @typeWriterModeSettingIsActivated()
         else
             @focusShadowModeOn()
             @setFullScreen()
@@ -146,7 +145,7 @@ class FocusModeManager
         if @focusScopeMode.isActivated
             @focusScopeModeOff()
             @exitFullScreen()
-            @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+            @typeWriterModeDeactivate()
         else
             fileType = @getActiveEditorFileType()
             if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
@@ -154,7 +153,9 @@ class FocusModeManager
                 @setFullScreen()
                 @typeWriterModeActivate() if @typeWriterModeSettingIsActivated()
             else
-                @getAtomNotificationsInstance().addInfo("Sorry, file type " + fileType + " is not currently supported by Scope Focus mode. All other focus modes will work with this file.");
+                @getAtomNotificationsInstance().addInfo("Sorry, file type " +
+                fileType + " is not currently supported by Scope Focus mode." +
+                " All other focus modes will work with this file.");
 
     focusScopeModeOn: =>
         @turnOffAnyActivatedFocusModes()
@@ -172,14 +173,14 @@ class FocusModeManager
         @turnOffAnyActivatedFocusModes()
         @exitFullScreen()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-        @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+        @typeWriterModeDeactivate()
 
     turnOffAnyActivatedFocusModes: ()=>
         @focusScopeModeOff() if @focusScopeMode.isActivated
         @focusCursorModeOff() if @focusCursorMode.isActivated
         @focusShadowModeOff() if @focusShadowMode.isActivated
         @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-        @typeWriterModeDeactivate() if @typeWriterModeSettingIsActivated()
+        @typeWriterModeDeactivate()
 
 
     # ---------------- type writer centered cursor mode -----------------
@@ -219,9 +220,13 @@ class FocusModeManager
 
     toggleTypeWriterScrolling: ()=>
         if @focusSingleLineMode.isActivated
-            @getAtomNotificationsInstance().addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
+            atom.notifications.addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
         else
-            @focusModeSettings.toggleTypeWriterScrollingSetting()
+            newValue = !@focusModeSettings.useTypeWriterMode
+            msg = if newValue then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
+            atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", newValue)
+            atom.notifications.addInfo(msg)
+            @typeWriterModeActivate() if newValue
 
 
     # ----------- clean up -----------
