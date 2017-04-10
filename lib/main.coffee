@@ -91,6 +91,10 @@ module.exports =
             'atom-workspace',
             'atom-focus-mode:exit': => @focusModeManager.exitFocusMode()
         )
+        @subscriptions.add atom.commands.add(
+            'atom-workspace',
+            'atom-focus-mode:use-type-writer-scrolling': => @focusModeManager.toggleTypeWriterScrolling()
+        )
 
 
     deactivate: ->

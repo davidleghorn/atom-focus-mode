@@ -10,12 +10,20 @@ class FocusModeBase
         return atom.config.get(key)
 
 
+    setConfig: (key, value) ->
+        atom.config.set(key, value)
+
+
     getAtomWorkspaceTextEditors: ->
         return atom.workspace.getTextEditors()
 
 
     getActiveTextEditor: ->
         return atom.workspace.getActiveTextEditor()
+
+
+    getAtomNotificationsInstance: ()->
+        return atom.notifications
 
 
     getBodyTagElement: ->

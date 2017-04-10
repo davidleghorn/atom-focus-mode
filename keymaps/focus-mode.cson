@@ -5,3 +5,4 @@
     'ctrl-alt-u': 'atom-focus-mode:toggle-shadow-focus'
     'ctrl-alt-p': 'atom-focus-mode:toggle-scope-focus'
     'ctrl-alt-cmd': 'atom-focus-mode:exit'
+    'ctrl-alt-t': 'atom-focus-mode:use-type-writer-scrolling'

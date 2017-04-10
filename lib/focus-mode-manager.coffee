@@ -30,8 +30,6 @@ class FocusModeManager
 
         return ""
 
-    getAtomNotificationsInstance: ()->
-        return atom.notifications
 
     # -------- package config settings -------
 
@@ -218,6 +216,10 @@ class FocusModeManager
         editor = @getActiveTextEditor()
         # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
         return Math.floor(editor.getRowsPerPage() / 2) - 2
+
+    toggleTypeWriterScrolling: ()=>
+        @focusModeSettings.toggleTypeWriterScrollingSetting()
+
 
     # ----------- clean up -----------
 
