@@ -16,7 +16,7 @@ describe "Main", ->
             focusModePackage.activate()
 
             expect(focusModePackage.subscriptions).not.toBeNull()
-            expect(focusModePackage.subscriptions.disposables.size).toEqual(5)
+            expect(focusModePackage.subscriptions.disposables.size).toEqual(6)
 
 
     describe "when the 'atom-focus-mode:toggle-cursor-focus' event is triggered", ->
