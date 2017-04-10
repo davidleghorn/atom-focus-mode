@@ -45,7 +45,8 @@ module.exports =
                     type: 'boolean'
                     default: false
                 useTypeWriterMode:
-                    title: "Use type writer mode (vertically center cursor)"
+                    title: "Use Type Writer Scrolling"
+                    description: "Keeps the line containing the cursor in the center of the text editor"
                     type: 'boolean'
                     default: false
 

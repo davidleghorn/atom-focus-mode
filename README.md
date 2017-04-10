@@ -33,7 +33,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 | Hide Side Panels                | true  | When focus mode is activated hide side panels e.g. the file explorer |
 | Hide Tab Bar                    | true  | When focus mode is activated hide any opened file tabs |
 | Use large font size             | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)    |
-| Type writer scrolling | false | Keeps the line containing the cursor in the center of the text editor |
+| Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor |
 | Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode |
 | Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode |
 
