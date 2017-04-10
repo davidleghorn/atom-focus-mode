@@ -103,7 +103,7 @@ class FocusModeSettings extends FocusModeBase
 
 
     toggleTypeWriterScrollingSetting: ()=>
-        msg = if @useTypeWriterMode then "Type Writer Scrolling Off" else "Type Writer Scrolling On"
+        msg = if @useTypeWriterMode then "Focus Mode Type Writer Scrolling Off" else "Focus Mode Type Writer Scrolling On"
         @setConfig("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", !@useTypeWriterMode)
         @getAtomNotificationsInstance().addInfo(msg)
 

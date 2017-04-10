@@ -218,7 +218,10 @@ class FocusModeManager
         return Math.floor(editor.getRowsPerPage() / 2) - 2
 
     toggleTypeWriterScrolling: ()=>
-        @focusModeSettings.toggleTypeWriterScrollingSetting()
+        if @focusSingleLineMode.isActivated
+            @getAtomNotificationsInstance().addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
+        else
+            @focusModeSettings.toggleTypeWriterScrollingSetting()
 
 
     # ----------- clean up -----------
