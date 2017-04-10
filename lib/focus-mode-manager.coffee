@@ -209,15 +209,15 @@ class FocusModeManager
     centerCursorRow: (cursor)=>
         editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
-        screenCenterRow = @getScreenCenterRow()
+        screenCenterRow = @getScreenCenterRow(editor)
         if cursorPoint.row >= screenCenterRow
             editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
 
-    getScreenCenterRow: () ->
-        editor = @getActiveTextEditor()
+    getScreenCenterRow: (editor) ->
         # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
         return Math.floor(editor.getRowsPerPage() / 2) - 2
 
+    # toggle type writer scrolling keyboard shortcut handler
     toggleTypeWriterScrolling: ()=>
         if @focusSingleLineMode.isActivated
             atom.notifications.addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
@@ -226,7 +226,8 @@ class FocusModeManager
             msg = if newValue then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
             atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", newValue)
             atom.notifications.addInfo(msg)
-            @typeWriterModeActivate() if newValue
+            if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
+                @typeWriterModeActivate() if newValue
 
 
     # ----------- clean up -----------
