@@ -42,18 +42,13 @@ class FocusCursorMode extends FocusModeBase
             rowNumber = range.getRows()
 
             if rowNumber[0] is bufferRowNumber
-                console.log("row is already focussed - ", bufferRowNumber)
                 return true
 
         return false
 
 
     addFocusLineMarker: (editor, bufferRow, cursor) =>
-        # range = [[bufferRow, 0], [bufferRow, 0]]
-        # NOTE: Seems to work, except for the first soft wrapped line that is
-        # focussed when focus cursor mode is activated?
-        range = cursor.getCurrentLineBufferRange({includeNewLine: true}) # NEW
-        console.log("line range = ", range)
+        range = cursor.getCurrentLineBufferRange({includeNewLine: true})
         marker = editor.markBufferRange(range)
         editor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
         @cacheFocusModeMarker(editor.id, marker)
@@ -71,7 +66,6 @@ class FocusCursorMode extends FocusModeBase
             if textEditor
                 selectedRanges = textEditor.getSelectedBufferRanges()
                 if selectedRanges and selectedRanges.length > 0
-                    console.log("selected ranges = ", selectedRanges)
                     for range in selectedRanges
                         marker = textEditor.markBufferRange(range)
                         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
