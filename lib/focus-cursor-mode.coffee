@@ -11,7 +11,10 @@ class FocusCursorMode extends FocusModeBase
     on: =>
         @isActivated = true
         bodyTag = @getBodyTagElement()
+        editor = @getActiveTextEditor()
+        cursor = editor.getLastCursor()
         @addCssClass(bodyTag, @focusModeBodyCssClass)
+        @focusLine(cursor) if cursor
         @applyFocusModeToSelectedBufferRanges()
 
 
@@ -25,11 +28,11 @@ class FocusCursorMode extends FocusModeBase
 
     focusLine: (cursor) =>
         bufferRow = cursor.getBufferRow()
-        textEditor = @getActiveTextEditor()
+        editor = @getActiveTextEditor()
 
-        return if @bufferRowIsAlreadyFocussed(textEditor.id, bufferRow)
+        return if @bufferRowIsAlreadyFocussed(editor.id, bufferRow)
 
-        @addFocusLineMarker(textEditor, bufferRow)
+        @addFocusLineMarker(editor, bufferRow, cursor)
 
 
     bufferRowIsAlreadyFocussed: (editorId, bufferRowNumber) =>
@@ -39,16 +42,21 @@ class FocusCursorMode extends FocusModeBase
             rowNumber = range.getRows()
 
             if rowNumber[0] is bufferRowNumber
+                console.log("row is already focussed - ", bufferRowNumber)
                 return true
 
         return false
 
 
-    addFocusLineMarker: (textEditor, bufferRow) =>
-        range = [[bufferRow, 0], [bufferRow, 0]]
-        marker = textEditor.markBufferRange(range)
-        textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
-        @cacheFocusModeMarker(textEditor.id, marker)
+    addFocusLineMarker: (editor, bufferRow, cursor) =>
+        # range = [[bufferRow, 0], [bufferRow, 0]]
+        # NOTE: Seems to work, except for the first soft wrapped line that is
+        # focussed when focus cursor mode is activated?
+        range = cursor.getCurrentLineBufferRange({includeNewLine: true}) # NEW
+        console.log("line range = ", range)
+        marker = editor.markBufferRange(range)
+        editor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+        @cacheFocusModeMarker(editor.id, marker)
 
 
     cacheFocusModeMarker: (editorId, marker) =>
@@ -57,12 +65,13 @@ class FocusCursorMode extends FocusModeBase
         else
             @focusModeMarkersCache[editorId] = [marker]
 
-
+    # applies focus mode decoration to any lines user has selected/highlighted with mouse
     applyFocusModeToSelectedBufferRanges: =>
         for textEditor in @getAtomWorkspaceTextEditors()
             if textEditor
                 selectedRanges = textEditor.getSelectedBufferRanges()
                 if selectedRanges and selectedRanges.length > 0
+                    console.log("selected ranges = ", selectedRanges)
                     for range in selectedRanges
                         marker = textEditor.markBufferRange(range)
                         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)

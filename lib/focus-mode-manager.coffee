@@ -59,6 +59,7 @@ class FocusModeManager
 
     didAddCursor: (cursor) =>
         if @focusCursorMode.isActivated
+            console.log("didAddCursor focusCursorMode, focusLine")
             @focusCursorMode.focusLine(cursor)
 
         if @focusShadowMode.isActivated
@@ -73,6 +74,7 @@ class FocusModeManager
 
     didChangeCursorPosition: (obj) =>
         if @focusCursorMode.isActivated
+            console.log("didChangeCursorPosition focusCursorMode, focusLine")
             @focusCursorMode.focusLine(obj.cursor)
 
         if @focusShadowMode.isActivated
@@ -82,7 +84,7 @@ class FocusModeManager
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
         if @typeWriterModeSettingIsActivated() and @mouseTextSelectionInProgress is false
-            console.log("is on, @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
+            # console.log("is on, @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
             @centerCursorRow(obj.cursor)
 
 
@@ -205,11 +207,11 @@ class FocusModeManager
 
     onmouseDown: (e)=>
         @mouseTextSelectionInProgress = true
-        console.log("mouseis down @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
+        # console.log("mouseis down @mouseTextSelectionInProgress = ", @mouseTextSelectionInProgress)
 
     onmouseUp: (e)=>
         @mouseTextSelectionInProgress = false
-        console.log("mouse up e = ", @mouseTextSelectionInProgress)
+        # console.log("mouse up e = ", @mouseTextSelectionInProgress)
 
     centerCursorRow: (cursor)=>
         editor = @getActiveTextEditor()
