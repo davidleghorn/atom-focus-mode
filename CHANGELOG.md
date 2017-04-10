@@ -1,4 +1,9 @@
 
+## 0.11.0  (2017-04-10)
+* Added (new feature): Scope Focus mode highlights paragraphs when activated in mark down or text files
+* Added (new feature): Type writer scrolling feature added (off by default, enable via package settings)
+* Enhancement/bug fix: Cursor focus now works with soft wrapped lines
+
 ## 0.10.0  (2017-04-06)
 * Breaking change: keyboard shortcut to exit focus mode is now ctrl-alt-cmd instead of esc key.
 * Change: Activating scope focus mode now warns if file type is incompatible before opening scope focus mode.
