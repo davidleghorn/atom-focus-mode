@@ -16,7 +16,6 @@ class FocusModeManager
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
-        @screenCenterRow = @getScreenCenterRow()
 
     # -----------atom editor -----------
 

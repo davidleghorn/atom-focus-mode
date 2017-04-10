@@ -30,9 +30,17 @@ describe "FocusCursorMode", ->
 
     describe "on", ->
 
+        cursor = {}
+        editor = {
+            getLastCursor: ()->
+        }
+
         beforeEach ->
             spyOn(focusMode, "addCssClass").andCallFake(->)
+            spyOn(focusMode, "focusLine").andCallFake(->)
             spyOn(focusMode, "applyFocusModeToSelectedBufferRanges").andCallFake(->)
+            spyOn(editor, "getLastCursor").andReturn(cursor)
+            spyOn(focusMode, "getActiveTextEditor").andReturn(editor)
 
         it "should set isActivated to true", ->
             focusMode.isActivated = false
@@ -45,6 +53,11 @@ describe "FocusCursorMode", ->
             expect(focusMode.addCssClass).toHaveBeenCalledWith(
                 bodyTagElem, focusMode.focusModeBodyCssClass
             )
+
+        it "should call focusLine", ->
+            focusMode.isActivated = false
+            focusMode.on()
+            expect(focusMode.focusLine).toHaveBeenCalledWith(cursor)
 
         it "should call applyFocusModeToSelectedBufferRanges", ->
             focusMode.isActivated = false
@@ -103,7 +116,7 @@ describe "FocusCursorMode", ->
             focusMode.focusLine(cursor)
 
             expect(focusMode.addFocusLineMarker).toHaveBeenCalledWith(
-                activeTextEditor, bufferRow
+                activeTextEditor, bufferRow, cursor
             )
 
         it "should not call addFocusLineMarker if buffer row is already focussed", ->
@@ -177,6 +190,10 @@ describe "FocusCursorMode", ->
 
     describe "addFocusLineMarker", ->
 
+        cursor = {
+            getCurrentLineBufferRange: ()->
+        }
+        bufferRange = [[0,19],[5,87]]
         bufferRow = 11
         textEditor = {
             decorateMarker: ->
@@ -185,18 +202,29 @@ describe "FocusCursorMode", ->
         marker = {}
 
         beforeEach ->
+            spyOn(cursor, "getCurrentLineBufferRange").andReturn(bufferRange)
             spyOn(textEditor, "markBufferRange").andReturn(marker)
             spyOn(textEditor, "decorateMarker").andCallFake(->)
 
 
+        it "should call getCurrentLineBufferRange with expected parameters", ->
+            focusMode.addFocusLineMarker(textEditor, bufferRow, cursor)
+            expect(cursor.getCurrentLineBufferRange).toHaveBeenCalledWith(
+                {includeNewLine: true}
+            )
+
+        it "should call editor markBufferRange expected parameter", ->
+            focusMode.addFocusLineMarker(textEditor, bufferRow, cursor)
+            expect(textEditor.markBufferRange).toHaveBeenCalledWith(bufferRange)
+
         it "should call textEditor decorateMarker with expected parameters", ->
-            focusMode.addFocusLineMarker(textEditor, bufferRow)
+            focusMode.addFocusLineMarker(textEditor, bufferRow, cursor)
             expect(textEditor.decorateMarker).toHaveBeenCalledWith(
                 marker, type: 'line', class: focusMode.focusLineCssClass
             )
 
         it "should call cacheFocusModeMarker with expected parameters", ->
-            focusMode.addFocusLineMarker(textEditor, bufferRow)
+            focusMode.addFocusLineMarker(textEditor, bufferRow, cursor)
             expect(textEditor.decorateMarker).toHaveBeenCalledWith(
                 marker, type: 'line', class: focusMode.focusLineCssClass
             )
