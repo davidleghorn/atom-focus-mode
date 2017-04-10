@@ -12,7 +12,7 @@ Hides editor panels and enters full screen mode for distraction free coding.
 
 Focus Mode          | Description                            | Key bindings
 --------------------|----------------------------------------|--------------
-Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In mark down (.md) and text (.txt) files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | `ctrl+alt+p`
+Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In ".txt" and ".md" files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | `ctrl+alt+p`
 Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o`
 Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u`
 Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i`
