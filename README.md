@@ -41,7 +41,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 
 **Scope Focus mode**
 
-* Currently supports files with ".js", ".coffee" and ".py" file extensions (more file types to follow).
+* Currently supports files with ".js", ".coffee", ".py", ".txt" and ".md" file extensions (more file types to follow).
 * Requires correct indentation of code block closing curly braces.
 * Does not focus scope when using multiple cursors.
 
