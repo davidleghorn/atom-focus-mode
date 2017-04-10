@@ -12,7 +12,7 @@ Hides editor panels and enters full screen mode for distraction free coding.
 
 Focus Mode          | Description                            | Key bindings
 --------------------|----------------------------------------|--------------
-Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside. | `ctrl+alt+p`
+Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In mark down (.md) and text (.txt) files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block e.g. paragraphs, headings, mark down tables etc. | `ctrl+alt+p`
 Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl+alt+o`
 Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl+alt+u`
 Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl+alt+i`
@@ -33,6 +33,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 | Hide Side Panels                | true  | When focus mode is activated hide side panels e.g. the file explorer |
 | Hide Tab Bar                    | true  | When focus mode is activated hide any opened file tabs |
 | Use large font size             | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)    |
+| Type writer scrolling | false | Keeps the line containing the cursor in the center of the text editor |
 | Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode |
 | Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode |
 
@@ -43,6 +44,10 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 * Currently supports files with ".js", ".coffee" and ".py" file extensions (more file types to follow).
 * Requires correct indentation of code block closing curly braces.
 * Does not focus scope when using multiple cursors.
+
+**Type Writer Scrolling**
+
+Supported in Scope, Shadow and Cursor focus modes.
 
 **To configure focus mode as per version 0.8 and earlier**
 
