@@ -1,14 +1,16 @@
 {CompositeDisposable} = require 'atom'
 
+FocusModeBase = require './focus-mode-base'
 FocusModeSettings = require './focus-mode-settings'
 FocusCursorMode = require './focus-cursor-mode'
 FocusScopeMode = require './focus-scope-mode'
 FocusShadowMode = require './focus-shadow-mode'
 FocusSingleLineMode = require './focus-single-line-mode'
 
-class FocusModeManager
+class FocusModeManager extends FocusModeBase
 
     constructor: ->
+        super('FocusModeManager')
         @cursorEventSubscribers = null
         @focusScopeMode = new FocusScopeMode()
         @focusCursorMode = new FocusCursorMode()
@@ -18,9 +20,9 @@ class FocusModeManager
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
 
     # -----------atom editor -----------
-
-    getActiveTextEditor: ->
-        return atom.workspace.getActiveTextEditor()
+    #
+    # getActiveTextEditor: ->
+    #     return atom.workspace.getActiveTextEditor()
 
     getActiveEditorFileType: () =>
         editor = @getActiveTextEditor()
@@ -30,15 +32,27 @@ class FocusModeManager
 
         return ""
 
-    # -------- package config settings -------
 
     setFullScreen: =>
         if (@focusModeSettings.fullScreen)
             atom.setFullScreen(true)
+            body = @getBodyTagElement()
+            # if editor is centered and a larger font size option, we need to trigger a reflow
+            # so atom editor correctly centres larger text content
+            if @hasCssClass(body, @focusModeSettings.centerWidthCssClass) and @hasCssClass(body, "afm-larger-font")
+                func = ()=> @triggerTextReflow()
+                window.setTimeout(func, 1800)
 
     exitFullScreen: =>
         if(@focusModeSettings.fullScreen)
             atom.setFullScreen(false)
+
+
+    triggerTextReflow: () =>
+        @removeCssClass(@getBodyTagElement(), @focusModeSettings.centerWidthCssClass)
+        func = ()=> @addCssClass(@getBodyTagElement(), @focusModeSettings.centerWidthCssClass)
+        window.setTimeout(func, 200)
+
 
     # ------------- adding and moving cursors -----------
 

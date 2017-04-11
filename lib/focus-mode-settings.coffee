@@ -35,7 +35,8 @@ class FocusModeSettings extends FocusModeBase
         }
         @applyConfigSettings()
         @configSubscribers = @registerConfigSubscribers()
-        @centerEditor(@getConfig('atom-focus-mode.whenFocusModeIsActivated.centerEditor'))
+        @centerWidthCssClass = @getConfig('atom-focus-mode.whenFocusModeIsActivated.centerEditor')
+        @centerEditor(@centerWidthCssClass)
 
 
     applyConfigSettings: =>
@@ -108,14 +109,15 @@ class FocusModeSettings extends FocusModeBase
 
 
     centerEditor: (cssClass) =>
-        cssClassName = cssClass or ""
+        @centerWidthCssClass = cssClass or ""
         @removeAnyCenterEditorCssClass()
-        if cssClassName isnt ""
-            @addCssClass(@getBodyTagElement(), cssClassName)
+        if @centerWidthCssClass isnt ""
+            @addCssClass(@getBodyTagElement(), @centerWidthCssClass)
 
 
     removeAnyCenterEditorCssClass: ()=>
         bodyTag = @getBodyTagElement()
+        @removeCssClass(bodyTag, "afm-center-editor-width-github")
         @removeCssClass(bodyTag, "afm-center-editor-width-60")
         @removeCssClass(bodyTag, "afm-center-editor-width-70")
         @removeCssClass(bodyTag, "afm-center-editor-width-80")

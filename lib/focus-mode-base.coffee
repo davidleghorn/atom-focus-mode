@@ -40,6 +40,10 @@ class FocusModeBase
         elem.className = elem.className.replace(new RegExp("\\s*" + cssClass, "g"), "");
 
 
+    hasCssClass: (elem, cssClass) ->
+        return elem.className.indexOf(cssClass) > -1
+
+
     removeFocusLineClass: =>
         for editor in @getAtomWorkspaceTextEditors()
              editorLineDecorations = editor.getLineDecorations()

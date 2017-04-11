@@ -55,7 +55,8 @@ module.exports =
                     default: ""
                     enum: [
                         {value: "", description: "Off"},
-                        {value: "afm-center-editor", description: "Width 60em (Optimal line length)"},
+                        {value: "afm-center-editor", description: "Width 700px (Medium.com)"},
+                        {value: "afm-center-editor-width-github", description: "Width 888px (Github)"},
                         {value: "afm-center-editor-width-60", description: "Width 60%"},
                         {value: "afm-center-editor-width-70", description: "Width 70%"},
                         {value: "afm-center-editor-width-80", description: "Width 80%"},

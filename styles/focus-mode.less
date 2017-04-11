@@ -117,6 +117,7 @@
     }
 
     &.afm-center-editor,
+    &.afm-center-editor-width-github,
     &.afm-center-editor-width-60,
     &.afm-center-editor-width-70,
     &.afm-center-editor-width-80,
@@ -124,12 +125,18 @@
         atom-text-editor:not(.mini) {
             margin: 0 auto;
             max-width: 100%;
-            width: 60em;
+            width: 700px; //60em;
 
             &.editor {
                 padding-left: 0;
                 padding-right: 0;
             }
+        }
+    }
+
+    &.afm-center-editor-width-github {
+        atom-text-editor:not(.mini) {
+            width: 888px;
         }
     }
 
