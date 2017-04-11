@@ -62,7 +62,7 @@
             border: 0;
 
             &.editor {
-                padding: 20px 0 20px 8%;
+                padding: 20px 0 20px 60px;
                 border: 0;
             }
         }
@@ -116,6 +116,46 @@
         }
     }
 
+    &.afm-center-editor,
+    &.afm-center-editor-width-60,
+    &.afm-center-editor-width-70,
+    &.afm-center-editor-width-80,
+    &.afm-center-editor-width-90 {
+        atom-text-editor:not(.mini) {
+            margin: 0 auto;
+            max-width: 100%;
+            width: 60em;
+
+            &.editor {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+
+    &.afm-center-editor-width-60 {
+        atom-text-editor:not(.mini) {
+            width: 60%;
+        }
+    }
+
+    &.afm-center-editor-width-70 {
+        atom-text-editor:not(.mini) {
+            width: 70%;
+        }
+    }
+
+    &.afm-center-editor-width-80 {
+        atom-text-editor:not(.mini) {
+            width: 80%;
+        }
+    }
+
+    &.afm-center-editor-width-90 {
+        atom-text-editor:not(.mini) {
+            width: 90%;
+        }
+    }
 }
 
 // when user selects focus mode line opacity 100% from package config settings

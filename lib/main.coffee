@@ -49,6 +49,18 @@ module.exports =
                     description: "Keeps the line containing the cursor in the center of the text editor"
                     type: 'boolean'
                     default: false
+                centerEditor:
+                    title: "Center Editor"
+                    type: "string"
+                    default: ""
+                    enum: [
+                        {value: "", description: "Off"},
+                        {value: "afm-center-editor", description: "Width 60em (Optimal line length)"},
+                        {value: "afm-center-editor-width-60", description: "Width 60%"},
+                        {value: "afm-center-editor-width-70", description: "Width 70%"},
+                        {value: "afm-center-editor-width-80", description: "Width 80%"},
+                        {value: "afm-center-editor-width-90", description: "Width 90%"}
+                    ]
 
         focusShadowMode:
             type: 'object'

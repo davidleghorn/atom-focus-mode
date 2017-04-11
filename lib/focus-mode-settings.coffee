@@ -35,6 +35,7 @@ class FocusModeSettings extends FocusModeBase
         }
         @applyConfigSettings()
         @configSubscribers = @registerConfigSubscribers()
+        @centerEditor(@getConfig('atom-focus-mode.whenFocusModeIsActivated.centerEditor'))
 
 
     applyConfigSettings: =>
@@ -82,6 +83,10 @@ class FocusModeSettings extends FocusModeBase
             'atom-focus-mode.focusModeLineOpacity',
             (value) => @applyFocusLineCssClass(value)
         ))
+        configSubscribers.add(atom.config.observe(
+            'atom-focus-mode.whenFocusModeIsActivated.centerEditor',
+            (value) => @centerEditor(value)
+        ))
 
         return configSubscribers
 
@@ -100,6 +105,22 @@ class FocusModeSettings extends FocusModeBase
             @addCssClass(@getBodyTagElement(), "line-100")
         else
             @removeCssClass(@getBodyTagElement(), "line-100")
+
+
+    centerEditor: (cssClass) =>
+        cssClassName = cssClass or ""
+        @removeAnyCenterEditorCssClass()
+        if cssClassName isnt ""
+            @addCssClass(@getBodyTagElement(), cssClassName)
+
+
+    removeAnyCenterEditorCssClass: ()=>
+        bodyTag = @getBodyTagElement()
+        @removeCssClass(bodyTag, "afm-center-editor-width-60")
+        @removeCssClass(bodyTag, "afm-center-editor-width-70")
+        @removeCssClass(bodyTag, "afm-center-editor-width-80")
+        @removeCssClass(bodyTag, "afm-center-editor-width-90")
+        @removeCssClass(bodyTag, "afm-center-editor") # must be called last
 
 
     dispose: =>
