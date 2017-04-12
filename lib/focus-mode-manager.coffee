@@ -21,6 +21,12 @@ class FocusModeManager extends FocusModeBase
         @useTypeWriterScrolling = @getConfig('atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode') or false
         @mouseTextSelectionInProgress = false
         @configSubscribers = @registerConfigSubscribers()
+        @focusModes = {
+            scopeFocus: "scopeFocus",
+            cursorFocus: "cursorFocus",
+            shadowFocus: "shadowFocus",
+            singleLineFocus: "singleLineFocus"
+        }
 
     registerConfigSubscribers: =>
         configSubscribers = new CompositeDisposable()
@@ -31,42 +37,19 @@ class FocusModeManager extends FocusModeBase
         return configSubscribers
 
 
-    # -----------atom editor -----------
-
-    getActiveEditorFileType: () =>
-        editor = @getActiveTextEditor()
-        if editor
-            splitFileName = editor.getTitle().split(".")
-            return if splitFileName.length > 1 then splitFileName[1] else ""
-
-        return ""
-
     setFullScreen: =>
-        if (@focusModeSettings.fullScreen)
-            atom.setFullScreen(true)
-            body = @getBodyTagElement()
-            # if editor is centered and a larger font size option, we need to trigger a reflow
-            # so atom editor correctly centres larger text content
-            if @hasCssClass(body, @focusModeSettings.centerWidthCssClass) and @hasCssClass(body, "afm-larger-font")
-                func = ()=> @triggerTextReflow()
-                window.setTimeout(func, 1800)
+        console.log("setFullScreen")
+        atom.setFullScreen(true) if @focusModeSettings.fullScreen
+
 
     exitFullScreen: =>
-        if(@focusModeSettings.fullScreen)
-            atom.setFullScreen(false)
+        console.log("exitFullScreen")
+        atom.setFullScreen(false) if @focusModeSettings.fullScreen
 
-    triggerTextReflow: () =>
-        @removeCssClass(@getBodyTagElement(), @focusModeSettings.centerWidthCssClass)
-        func = ()=> @addCssClass(@getBodyTagElement(), @focusModeSettings.centerWidthCssClass)
-        window.setTimeout(func, 200)
-
-
-    # ------------- adding and moving cursors -----------
 
     registerCursorEventHandlers: =>
         self = @
         subscriptions = new CompositeDisposable
-
         atom.workspace.observeTextEditors (editor) ->
             subscriptions.add editor.onDidAddCursor(self.didAddCursor)
             subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
@@ -102,109 +85,133 @@ class FocusModeManager extends FocusModeBase
             @centerCursorRow(obj.cursor)
 
 
-    # ----------------- focus cursor mode ---------------
-
-    toggleCursorFocusMode: =>
-        if @focusCursorMode.isActivated
-            @focusCursorModeOff()
-            @exitFullScreen()
-            @typeWriterModeDeactivate()
-        else
-            @focusCursorModeOn()
-            @setFullScreen()
-            @typeWriterModeActivate() if @useTypeWriterScrolling
-
-    focusCursorModeOn: =>
-        @turnOffAnyActivatedFocusModes()
-        @cursorEventSubscribers = @registerCursorEventHandlers()
-        @focusCursorMode.on()
-
-    focusCursorModeOff: =>
-        @focusCursorMode.off()
-        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+    activateFocusMode: (mode) =>
+        console.log("activateFocusMode mode = ", mode)
+        @turnOffActivatedFocusMode()
+        switch mode
+            when @focusModes.scopeFocus
+                @cursorEventSubscribers = @registerCursorEventHandlers()
+                @focusScopeMode.on()
+            when @focusModes.cursorFocus
+                @cursorEventSubscribers = @registerCursorEventHandlers()
+                @focusCursorMode.on()
+            when @focusModes.shadowFocus
+                @cursorEventSubscribers = @registerCursorEventHandlers()
+                @focusShadowMode.on()
+            when @focusModes.singleLineFocus
+                @focusSingleLineMode.on()
+        # @setFullScreen()
+        # @typeWriterModeActivate() if @useTypeWriterScrolling
+        # @shouldReflowEditorContent()
 
 
-    # ----------------- focus single line mode ---------------
-
-    toggleFocusSingleLineMode: =>
-        if @focusSingleLineMode.isActivated
-            @focusSingleLineMode.off()
-            @exitFullScreen()
-            @typeWriterModeDeactivate()
-        else
-            @turnOffAnyActivatedFocusModes()
-            @focusSingleLineMode.on()
-            @setFullScreen()
-            @typeWriterModeActivate() if @useTypeWriterScrolling
-
-
-    # ----------------- focus shadow mode ---------------
-
-    toggleFocusShadowMode: =>
-        if @focusShadowMode.isActivated
-            @focusShadowModeOff()
-            @exitFullScreen()
-            @typeWriterModeDeactivate()
-        else
-            @focusShadowModeOn()
-            @setFullScreen()
-            @typeWriterModeActivate() if @useTypeWriterScrolling
-
-    focusShadowModeOff: =>
-        @focusShadowMode.off()
-        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-
-    focusShadowModeOn: =>
-        @turnOffAnyActivatedFocusModes()
-        @cursorEventSubscribers = @registerCursorEventHandlers()
-        @focusShadowMode.on()
+    deActivateFocusMode: (mode) =>
+        console.log("3 deActivateFocusMode mode = ", mode)
+        switch mode
+            when @focusModes.scopeFocus
+                @focusScopeMode.off()
+                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+            when @focusModes.cursorFocus
+                @focusCursorMode.off()
+                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+            when @focusModes.shadowFocus
+                @focusShadowMode.off()
+                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+            when @focusModes.singleLineFocus
+                @focusSingleLineMode.off()
+        # @exitFullScreen()
+        # @typeWriterModeDeactivate()
 
 
-    # ----------------- focus scope mode ---------------
+    focusModeIsActivated: ()=>
+        return @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
+
+
+    turnOffActivatedFocusMode: ()=>
+        @deActivateFocusMode(@focusModes.scopeFocus) if @focusScopeMode.isActivated
+        @deActivateFocusMode(@focusModes.cursorFocus) if @focusCursorMode.isActivated
+        @deActivateFocusMode(@focusModes.shadowFocus) if @focusShadowMode.isActivated
+        @deActivateFocusMode(@focusModes.singleLineFocus) if @focusSingleLineMode.isActivated
+
+
+    screenSetup: ()=>
+        console.log("screen setup - fullscreen, type scrolling activate, reflow")
+        @setFullScreen()
+        @typeWriterModeActivate() if @useTypeWriterScrolling
+        @shouldReflowEditorContent()
+
+
+    # --------- menu and shortcut key focus mode toggle event handlers --------
 
     toggleFocusScopeMode: =>
         if @focusScopeMode.isActivated
-            @focusScopeModeOff()
-            @exitFullScreen()
-            @typeWriterModeDeactivate()
+            @exitFocusMode()
+            # @deActivateFocusMode(@focusModes.scopeFocus)
+            # @exitFullScreen()
+            # @typeWriterModeDeactivate()
         else
             fileType = @getActiveEditorFileType()
             if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
-                @focusScopeModeOn()
-                @setFullScreen()
-                @typeWriterModeActivate() if @useTypeWriterScrolling
+                @activateFocusMode(@focusModes.scopeFocus)
+                @screenSetup()
             else
                 @getAtomNotificationsInstance().addInfo("Sorry, file type " +
                 fileType + " is not currently supported by Scope Focus mode." +
                 " All other focus modes will work with this file.");
 
-    focusScopeModeOn: =>
-        @turnOffAnyActivatedFocusModes()
-        @cursorEventSubscribers = @registerCursorEventHandlers()
-        @focusScopeMode.on()
+    toggleCursorFocusMode: =>
+        if @focusCursorMode.isActivated
+            @exitFocusMode()
+            # @deActivateFocusMode(@focusModes.cursorFocus)
+        else
+            @activateFocusMode(@focusModes.cursorFocus)
+            @screenSetup()
 
-    focusScopeModeOff: =>
-        @focusScopeMode.off()
-        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
+    toggleFocusShadowMode: =>
+        if @focusShadowMode.isActivated
+            @exitFocusMode()
+            # @deActivateFocusMode(@focusModes.shadowFocus)
+        else
+            @activateFocusMode(@focusModes.shadowFocus)
+            @screenSetup()
 
+    toggleFocusSingleLineMode: =>
+        if @focusSingleLineMode.isActivated
+            @exitFocusMode()
+            # @deActivateFocusMode(@focusModes.singleLineFocus)
+        else
+            @activateFocusMode(@focusModes.singleLineFocus)
+            @screenSetup()
 
-    # ---------------- general for all focus modes --------------
 
     exitFocusMode: =>
-        @turnOffAnyActivatedFocusModes()
+        @turnOffActivatedFocusMode()
         @exitFullScreen()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
         @typeWriterModeDeactivate()
 
-    turnOffAnyActivatedFocusModes: ()=>
-        @focusScopeModeOff() if @focusScopeMode.isActivated
-        @focusCursorModeOff() if @focusCursorMode.isActivated
-        @focusShadowModeOff() if @focusShadowMode.isActivated
-        @focusSingleLineMode.off() if @focusSingleLineMode.isActivated
-        @typeWriterModeDeactivate()
+
+    # -------- text reflow fix when editor is centered with larger text ------
+
+    isCenteredEditorWithLargerFontSize: ()=>
+        body = @getBodyTagElement()
+        return @hasCssClass(body, @focusModeSettings.centerWidthCssClass) and @hasCssClass(body, "afm-larger-font")
+
+    shouldReflowEditorContent: ()=>
+        if @isCenteredEditorWithLargerFontSize()
+            waitForEditorResizeTimeout = if @focusModeSettings.fullScreen then 1800 else 300
+            func = ()=> @triggerEditorReflow()
+            window.setTimeout(func, waitForEditorResizeTimeout)
+
+    triggerEditorReflow: () =>
+        editorElem = document.querySelector("atom-text-editor.editor.is-focused")
+        # console.log("refactored do reflow editor elem = ", editorElem)
+        @addCssClass(editorElem, "reflow")
+        func = ()=> @removeCssClass(editorElem, "reflow")
+        window.setTimeout(func, 200)
 
 
-    # ---------------- type writer centered cursor mode -----------------
+    # -------------- type writer scrolling mode -----------------
 
     typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
@@ -225,11 +232,12 @@ class FocusModeManager extends FocusModeBase
         @mouseTextSelectionInProgress = false
 
     centerCursorRow: (cursor)=>
-        editor = @getActiveTextEditor()
-        cursorPoint = cursor.getScreenPosition()
-        screenCenterRow = @getScreenCenterRow(editor)
-        if cursorPoint.row >= screenCenterRow
-            editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
+        if @focusModeIsActivated()
+            editor = @getActiveTextEditor()
+            cursorPoint = cursor.getScreenPosition()
+            screenCenterRow = @getScreenCenterRow(editor)
+            if cursorPoint.row >= screenCenterRow
+                editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
 
     getScreenCenterRow: (editor) ->
         # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
@@ -242,13 +250,12 @@ class FocusModeManager extends FocusModeBase
         msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
         atom.notifications.addInfo(msg)
 
+    #  callback when package useTypeWriterScrolling config setting value is changed
     useTypeWriterScrollingValueChanged: (value) =>
         @useTypeWriterScrolling = value
-        if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
+        if @focusModeIsActivated()
             if @useTypeWriterScrolling then @typeWriterModeActivate() else @typeWriterModeDeactivate()
 
-
-    # ----------- clean up -----------
 
     subscribersDispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers

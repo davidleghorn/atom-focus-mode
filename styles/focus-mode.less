@@ -125,42 +125,71 @@
         atom-text-editor:not(.mini) {
             margin: 0 auto;
             max-width: 100%;
-            width: 700px; //60em;
+            width: 700px;
 
             &.editor {
                 padding-left: 0;
                 padding-right: 0;
             }
+
+            &.reflow {
+                width: 702px !important;
+            }
+        }
+
+        atom-panel-container.left,
+        atom-panel-container.right {
+            display: none;
         }
     }
 
     &.afm-center-editor-width-github {
         atom-text-editor:not(.mini) {
             width: 888px;
+
+            &.reflow {
+                width: 890px !important;
+            }
         }
     }
 
     &.afm-center-editor-width-60 {
         atom-text-editor:not(.mini) {
             width: 60%;
+
+            &.reflow {
+                width: 61% !important;
+            }
         }
     }
 
     &.afm-center-editor-width-70 {
         atom-text-editor:not(.mini) {
             width: 70%;
+
+            &.reflow {
+                width: 71% !important;
+            }
         }
     }
 
     &.afm-center-editor-width-80 {
         atom-text-editor:not(.mini) {
             width: 80%;
+
+            &.reflow {
+                width: 81% !important;
+            }
         }
     }
 
     &.afm-center-editor-width-90 {
         atom-text-editor:not(.mini) {
             width: 90%;
+
+            &.reflow {
+                width: 91% !important;
+            }
         }
     }
 }

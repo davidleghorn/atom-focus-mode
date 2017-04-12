@@ -22,6 +22,14 @@ class FocusModeBase
         return atom.workspace.getActiveTextEditor()
 
 
+    getActiveEditorFileType: () =>
+        editor = @getActiveTextEditor()
+        if editor
+            splitFileName = editor.getTitle().split(".")
+            return if splitFileName.length > 1 then splitFileName[1] else ""
+        return ""
+
+        
     getAtomNotificationsInstance: ()->
         return atom.notifications
 
