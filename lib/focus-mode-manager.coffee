@@ -19,6 +19,7 @@ class FocusModeManager extends FocusModeBase
         @focusModeSettings = new FocusModeSettings()
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
         @useTypeWriterScrolling = @getConfig('atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode') or false
+        @mouseTextSelectionInProgress = false
         @configSubscribers = @registerConfigSubscribers()
 
     registerConfigSubscribers: =>
@@ -83,8 +84,8 @@ class FocusModeManager extends FocusModeBase
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(cursor)
 
-        if @useTypeWriterScrolling and @mouseTextSelectionInProgress is false
-            @centerCursorRow(obj.cursor)
+        if @useTypeWriterScrolling and not @mouseTextSelectionInProgress
+            @centerCursorRow(cursor)
 
 
     didChangeCursorPosition: (obj) =>
@@ -97,7 +98,7 @@ class FocusModeManager extends FocusModeBase
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
-        if @useTypeWriterScrolling and @mouseTextSelectionInProgress is false
+        if @useTypeWriterScrolling and not @mouseTextSelectionInProgress
             @centerCursorRow(obj.cursor)
 
 
@@ -206,26 +207,21 @@ class FocusModeManager extends FocusModeBase
     # ---------------- type writer centered cursor mode -----------------
 
     typeWriterModeActivate: ()=>
-        console.log("typeWriterModeActivate")
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
         document.querySelector("body").addEventListener("mousedown", @onmouseDown)
         document.querySelector("body").addEventListener("mouseup", @onmouseUp)
         editor = @getActiveTextEditor()
-        console.log("active editor = ", editor)
         @centerCursorRow(editor.getLastCursor()) if editor
 
     typeWriterModeDeactivate: ()=>
-        console.log("typeWriterModeDeactivate")
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
         document.querySelector("body").removeEventListener("mousedown", @onmouseDown)
         document.querySelector("body").removeEventListener("mouseup", @onmouseUp)
 
     onmouseDown: (e)=>
-        console.log("onMouseDown in progress = true")
         @mouseTextSelectionInProgress = true
 
     onmouseUp: (e)=>
-        console.log("onMouseUp in progress = false")
         @mouseTextSelectionInProgress = false
 
     centerCursorRow: (cursor)=>
@@ -241,25 +237,16 @@ class FocusModeManager extends FocusModeBase
 
     # toggle type writer scrolling keyboard shortcut handler
     toggleTypeWriterScrolling: ()=>
-        # if @focusSingleLineMode.isActivated
-        #     atom.notifications.addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
-        # else
-        console.log("@useTypeWriterScrolling current = ", @useTypeWriterScrolling)
         @useTypeWriterScrolling = !@useTypeWriterScrolling
-        console.log("@useTypeWriterScrolling new = ", @useTypeWriterScrolling)
         atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", @useTypeWriterScrolling)
         msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
         atom.notifications.addInfo(msg)
-        # VIA useTypeWriterScrollingValueChanged after config set above
-        # if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
-        #     if newValue then @typeWriterModeActivate() else @typeWriterModeDeactivate()
-
 
     useTypeWriterScrollingValueChanged: (value) =>
-        console.log("useTypeWriterScrollingValueChanged value = ", value)
         @useTypeWriterScrolling = value
         if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
             if @useTypeWriterScrolling then @typeWriterModeActivate() else @typeWriterModeDeactivate()
+
 
     # ----------- clean up -----------
 
