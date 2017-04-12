@@ -1,7 +1,8 @@
 
-## 0.11.0  (2017-04-10)
+## 0.11.0  (2017-04-12)
 * Added (new feature): Scope Focus mode highlights paragraphs when activated in mark down or text files
-* Added (new feature): Type writer scrolling feature added (off by default, enable via package settings)
+* Added (new feature): Focus mode type writer scrolling feature added (toggle via keyboard shortcut or package settings)
+* Added (new feature): Center editor when focus mode is activated (configurable centered editor widths)
 * Enhancement/bug fix: Cursor focus now works with soft wrapped lines
 
 ## 0.10.0  (2017-04-06)

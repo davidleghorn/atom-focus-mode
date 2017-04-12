@@ -211,6 +211,7 @@ class FocusModeManager extends FocusModeBase
         document.querySelector("body").addEventListener("mousedown", @onmouseDown)
         document.querySelector("body").addEventListener("mouseup", @onmouseUp)
         editor = @getActiveTextEditor()
+        console.log("active editor = ", editor)
         @centerCursorRow(editor.getLastCursor()) if editor
 
     typeWriterModeDeactivate: ()=>
@@ -220,9 +221,11 @@ class FocusModeManager extends FocusModeBase
         document.querySelector("body").removeEventListener("mouseup", @onmouseUp)
 
     onmouseDown: (e)=>
+        console.log("onMouseDown in progress = true")
         @mouseTextSelectionInProgress = true
 
     onmouseUp: (e)=>
+        console.log("onMouseUp in progress = false")
         @mouseTextSelectionInProgress = false
 
     centerCursorRow: (cursor)=>
@@ -238,15 +241,18 @@ class FocusModeManager extends FocusModeBase
 
     # toggle type writer scrolling keyboard shortcut handler
     toggleTypeWriterScrolling: ()=>
-        if @focusSingleLineMode.isActivated
-            atom.notifications.addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
-        else
-            newValue = !@focusModeSettings.useTypeWriterMode
-            msg = if newValue then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
-            atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", newValue)
-            atom.notifications.addInfo(msg)
-            if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
-                if newValue then @typeWriterModeActivate() else @typeWriterModeDeactivate()
+        # if @focusSingleLineMode.isActivated
+        #     atom.notifications.addInfo("Sorry, Focus Single Line mode does not support type writer scrolling")
+        # else
+        console.log("@useTypeWriterScrolling current = ", @useTypeWriterScrolling)
+        @useTypeWriterScrolling = !@useTypeWriterScrolling
+        console.log("@useTypeWriterScrolling new = ", @useTypeWriterScrolling)
+        atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", @useTypeWriterScrolling)
+        msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
+        atom.notifications.addInfo(msg)
+        # VIA useTypeWriterScrollingValueChanged after config set above
+        # if @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
+        #     if newValue then @typeWriterModeActivate() else @typeWriterModeDeactivate()
 
 
     useTypeWriterScrollingValueChanged: (value) =>
