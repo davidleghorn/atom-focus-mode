@@ -26,14 +26,14 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 |---------------------------------|---------|-------------|
 | Focus Mode Line Opacity  | 65%   | Line opacity applied to any focus mode highlighted lines (options 65% or 100%) |
 | Enter Full Screen               | true  | When focus mode is activated enter full screen mode |
+| Center Editor | Off | Hides side panels and centers the editor. Several width options are available - "700px" (Medium.com article width), "888px" (github content/ReadMe width), "60%", "70%", "80%" and "90%". |
+| Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor.<br/>Type Writer Scrolling can be toggled on/off within files using keyboard shortcut `ctrl+alt+t`. |
 | Hide Footer Bar                 | true  | When focus mode is activated hide editor footer bar |
 | Hide Line Numbers               | true  | When focus mode is activated hide editor line numbers |
 | Hide Line Length Guide          | false | When focus mode is activated hide the line length guide line |
-| Hide Footer Bar                 | true  | When focus mode is activated hide the editor footer bar |
 | Hide Side Panels                | true  | When focus mode is activated hide side panels e.g. the file explorer |
 | Hide Tab Bar                    | true  | When focus mode is activated hide any opened file tabs |
 | Use large font size             | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)    |
-| Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor.<br/>Type Writer Scrolling can be toggled on/off using keyboard shortcut `ctrl+alt+t`. |
 | Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode |
 | Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode |
 
@@ -47,8 +47,9 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 
 **Type Writer Scrolling**
 
+* Keeps the line containing the cursor in the center of the text editor.
+* Type Writer Scrolling can be toggled on/off using keyboard shortcut `ctrl+alt+t` or via package settings.
 * Supported in Scope, Shadow and Cursor focus modes.
-* Type Writer Scrolling setting can be toggled on/off using keyboard shortcut `ctrl+alt+t`.
 
 **To configure focus mode as per version 0.8 and earlier**
 
