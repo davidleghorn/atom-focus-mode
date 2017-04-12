@@ -12,11 +12,11 @@ Hides editor panels and enters full screen mode for distraction free coding.
 
 Focus Mode          | Description                            | Key bindings
 --------------------|----------------------------------------|--------------
-<span style="white-space: nowrap">Scope Focus</span> | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In ".txt" and ".md" files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | <code style="white-space: nowrap">ctrl-alt-p</code>
-<span style="white-space: nowrap">Cursor Focus</span> | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | <code style="white-space: nowrap">ctrl-alt-o</code>
-<span style="white-space: nowrap">Cursor Shadow </span><br/>Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | <code style="white-space: nowrap">ctrl-alt-u</code>
-Single Line Focus   | Focus highlights the single line(s) that have cursor focus | <code style="white-space: nowrap">ctrl-alt-i</code>
-Exit    | To exit a focus mode, press <code style="white-space: nowrap">ctrl-alt-cmd</code> keys or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `ctrl-alt-cmd`
+Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In ".txt" and ".md" files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | `ctrl-alt-p`
+Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl-alt-o`
+Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl-alt-u`
+Single Line Focus   | Focus highlights the single line(s) that have cursor focus | `ctrl-alt-i`
+Exit    | To exit a focus mode, press `ctrl-alt-cmd` keys or select the focus mode again (using menu or key bindings).<br>From atom menu `Packages > Focus Mode > Exit` or `Right click menu > Focus Mode > Exit` | `ctrl-alt-cmd`
 
 To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`.
 
