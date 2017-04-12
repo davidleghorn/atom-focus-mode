@@ -27,7 +27,7 @@ module.exports =
                 hideTabBar:
                     title: "Hide Tab Bar"
                     type: 'boolean'
-                    default: true
+                    default: false
                 hideFooterBar:
                     title: "Hide Footer Bar"
                     type: 'boolean'

@@ -32,7 +32,7 @@ Hide Footer Bar | true | When focus mode is activated hide editor footer bar
 Hide Line Numbers | true | When focus mode is activated hide editor line numbers
 Hide Line Length Guide | false | When focus mode is activated hide the line length guide line
 Hide Side Panels | true  | When focus mode is activated hide side panels e.g. the file explorer
-Hide Tab Bar | true  | When focus mode is activated hide any opened file tabs
+Hide Tab Bar | false  | When focus mode is activated hide the top tab bar containing open file tabs
 Use large font size | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)
 Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode
 Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode
