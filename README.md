@@ -11,7 +11,7 @@ Hides editor panels and enters full screen mode for distraction free coding.
 * Use key bindings (see table below)
 
 Focus Mode          | Description                            | Key bindings
---------------------|----------------------------------------|--------------
+:-------------------| :----------------------------------------| :--------------
 Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In ".txt" and ".md" files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | `ctrl-alt-p`
 Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl-alt-o`
 Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl-alt-u`
@@ -23,7 +23,7 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 ### Package settings
 
 | Setting                         | Default | Description |
-|---------------------------------|---------|-------------|
+| :-------------------------------| :---------| :-------------|
 | Focus Mode Line Opacity  | 65%   | Line opacity applied to any focus mode highlighted lines (options 65% or 100%) |
 | Enter Full Screen               | true  | When focus mode is activated enter full screen mode |
 | Center Editor | Off | Hides side panels and centers the editor. Editor width options - "700px" (Medium.com article width), "888px" (github content/ReadMe width), "60%", "70%", "80%" and "90%". |
