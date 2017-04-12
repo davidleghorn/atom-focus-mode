@@ -39,9 +39,8 @@ class FocusModeSettings extends FocusModeBase
 
 
     applyConfigSettings: =>
-        for key, value of @config
-            if (@config[key].activated)
-                @addCssClass(@getBodyTagElement(), @config[key].cssClass)
+        for key of @config when @config[key].activated
+            @addCssClass(@getBodyTagElement(), @config[key].cssClass)
 
 
     registerConfigSubscribers: =>
@@ -89,18 +88,13 @@ class FocusModeSettings extends FocusModeBase
 
     applyConfigSetting: (configKey, value) =>
         @config[configKey].activated = value
-
-        if (@config[configKey].activated)
-            @addCssClass(@getBodyTagElement(), @config[configKey].cssClass)
-        else
-            @removeCssClass(@getBodyTagElement(), @config[configKey].cssClass)
+        action = if @config[configKey].activated then 'addCssClass' else 'removeCssClass'
+        @[action](@getBodyTagElement(), @config[configKey].cssClass)
 
 
     applyFocusLineCssClass: (opacityValue) =>
-        if (opacityValue is "100%")
-            @addCssClass(@getBodyTagElement(), "line-100")
-        else
-            @removeCssClass(@getBodyTagElement(), "line-100")
+        action = if opacityValue is "100%" then 'addCssClass' else 'removeCssClass'
+        @[action](@getBodyTagElement(), "line-100")
 
 
     centerEditor: (cssClass) =>
