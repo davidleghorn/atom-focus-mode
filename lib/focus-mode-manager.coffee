@@ -38,13 +38,11 @@ class FocusModeManager extends FocusModeBase
 
 
     setFullScreen: =>
-        console.log("setFullScreen")
         atom.setFullScreen(true) if @focusModeSettings.fullScreen
 
 
     exitFullScreen: =>
-        console.log("exitFullScreen")
-        atom.setFullScreen(false) if @focusModeSettings.fullScreen
+        atom.setFullScreen(false) if atom.isFullScreen()
 
 
     registerCursorEventHandlers: =>
@@ -86,7 +84,6 @@ class FocusModeManager extends FocusModeBase
 
 
     activateFocusMode: (mode) =>
-        console.log("activateFocusMode mode = ", mode)
         @turnOffActivatedFocusMode()
         switch mode
             when @focusModes.scopeFocus
@@ -100,13 +97,9 @@ class FocusModeManager extends FocusModeBase
                 @focusShadowMode.on()
             when @focusModes.singleLineFocus
                 @focusSingleLineMode.on()
-        # @setFullScreen()
-        # @typeWriterModeActivate() if @useTypeWriterScrolling
-        # @shouldReflowEditorContent()
 
 
     deActivateFocusMode: (mode) =>
-        console.log("3 deActivateFocusMode mode = ", mode)
         switch mode
             when @focusModes.scopeFocus
                 @focusScopeMode.off()
@@ -119,8 +112,6 @@ class FocusModeManager extends FocusModeBase
                 @cursorEventSubscribers.dispose() if @cursorEventSubscribers
             when @focusModes.singleLineFocus
                 @focusSingleLineMode.off()
-        # @exitFullScreen()
-        # @typeWriterModeDeactivate()
 
 
     focusModeIsActivated: ()=>
@@ -135,7 +126,6 @@ class FocusModeManager extends FocusModeBase
 
 
     screenSetup: ()=>
-        console.log("screen setup - fullscreen, type scrolling activate, reflow")
         @setFullScreen()
         @typeWriterModeActivate() if @useTypeWriterScrolling
         @shouldReflowEditorContent()
@@ -146,9 +136,6 @@ class FocusModeManager extends FocusModeBase
     toggleFocusScopeMode: =>
         if @focusScopeMode.isActivated
             @exitFocusMode()
-            # @deActivateFocusMode(@focusModes.scopeFocus)
-            # @exitFullScreen()
-            # @typeWriterModeDeactivate()
         else
             fileType = @getActiveEditorFileType()
             if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
@@ -162,7 +149,6 @@ class FocusModeManager extends FocusModeBase
     toggleCursorFocusMode: =>
         if @focusCursorMode.isActivated
             @exitFocusMode()
-            # @deActivateFocusMode(@focusModes.cursorFocus)
         else
             @activateFocusMode(@focusModes.cursorFocus)
             @screenSetup()
@@ -170,7 +156,6 @@ class FocusModeManager extends FocusModeBase
     toggleFocusShadowMode: =>
         if @focusShadowMode.isActivated
             @exitFocusMode()
-            # @deActivateFocusMode(@focusModes.shadowFocus)
         else
             @activateFocusMode(@focusModes.shadowFocus)
             @screenSetup()
@@ -178,7 +163,6 @@ class FocusModeManager extends FocusModeBase
     toggleFocusSingleLineMode: =>
         if @focusSingleLineMode.isActivated
             @exitFocusMode()
-            # @deActivateFocusMode(@focusModes.singleLineFocus)
         else
             @activateFocusMode(@focusModes.singleLineFocus)
             @screenSetup()
@@ -205,7 +189,6 @@ class FocusModeManager extends FocusModeBase
 
     triggerEditorReflow: () =>
         editorElem = document.querySelector("atom-text-editor.editor.is-focused")
-        # console.log("refactored do reflow editor elem = ", editorElem)
         @addCssClass(editorElem, "reflow")
         func = ()=> @removeCssClass(editorElem, "reflow")
         window.setTimeout(func, 200)
