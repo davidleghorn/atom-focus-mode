@@ -112,4 +112,4 @@ module.exports =
 
     deactivate: ->
         @subscriptions.dispose()
-        @focusModeManager.subscribersDispose()
+        @focusModeManager.dispose()

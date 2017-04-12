@@ -64,9 +64,9 @@ describe "Main", ->
             focusModePackage.activate()
 
             spyOn(focusModePackage.subscriptions, "dispose")
-            spyOn(focusModePackage.focusModeManager, "subscribersDispose")
+            spyOn(focusModePackage.focusModeManager, "dispose")
 
             focusModePackage.deactivate()
 
             expect(focusModePackage.subscriptions.dispose).toHaveBeenCalled()
-            expect(focusModePackage.focusModeManager.subscribersDispose).toHaveBeenCalled()
+            expect(focusModePackage.focusModeManager.dispose).toHaveBeenCalled()

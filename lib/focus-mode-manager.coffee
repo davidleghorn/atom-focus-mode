@@ -6,6 +6,7 @@ FocusCursorMode = require './focus-cursor-mode'
 FocusScopeMode = require './focus-scope-mode'
 FocusShadowMode = require './focus-shadow-mode'
 FocusSingleLineMode = require './focus-single-line-mode'
+TypeWriterScrollingMode = require './type-writer-scrolling-mode'
 
 class FocusModeManager extends FocusModeBase
 
@@ -17,9 +18,9 @@ class FocusModeManager extends FocusModeBase
         @focusShadowMode = new FocusShadowMode()
         @focusSingleLineMode = new FocusSingleLineMode()
         @focusModeSettings = new FocusModeSettings()
+        @typeWriterScrollingMode = new TypeWriterScrollingMode()
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
-        @useTypeWriterScrolling = @getConfig('atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode') or false
-        @mouseTextSelectionInProgress = false
+        key = 'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode'
         @configSubscribers = @registerConfigSubscribers()
         @focusModes = {
             scopeFocus: "scopeFocus",
@@ -27,6 +28,7 @@ class FocusModeManager extends FocusModeBase
             shadowFocus: "shadowFocus",
             singleLineFocus: "singleLineFocus"
         }
+
 
     registerConfigSubscribers: =>
         configSubscribers = new CompositeDisposable()
@@ -65,8 +67,8 @@ class FocusModeManager extends FocusModeBase
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(cursor)
 
-        if @useTypeWriterScrolling and not @mouseTextSelectionInProgress
-            @centerCursorRow(cursor)
+        if @typeWriterScrollingMode.useTypeWriterScrolling and not @typeWriterScrollingMode.mouseTextSelectionInProgress
+            @typeWriterScrollingMode.centerCursorRow(cursor)
 
 
     didChangeCursorPosition: (obj) =>
@@ -79,8 +81,8 @@ class FocusModeManager extends FocusModeBase
         if @focusScopeMode.isActivated
             @focusScopeMode.scopeModeOnCursorMove(obj.cursor)
 
-        if @useTypeWriterScrolling and not @mouseTextSelectionInProgress
-            @centerCursorRow(obj.cursor)
+        if @typeWriterScrollingMode.useTypeWriterScrolling and not @typeWriterScrollingMode.mouseTextSelectionInProgress
+            @typeWriterScrollingMode.centerCursorRow(obj.cursor)
 
 
     activateFocusMode: (mode) =>
@@ -127,7 +129,7 @@ class FocusModeManager extends FocusModeBase
 
     screenSetup: ()=>
         @setFullScreen()
-        @typeWriterModeActivate() if @useTypeWriterScrolling
+        @typeWriterScrollingMode.on() if @typeWriterScrollingMode.useTypeWriterScrolling
         @shouldReflowEditorContent()
 
 
@@ -172,19 +174,19 @@ class FocusModeManager extends FocusModeBase
         @turnOffActivatedFocusMode()
         @exitFullScreen()
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
-        @typeWriterModeDeactivate()
+        @typeWriterScrollingMode.off()
 
-
-    # -------- text reflow fix when editor is centered with larger text ------
 
     isCenteredEditorWithLargerFontSize: ()=>
         body = @getBodyTagElement()
         return @hasCssClass(body, @focusModeSettings.centerWidthCssClass) and @hasCssClass(body, "afm-larger-font")
 
+
     shouldReflowEditorContent: ()=>
         if @isCenteredEditorWithLargerFontSize()
             func = ()=> @triggerEditorReflow()
             window.setTimeout(func, 1500)
+
 
     triggerEditorReflow: () =>
         editorElem = document.querySelector("atom-text-editor.editor.is-focused")
@@ -193,56 +195,25 @@ class FocusModeManager extends FocusModeBase
         window.setTimeout(func, 200)
 
 
-    # -------------- type writer scrolling mode -----------------
-
-    typeWriterModeActivate: ()=>
-        atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        document.querySelector("body").addEventListener("mousedown", @onmouseDown)
-        document.querySelector("body").addEventListener("mouseup", @onmouseUp)
-        editor = @getActiveTextEditor()
-        @centerCursorRow(editor.getLastCursor()) if editor
-
-    typeWriterModeDeactivate: ()=>
-        atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
-        document.querySelector("body").removeEventListener("mousedown", @onmouseDown)
-        document.querySelector("body").removeEventListener("mouseup", @onmouseUp)
-
-    onmouseDown: (e)=>
-        @mouseTextSelectionInProgress = true
-
-    onmouseUp: (e)=>
-        @mouseTextSelectionInProgress = false
-
-    centerCursorRow: (cursor)=>
-        if @focusModeIsActivated()
-            editor = @getActiveTextEditor()
-            cursorPoint = cursor.getScreenPosition()
-            screenCenterRow = @getScreenCenterRow(editor)
-            if cursorPoint.row >= screenCenterRow
-                editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
-
-    getScreenCenterRow: (editor) ->
-        # -2 as getRowsPerPage doesn't seem to take top/bottom gutters into account
-        return Math.floor(editor.getRowsPerPage() / 2) - 2
-
     # toggle type writer scrolling keyboard shortcut handler
     toggleTypeWriterScrolling: ()=>
-        @useTypeWriterScrolling = !@useTypeWriterScrolling
-        atom.config.set("atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode", @useTypeWriterScrolling)
-        msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
-        atom.notifications.addInfo(msg)
+        @typeWriterScrollingMode.toggle()
+
 
     #  callback when package useTypeWriterScrolling config setting value is changed
     useTypeWriterScrollingValueChanged: (value) =>
-        @useTypeWriterScrolling = value
         if @focusModeIsActivated()
-            if @useTypeWriterScrolling then @typeWriterModeActivate() else @typeWriterModeDeactivate()
+            @typeWriterScrollingMode.useTypeWriterScrolling = value
+            if @typeWriterScrollingMode.useTypeWriterScrolling
+                @typeWriterScrollingMode.on() if @focusModeIsActivated()
+            else
+                @typeWriterScrollingMode.off()
 
 
-    subscribersDispose: =>
+    dispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
         @focusShadowMode.dispose()
-        @configSubscribers.dispose() if @configSubscribers
+        @configSubscribers.dispose()
 
 
 module.exports = FocusModeManager
