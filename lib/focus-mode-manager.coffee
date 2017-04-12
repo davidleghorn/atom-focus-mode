@@ -183,9 +183,8 @@ class FocusModeManager extends FocusModeBase
 
     shouldReflowEditorContent: ()=>
         if @isCenteredEditorWithLargerFontSize()
-            waitForEditorResizeTimeout = if @focusModeSettings.fullScreen then 1800 else 300
             func = ()=> @triggerEditorReflow()
-            window.setTimeout(func, waitForEditorResizeTimeout)
+            window.setTimeout(func, 1500)
 
     triggerEditorReflow: () =>
         editorElem = document.querySelector("atom-text-editor.editor.is-focused")
