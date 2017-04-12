@@ -1,4 +1,3 @@
-{CompositeDisposable} = require 'atom'
 FocusModeBase = require './focus-mode-base'
 
 class FocusCursorMode extends FocusModeBase
@@ -55,21 +54,16 @@ class FocusCursorMode extends FocusModeBase
 
 
     cacheFocusModeMarker: (editorId, marker) =>
-        if @focusModeMarkersCache[editorId]
-            @focusModeMarkersCache[editorId].push(marker)
-        else
-            @focusModeMarkersCache[editorId] = [marker]
+        cache = focusModeMarkersCache[editorId] ?= []
+        cache.push(marker)
 
     # applies focus mode decoration to any lines user has selected/highlighted with mouse
     applyFocusModeToSelectedBufferRanges: =>
-        for textEditor in @getAtomWorkspaceTextEditors()
-            if textEditor
-                selectedRanges = textEditor.getSelectedBufferRanges()
-                if selectedRanges and selectedRanges.length > 0
-                    for range in selectedRanges
-                        marker = textEditor.markBufferRange(range)
-                        textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
-                        @cacheFocusModeMarker(textEditor.id, marker)
+        for textEditor in @getAtomWorkspaceTextEditors() when textEditor
+            for range in textEditor.getSelectedBufferRanges() or []
+                marker = textEditor.markBufferRange(range)
+                textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
+                @cacheFocusModeMarker(textEditor.id, marker)
 
 
 module.exports = FocusCursorMode

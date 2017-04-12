@@ -85,8 +85,8 @@ class FocusScopeMode extends FocusModeBase
         while index > 0
             index = index - 1
             lineText = editor.lineTextForBufferRow(index)
-            if(!@isDecoratorLine(lineText) and !@isCommentLine(lineText))
-                break;
+            unless @isDecoratorLine(lineText) and @isCommentLine(lineText)
+                break
 
         return index
 
@@ -99,12 +99,12 @@ class FocusScopeMode extends FocusModeBase
         cursorRowText = editor.lineTextForBufferRow(rowIndex)
 
         # if cursor row is a method or class start line, exit as this is the scope start row
-        if(@isMethodStartLine(cursorRowText, editor) or @isClassStartLine(cursorRowText))
+        if @isMethodStartLine(cursorRowText, editor) or @isClassStartLine(cursorRowText)
             return rowIndex
 
         # prevents traversal up file and matching of previous method scope
         # when cursor row is a python method decorator
-        if(fileType is "py" and @isDecoratorLine(cursorRowText))
+        if fileType is "py" and @isDecoratorLine(cursorRowText)
             return rowIndex
 
         # start traversing up file looking for the cursor line's
@@ -114,12 +114,12 @@ class FocusScopeMode extends FocusModeBase
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
 
-            if(@isClassStartLine(rowText))
+            if @isClassStartLine(rowText)
                 matchedBufferRowNumber = rowIndex
                 break
 
-            if(@isMethodStartLine(rowText, editor))
-                if(fileType is "js" and closingCurlyRowIndents.indexOf(rowIndent) > -1)
+            if @isMethodStartLine(rowText, editor)
+                if fileType is "js" and rowIndent in closingCurlyRowIndents
                     # we matched a method/function start line but at an incorrect
                     # (too deep) scope - continue moving up file lines
                     continue
@@ -127,7 +127,7 @@ class FocusScopeMode extends FocusModeBase
                     matchedBufferRowNumber = rowIndex
                     break
 
-            else if(fileType is "js" and @lineContainsClosingCurly(rowText))
+            else if fileType is "js" and @lineContainsClosingCurly(rowText)
                 closingCurlyRowIndents.push(rowIndent)
 
         return matchedBufferRowNumber
@@ -145,16 +145,16 @@ class FocusScopeMode extends FocusModeBase
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
 
-            if(fileType is "coffee" or fileType is "py")
-                if((@isMethodStartLine(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= scopeStartRowIndent)
+            if fileType in ["coffee", "py"]
+                if ((@isMethodStartLine(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= scopeStartRowIndent)
                     bufferScopeEndRow = rowIndex
                     previousLineText = editor.lineTextForBufferRow(rowIndex - 1)
-                    if(@isDecoratorLine(previousLineText) or @isCommentLine(previousLineText))
+                    if @isDecoratorLine(previousLineText) or @isCommentLine(previousLineText)
                         bufferScopeEndRow = @adjustBufferEndRow(rowIndex, editor)
                     break
 
-            else if(fileType is "js")
-                if(editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isClosingCurlyLine(rowText))
+            else if fileType is "js"
+                if editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isClosingCurlyLine(rowText)
                     # +1 as buffer range end row isn't included in range and we also want it included/decorated
                     bufferScopeEndRow = rowIndex + 1
                     break
@@ -166,7 +166,7 @@ class FocusScopeMode extends FocusModeBase
         fileType = @getFileTypeForEditor(editor)
         startRow = 0
         endRow = editor.getLineCount() - 1
-        if (['md', 'txt'].indexOf(fileType) > -1)
+        if fileType in ['md', 'txt']
             paragraphRange = editor.getCurrentParagraphBufferRange()
             if paragraphRange
                 startRow = paragraphRange.start.row
@@ -189,28 +189,18 @@ class FocusScopeMode extends FocusModeBase
 
 
     removeScopeModeMarkers: =>
-        for editor in @getAtomWorkspaceTextEditors()
-            marker = @focusScopeMarkerCache[editor.id]
-            marker.destroy() if marker
+        marker.destroy() for editor in @getAtomWorkspaceTextEditors() when marker = @focusScopeMarkerCache[editor.id]
 
 
     getScopeModeMarkerForEditor: (editor) =>
-        marker = @focusScopeMarkerCache[editor.id]
-        if not marker
-            marker = @createScopeModeMarker(editor)
-            @focusScopeMarkerCache[editor.id] = marker
-
-        return marker
+        @focusScopeMarkerCache[editor.id] or do ->
+            @focusScopeMarkerCache[editor.id] = @createScopeModeMarker(editor)
 
 
     getFileTypeForEditor: (editor) =>
-        fileType = @editorFileTypeCache[editor.id]
-        if not fileType
-            splitFileName = editor.getTitle().split(".")
-            fileType = if splitFileName.length > 1 then splitFileName[1] else ""
-            @editorFileTypeCache[editor.id] = fileType
-
-        return fileType
+        @editorFileTypeCache[editor.id] or do ->
+            splitFileName = editor.getTitle().split(".") or []
+            @editorFileTypeCache[editor.id] = splitFileName[1] or ""
 
 
     scopeModeOnCursorMove: (cursor) =>

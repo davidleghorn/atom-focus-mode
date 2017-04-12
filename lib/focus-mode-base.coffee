@@ -24,10 +24,8 @@ class FocusModeBase
 
     getActiveEditorFileType: () =>
         editor = @getActiveTextEditor()
-        if editor
-            splitFileName = editor.getTitle().split(".")
-            return if splitFileName.length > 1 then splitFileName[1] else ""
-        return ""
+        splitFileName = editor?.getTitle().split(".") or []
+        return splitFileName[1] or ""
 
         
     getAtomNotificationsInstance: ()->
@@ -38,18 +36,17 @@ class FocusModeBase
         return document.getElementsByTagName("body")[0]
 
 
-    addCssClass: (elem, cssClass) ->
-        classNameValue = elem.className
-        if (classNameValue.indexOf(cssClass) is -1)
-            elem.className = classNameValue + " " + cssClass
+    addCssClass: (elem, cssClass) =>
+        unless @hasCssClass(elem, cssClass)
+            elem.className += " #{cssClass}"
 
 
     removeCssClass: (elem, cssClass) ->
-        elem.className = elem.className.replace(new RegExp("\\s*" + cssClass, "g"), "");
+        elem.className = elem.className.replace(///\s*#{cssClass}///g, "")
 
 
     hasCssClass: (elem, cssClass) ->
-        return elem.className.indexOf(cssClass) > -1
+        return cssClass in elem.className
 
 
     removeFocusLineClass: =>

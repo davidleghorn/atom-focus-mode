@@ -46,11 +46,10 @@ class FocusModeManager extends FocusModeBase
 
 
     registerCursorEventHandlers: =>
-        self = @
         subscriptions = new CompositeDisposable
-        atom.workspace.observeTextEditors (editor) ->
-            subscriptions.add editor.onDidAddCursor(self.didAddCursor)
-            subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
+        atom.workspace.observeTextEditors (editor) =>
+            subscriptions.add editor.onDidAddCursor(@didAddCursor)
+            subscriptions.add editor.onDidChangeCursorPosition(@didChangeCursorPosition)
 
         return subscriptions
 
@@ -138,13 +137,13 @@ class FocusModeManager extends FocusModeBase
             @exitFocusMode()
         else
             fileType = @getActiveEditorFileType()
-            if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
+            if fileType in ['js', 'py', 'coffee', 'md', 'txt']
                 @activateFocusMode(@focusModes.scopeFocus)
                 @screenSetup()
             else
-                @getAtomNotificationsInstance().addInfo("Sorry, file type " +
-                fileType + " is not currently supported by Scope Focus mode." +
-                " All other focus modes will work with this file.");
+                @getAtomNotificationsInstance().addInfo("Sorry, file type #{fileType}
+                is not currently supported by Scope Focus mode.
+                All other focus modes will work with this file.");
 
     toggleCursorFocusMode: =>
         if @focusCursorMode.isActivated
@@ -183,29 +182,28 @@ class FocusModeManager extends FocusModeBase
 
     shouldReflowEditorContent: ()=>
         if @isCenteredEditorWithLargerFontSize()
-            func = ()=> @triggerEditorReflow()
-            window.setTimeout(func, 1500)
+            window.setTimeout(@triggerEditorReflow, 1500)
 
     triggerEditorReflow: () =>
         editorElem = document.querySelector("atom-text-editor.editor.is-focused")
         @addCssClass(editorElem, "reflow")
-        func = ()=> @removeCssClass(editorElem, "reflow")
-        window.setTimeout(func, 200)
+        window.setTimeout(@removeCssClass, 200, editorElem, "reflow")
 
 
     # -------------- type writer scrolling mode -----------------
 
     typeWriterModeActivate: ()=>
         atom.config.set('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        document.querySelector("body").addEventListener("mousedown", @onmouseDown)
-        document.querySelector("body").addEventListener("mouseup", @onmouseUp)
-        editor = @getActiveTextEditor()
-        @centerCursorRow(editor.getLastCursor()) if editor
+        body = document.querySelector("body")
+        body.addEventListener("mousedown", @onmouseDown)
+        body.addEventListener("mouseup", @onmouseUp)
+        @centerCursorRow(editor.getLastCursor()) if editor = @getActiveTextEditor()
 
     typeWriterModeDeactivate: ()=>
         atom.config.set('editor.scrollPastEnd', @usersScrollPastEndSetting)
-        document.querySelector("body").removeEventListener("mousedown", @onmouseDown)
-        document.querySelector("body").removeEventListener("mouseup", @onmouseUp)
+        body = document.querySelector("body")
+        body.removeEventListener("mousedown", @onmouseDown)
+        body.removeEventListener("mouseup", @onmouseUp)
 
     onmouseDown: (e)=>
         @mouseTextSelectionInProgress = true

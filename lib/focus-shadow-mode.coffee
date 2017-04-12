@@ -87,19 +87,12 @@ class FocusShadowMode extends FocusModeBase
 
 
     removeShadowModeMarkers: =>
-        for editor in @getAtomWorkspaceTextEditors()
-            marker = @focusShadowMarkerCache[editor.id]
-            marker.destroy() if marker
+        marker.destroy() for editor in @getAtomWorkspaceTextEditors() when marker = @focusShadowMarkerCache[editor.id]
 
 
     getShadowModeMarkerForEditor: (editor) =>
-        marker = @focusShadowMarkerCache[editor.id]
-
-        if not marker
-            marker = @createShadowModeMarker(editor)
-            @focusShadowMarkerCache[editor.id] = marker
-
-        return marker
+        @focusShadowMarkerCache[editor.id] or do ->
+            @focusShadowMarkerCache[editor.id] = @createShadowModeMarker(editor)
 
 
     shadowModeOnCursorMove: (cursor) =>
