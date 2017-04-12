@@ -1,9 +1,9 @@
 
 ## 0.11.0  (2017-04-12)
-* Added (new feature): Scope Focus mode highlights paragraphs when activated in mark down or text files
-* Added (new feature): Focus mode type writer scrolling feature added (toggle via keyboard shortcut or package settings)
-* Added (new feature): Center editor when focus mode is activated (configurable centered editor widths)
-* Enhancement/bug fix: Cursor focus now works with soft wrapped lines
+* Added: Type writer scrolling feature - keeps the line containing the cursor in the center of the text editor. Can be toggled on/off using a keyboard shortcut or via package settings.
+* Added: Package setting to center editor when focus mode is activated.
+* Enhancement: In ".txt" and ".md" files, Scope Focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block e.g. paragraphs.
+* Enhancement/bug fix: Cursor focus now works with soft wrapped lines.
 
 ## 0.10.0  (2017-04-06)
 * Breaking change: keyboard shortcut to exit focus mode is now ctrl-alt-cmd instead of esc key.
