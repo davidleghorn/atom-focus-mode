@@ -11,7 +11,7 @@ Hides editor panels and enters full screen mode for distraction free coding.
 * Use key bindings (see table below)
 
 Focus Mode          | Description                            | Key bindings
-:-------------------| :----------------------------------------| :--------------
+------------------- | -------------------------------------- | -------------
 Scope Focus         | Automatically focus highlights lines inside the method/function/class scope that the cursor was placed inside.<br/><br/>In ".txt" and ".md" files, scope focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block. | `ctrl-alt-p`
 Cursor Focus        | Focus highlights any lines that receive cursor focus and any lines that have been selected with your mouse | `ctrl-alt-o`
 Cursor Shadow Focus | Focus highlights the cursor line and the 2 lines above and below the cursor line (configurable in package settings) | `ctrl-alt-u`
@@ -22,20 +22,20 @@ To change the key bindings used by Focus Mode `Atom > Preferences > Keybindings`
 
 ### Package settings
 
-| Setting                         | Default | Description |
-| :-------------------------------| :---------| :-------------|
-| Focus Mode Line Opacity  | 65%   | Line opacity applied to any focus mode highlighted lines (options 65% or 100%) |
-| Enter Full Screen               | true  | When focus mode is activated enter full screen mode |
-| Center Editor | Off | Hides side panels and centers the editor. Editor width options - "700px" (Medium.com article width), "888px" (github content/ReadMe width), "60%", "70%", "80%" and "90%". |
-| Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor.<br/>Type Writer Scrolling can be toggled on/off within files using keyboard shortcut `ctrl-alt-t`. |
-| Hide Footer Bar                 | true  | When focus mode is activated hide editor footer bar |
-| Hide Line Numbers               | true  | When focus mode is activated hide editor line numbers |
-| Hide Line Length Guide          | false | When focus mode is activated hide the line length guide line |
-| Hide Side Panels                | true  | When focus mode is activated hide side panels e.g. the file explorer |
-| Hide Tab Bar                    | true  | When focus mode is activated hide any opened file tabs |
-| Use large font size             | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)    |
-| Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode |
-| Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode |
+Setting                         | Default  | Description
+------------------------------- | -------- | ----------------
+Focus Mode Line Opacity  | 65% | Line opacity applied to any focus mode highlighted lines (options 65% or 100%)
+Enter Full Screen | true  | When focus mode is activated enter full screen mode
+Center Editor | Off | Hides side panels and centers the editor. Editor width options - "700px" (Medium.com article width), "888px" (github content/ReadMe width), "60%", "70%", "80%" and "90%".
+Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor.<br/>Type Writer Scrolling can be toggled on/off within files using keyboard shortcut `ctrl-alt-t`.
+Hide Footer Bar | true | When focus mode is activated hide editor footer bar
+Hide Line Numbers | true | When focus mode is activated hide editor line numbers
+Hide Line Length Guide | false | When focus mode is activated hide the line length guide line
+Hide Side Panels | true  | When focus mode is activated hide side panels e.g. the file explorer
+Hide Tab Bar | true  | When focus mode is activated hide any opened file tabs
+Use large font size | false | When focus mode is activated increase font size to 18px (note: this mode also hides the line length guide)
+Number of lines to highlight above cursor | 2 | Number of lines above the cursor line to focus highlight in Focus Shadow mode
+Number of lines to highlight below cursor | 2 | Number of lines below the cursor line to focus highlight in Focus Shadow mode
 
 ### Notes
 
