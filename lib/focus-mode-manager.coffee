@@ -48,11 +48,10 @@ class FocusModeManager extends FocusModeBase
 
 
     registerCursorEventHandlers: =>
-        self = @
         subscriptions = new CompositeDisposable
-        atom.workspace.observeTextEditors (editor) ->
-            subscriptions.add editor.onDidAddCursor(self.didAddCursor)
-            subscriptions.add editor.onDidChangeCursorPosition(self.didChangeCursorPosition)
+        atom.workspace.observeTextEditors (editor) =>
+            subscriptions.add editor.onDidAddCursor(@didAddCursor)
+            subscriptions.add editor.onDidChangeCursorPosition(@didChangeCursorPosition)
 
         return subscriptions
 
@@ -105,15 +104,14 @@ class FocusModeManager extends FocusModeBase
         switch mode
             when @focusModes.scopeFocus
                 @focusScopeMode.off()
-                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
             when @focusModes.cursorFocus
                 @focusCursorMode.off()
-                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
             when @focusModes.shadowFocus
                 @focusShadowMode.off()
-                @cursorEventSubscribers.dispose() if @cursorEventSubscribers
             when @focusModes.singleLineFocus
                 @focusSingleLineMode.off()
+
+        @cursorEventSubscribers.dispose() if @cursorEventSubscribers
 
 
     focusModeIsActivated: ()=>
@@ -133,20 +131,19 @@ class FocusModeManager extends FocusModeBase
         @shouldReflowEditorContent()
 
 
-    # --------- menu and shortcut key focus mode toggle event handlers --------
-
     toggleFocusScopeMode: =>
         if @focusScopeMode.isActivated
             @exitFocusMode()
         else
             fileType = @getActiveEditorFileType()
-            if (['js', 'py', 'coffee', 'md', 'txt'].indexOf(fileType) > -1)
+            if fileType in ['js', 'py', 'coffee', 'md', 'txt']
                 @activateFocusMode(@focusModes.scopeFocus)
                 @screenSetup()
             else
-                @getAtomNotificationsInstance().addInfo("Sorry, file type " +
-                fileType + " is not currently supported by Scope Focus mode." +
-                " All other focus modes will work with this file.");
+                @getAtomNotificationsInstance().addInfo("Sorry, file type #{fileType}
+                 is not currently supported by Scope Focus mode.
+                All other focus modes will work with this file.");
+
 
     toggleCursorFocusMode: =>
         if @focusCursorMode.isActivated
@@ -155,12 +152,14 @@ class FocusModeManager extends FocusModeBase
             @activateFocusMode(@focusModes.cursorFocus)
             @screenSetup()
 
+
     toggleFocusShadowMode: =>
         if @focusShadowMode.isActivated
             @exitFocusMode()
         else
             @activateFocusMode(@focusModes.shadowFocus)
             @screenSetup()
+
 
     toggleFocusSingleLineMode: =>
         if @focusSingleLineMode.isActivated
@@ -184,23 +183,19 @@ class FocusModeManager extends FocusModeBase
 
     shouldReflowEditorContent: ()=>
         if @isCenteredEditorWithLargerFontSize()
-            func = ()=> @triggerEditorReflow()
-            window.setTimeout(func, 1500)
+            window.setTimeout(@triggerEditorReflow, 1500)
 
 
     triggerEditorReflow: () =>
         editorElem = document.querySelector("atom-text-editor.editor.is-focused")
         @addCssClass(editorElem, "reflow")
-        func = ()=> @removeCssClass(editorElem, "reflow")
-        window.setTimeout(func, 200)
+        window.setTimeout(@removeCssClass, 200, editorElem, "reflow")
 
 
-    # toggle type writer scrolling keyboard shortcut handler
     toggleTypeWriterScrolling: ()=>
         @typeWriterScrollingMode.toggle()
 
 
-    #  callback when package useTypeWriterScrolling config setting value is changed
     useTypeWriterScrollingValueChanged: (value) =>
         if @focusModeIsActivated()
             @typeWriterScrollingMode.useTypeWriterScrolling = value
