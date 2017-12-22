@@ -42,7 +42,7 @@ class TypeWriterScrollingMode extends FocusModeBase
         cursorPoint = cursor.getScreenPosition()
         screenCenterRow = @getScreenCenterRow(editor)
         if cursorPoint.row >= screenCenterRow
-            editor.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
+            editor.element.setScrollTop(editor.getLineHeightInPixels() * (cursorPoint.row - screenCenterRow))
 
 
     getScreenCenterRow: (editor) ->

@@ -1,4 +1,7 @@
 
+## 0.12.0  (2017-12-22)
+* Fixed TextEditor.setScrollTop deprecation warning
+
 ## 0.11.0  (2017-04-12)
 * Added: Type writer scrolling feature - keeps the line containing the cursor in the center of the text editor. Can be toggled on/off using a keyboard shortcut or via package settings.
 * Added: Package setting to center editor when focus mode is activated.
