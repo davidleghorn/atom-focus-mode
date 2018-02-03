@@ -1,5 +1,5 @@
 
-## 0.13.0  (2017-02-03)
+## 0.12.1  (2017-02-03)
 * Fixed Odd shadow behaviour on word-wrapped lines bug
 
 ## 0.12.0  (2017-12-22)
