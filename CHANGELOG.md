@@ -1,4 +1,7 @@
 
+## 0.13.0  (2017-02-03)
+* Fixed Odd shadow behaviour on word-wrapped lines bug
+
 ## 0.12.0  (2017-12-22)
 * Fixed TextEditor.setScrollTop deprecation warning
 

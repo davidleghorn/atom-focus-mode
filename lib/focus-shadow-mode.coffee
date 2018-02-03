@@ -16,7 +16,7 @@ class FocusShadowMode extends FocusModeBase
         ) or 2
         @configSubscriptions = @registerConfigSubscriptions()
 
-    # TODO: move to focus-mode-settings class and read here via settingsObj.numberOfLinesToHighlightAboveCursor
+
     registerConfigSubscriptions: =>
         configSubscriptions = new CompositeDisposable()
         configSubscriptions.add(atom.config.observe(
@@ -54,12 +54,10 @@ class FocusShadowMode extends FocusModeBase
 
 
     getShadowModeBufferEndRow: (cursorBufferRow, numOfRowsToShadow, bufferLineCount) =>
-        # We need +1 as when atom decorates a marker as type line, it doesn't
-        # include a line decoration for the endRow marker in a buffer range
         endRow = cursorBufferRow + numOfRowsToShadow + 1
 
-        if endRow > (bufferLineCount - 1)
-            endRow = bufferLineCount - 1
+        if endRow > bufferLineCount
+            endRow = bufferLineCount
 
         return endRow
 
@@ -78,7 +76,7 @@ class FocusShadowMode extends FocusModeBase
     createShadowModeMarker: (textEditor) =>
         cursorBufferPos = textEditor.getCursorBufferPosition()
         shadowBufferRange = @getShadowModeBufferRange(
-            cursorBufferPos.row, textEditor.getLineCount()
+            cursorBufferPos.row, textEditor.getLastBufferRow()
         )
         marker = textEditor.markBufferRange(shadowBufferRange)
         textEditor.decorateMarker(marker, type: 'line', class: @focusLineCssClass)
