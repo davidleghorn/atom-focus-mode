@@ -118,9 +118,9 @@ describe "FocusShadowMode", ->
             expect(result).toEqual(34)
 
         it "should return the last row number if the calculated end row exceeds total rows", ->
-            cursorRow = 53
+            cursorRow = 54
             result = focusShadowMode.getShadowModeBufferEndRow(cursorRow, numOfRowsToShadow, lineCount)
-            expect(result).toEqual(54)
+            expect(result).toEqual(lineCount)
 
 
     describe "getShadowModeBufferRange", ->
@@ -147,14 +147,16 @@ describe "FocusShadowMode", ->
         fakeTextEditor = {
             decorateMarker: ->
             markBufferRange: ->
-            getCursorBufferPosition: -> cursorBufferPos
-            getLineCount: -> 35
+            getCursorBufferPosition: ->
+            getLastBufferRow: ->
         }
 
         beforeEach ->
             spyOn(fakeTextEditor, "decorateMarker").andCallFake(->)
             spyOn(focusShadowMode, "getShadowModeBufferRange").andReturn({})
             spyOn(fakeTextEditor, "markBufferRange").andReturn(marker)
+            spyOn(fakeTextEditor, "getCursorBufferPosition").andReturn(cursorBufferPos)
+            spyOn(fakeTextEditor, "getLastBufferRow").andReturn(35)
 
         it "should call decorate marker", ->
             focusShadowMode.createShadowModeMarker(fakeTextEditor)
