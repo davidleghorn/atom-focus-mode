@@ -44,7 +44,7 @@ class FocusModeManager extends FocusModeBase
 
 
     exitFullScreen: =>
-        atom.setFullScreen(false) if atom.isFullScreen()
+        atom.setFullScreen(false) if @focusModeSettings.fullScreen
 
 
     registerCursorEventHandlers: =>
