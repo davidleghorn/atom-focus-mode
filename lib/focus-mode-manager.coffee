@@ -135,7 +135,7 @@ class FocusModeManager extends FocusModeBase
         if @focusScopeMode.isActivated
             @exitFocusMode()
         else
-            fileType = @getActiveEditorFileType()
+            fileType = @getActiveEditorScopeType()
             if fileType in ['js', 'py', 'coffee', 'md', 'txt']
                 @activateFocusMode(@focusModes.scopeFocus)
                 @screenSetup()
