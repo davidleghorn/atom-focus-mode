@@ -67,7 +67,7 @@ class FocusScopeMode extends FocusModeBase
 
 
     isMethodStartLine: (rowText, editor) =>
-        fileType = @getFileTypeForEditor(editor)
+        fileType = @getScopeTypeForEditor(editor)
         switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
@@ -92,7 +92,7 @@ class FocusScopeMode extends FocusModeBase
 
 
     getScopeModeBufferStartRow: (cursorBufferRow, editor) =>
-        fileType = @getFileTypeForEditor(editor)
+        fileType = @getScopeTypeForEditor(editor)
         matchedBufferRowNumber = 0 # default to first row in file
         closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
@@ -135,7 +135,7 @@ class FocusScopeMode extends FocusModeBase
 
     getScopeModeBufferEndRow: (scopeStartRow, editor) =>
         bufferRowCount = editor.getLineCount() - 1
-        fileType = @getFileTypeForEditor(editor)
+        fileType = @getScopeTypeForEditor(editor)
         bufferScopeEndRow = bufferRowCount # default to last row in buffer
         rowIndex = scopeStartRow
         scopeStartRowIndent = editor.indentationForBufferRow(scopeStartRow)
@@ -163,7 +163,7 @@ class FocusScopeMode extends FocusModeBase
 
 
     getScopeModeBufferRange: (bufferPosition, editor) =>
-        fileType = @getFileTypeForEditor(editor)
+        fileType = @getScopeTypeForEditor(editor)
         startRow = 0
         endRow = editor.getLineCount() - 1
         if fileType in ['md', 'txt']
@@ -203,14 +203,17 @@ class FocusScopeMode extends FocusModeBase
         return marker
 
 
-    getFileTypeForEditor: (editor) =>
-        fileType = @editorFileTypeCache[editor.id]
-        if not fileType
-            splitFileName = editor.getTitle().split(".")
-            fileType = if splitFileName.length > 1 then splitFileName[1] else ""
-            @editorFileTypeCache[editor.id] = fileType
-
-        return fileType
+    getScopeTypeForEditor: (editor) =>
+        types = {
+            JavaScript: "js"
+            Python: "py"
+            CoffeeScript: "coffee"
+            Markdown: "md"
+            "GitHub Markdown": "md"
+            "Plain Text": "txt"
+        }
+        scopeName = editor.getGrammar().name
+        return types[scopeName] || ""
 
 
     scopeModeOnCursorMove: (cursor) =>

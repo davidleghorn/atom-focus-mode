@@ -22,12 +22,17 @@ class FocusModeBase
         return atom.workspace.getActiveTextEditor()
 
 
-    getActiveEditorFileType: () =>
-        editor = @getActiveTextEditor()
-        if editor
-            splitFileName = editor.getTitle().split(".")
-            return if splitFileName.length > 1 then splitFileName[1] else ""
-        return ""
+    getActiveEditorScopeType: () =>
+        types = {
+            JavaScript: "js"
+            Python: "py"
+            CoffeeScript: "coffee"
+            Markdown: "md"
+            "GitHub Markdown": "md"
+            "Plain Text": "txt"
+        }
+        scopeName = atom.workspace.getActiveTextEditor().getGrammar().name
+        return types[scopeName] || ""
 
         
     getAtomNotificationsInstance: ()->
