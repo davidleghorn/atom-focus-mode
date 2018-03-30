@@ -104,10 +104,10 @@ class FocusScopeMode extends FocusModeBase
         closingCurlyRowIndents = []
         rowIndex = cursorBufferRow
         cursorRowText = editor.lineTextForBufferRow(rowIndex)
+        cursorRowIndent = editor.indentationForBufferRow(rowIndex)
 
         # if cursor row is a method or class start line, exit as this is the scope start row
         if @isMethodStartLine(cursorRowText, editor) or @isClassStartLine(cursorRowText)
-            console.log('>>> IS start line >>> rowIndex = ', rowIndex, ' cursorRowText = ', cursorRowText)
             return rowIndex
 
         # prevents traversal up file and matching of previous method scope
@@ -131,6 +131,9 @@ class FocusScopeMode extends FocusModeBase
                     # we matched a method/function start line but at an incorrect
                     # (too deep) scope - continue moving up file lines
                     continue
+                else if fileType is "rb" and rowIndent >= cursorRowIndent
+                    # we matched a method start but at same indent as cursor so continue up file
+                    continue
                 else
                     matchedBufferRowNumber = rowIndex
                     break
@@ -152,7 +155,6 @@ class FocusScopeMode extends FocusModeBase
             rowIndex = rowIndex + 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
-            console.log('rowIndex = ', rowIndex, ' rowIndent = ', rowIndent, ' rowText = ', rowText)
 
             if fileType is "coffee" or fileType is "py"
                 if (@isMethodStartLine(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= scopeStartRowIndent
@@ -164,7 +166,7 @@ class FocusScopeMode extends FocusModeBase
 
                     break
 
-            else if fileType is "rb" and editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isEndKeyword(rowText)
+            else if fileType is "rb" and @isEndKeyword(rowText) and rowIndent is scopeStartRowIndent
                 bufferScopeEndRow = rowIndex + 1
                 break
 
