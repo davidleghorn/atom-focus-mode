@@ -27,7 +27,13 @@ class FocusScopeMode extends FocusModeBase
         return /:\s*\(?.*\)?\s*(=>|->)/.test(lineText)
 
     isPythonMethodSignature: (lineText) ->
-        return /\s*def\s*.*\s*\(?.*\)?\s*:/.test(lineText)
+        return /^\s*def\s*.*\s*\(?.*\)?\s*:/.test(lineText)
+
+    isRubyMethodSignature: (lineText) ->
+        return /^\s*def\s*.*\s*\(?.*\)?\s*/.test(lineText)
+
+    isEndKeyword: (lineText) ->
+        return /^\s*end\s*#?/.test(lineText)
 
     isJavascriptFunctionSignature: (rowText) ->
         return /^.*\s*\(?function\s*([a-zA-Z0-9_-]*)?\s*\({1}.*\){1}\s*{\s*$/.test(rowText)
@@ -71,6 +77,7 @@ class FocusScopeMode extends FocusModeBase
         switch fileType
             when "coffee" then return @isCoffeeScriptMethodSignature(rowText)
             when "py" then return @isPythonMethodSignature(rowText)
+            when "rb" then return @isRubyMethodSignature(rowText)
             when "js"
                 if @isIfStatement(rowText) or @isForStatement(rowText) or @isWhileStatement(rowText) or @isSwitchStatement(rowText)
                     return false
@@ -100,6 +107,7 @@ class FocusScopeMode extends FocusModeBase
 
         # if cursor row is a method or class start line, exit as this is the scope start row
         if @isMethodStartLine(cursorRowText, editor) or @isClassStartLine(cursorRowText)
+            console.log('>>> IS start line >>> rowIndex = ', rowIndex, ' cursorRowText = ', cursorRowText)
             return rowIndex
 
         # prevents traversal up file and matching of previous method scope
@@ -144,14 +152,21 @@ class FocusScopeMode extends FocusModeBase
             rowIndex = rowIndex + 1
             rowText = editor.lineTextForBufferRow(rowIndex)
             rowIndent = editor.indentationForBufferRow(rowIndex)
+            console.log('rowIndex = ', rowIndex, ' rowIndent = ', rowIndent, ' rowText = ', rowText)
 
             if fileType is "coffee" or fileType is "py"
                 if (@isMethodStartLine(rowText, editor) or @isClassStartLine(rowText)) and rowIndent <= scopeStartRowIndent
                     bufferScopeEndRow = rowIndex
                     previousLineText = editor.lineTextForBufferRow(rowIndex - 1)
+
                     if @isDecoratorLine(previousLineText) or @isCommentLine(previousLineText)
                         bufferScopeEndRow = @adjustBufferEndRow(rowIndex, editor)
+
                     break
+
+            else if fileType is "rb" and editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isEndKeyword(rowText)
+                bufferScopeEndRow = rowIndex + 1
+                break
 
             else if fileType is "js"
                 if editor.indentationForBufferRow(rowIndex) is scopeStartRowIndent and @isClosingCurlyLine(rowText)
