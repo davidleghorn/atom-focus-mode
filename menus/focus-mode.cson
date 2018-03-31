@@ -21,6 +21,10 @@
                     'command': 'atom-focus-mode:toggle-single-line-focus'
                 }
                 {
+                    'label': 'Type writer mode'
+                    'command': 'atom-focus-mode:use-type-writer-scrolling'
+                }
+                {
                     'label': 'Exit'
                     'command': 'atom-focus-mode:exit'
                 }
@@ -34,20 +38,24 @@
             'label': 'Focus Mode'
             'submenu': [
                 {
-                'label': 'Scope Focus'
-                'command': 'atom-focus-mode:toggle-scope-focus'
+                    'label': 'Scope Focus'
+                    'command': 'atom-focus-mode:toggle-scope-focus'
                 }
                 {
-                'label': 'Cursor Focus'
-                'command': 'atom-focus-mode:toggle-cursor-focus'
+                    'label': 'Cursor Focus'
+                    'command': 'atom-focus-mode:toggle-cursor-focus'
                 }
                 {
-                'label': 'Cursor Shadow Focus'
-                'command': 'atom-focus-mode:toggle-shadow-focus'
+                    'label': 'Cursor Shadow Focus'
+                    'command': 'atom-focus-mode:toggle-shadow-focus'
                 }
                 {
-                'label': 'Single Line Focus'
-                'command': 'atom-focus-mode:toggle-single-line-focus'
+                    'label': 'Single Line Focus'
+                    'command': 'atom-focus-mode:toggle-single-line-focus'
+                }
+                {
+                    'label': 'Type writer mode'
+                    'command': 'atom-focus-mode:use-type-writer-scrolling'
                 }
                 {
                     'label': 'Exit'
