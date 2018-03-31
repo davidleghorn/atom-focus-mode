@@ -1,4 +1,7 @@
 
+## 0.13.0  (2017-03-31)
+* Scope focus mode support added for Ruby files
+
 ## 0.12.2  (2017-02-10)
 * Fix to prevent focus mode exiting full screen when atom editor is full screen and focus mode full screen setting is off
 * unit test fixes
