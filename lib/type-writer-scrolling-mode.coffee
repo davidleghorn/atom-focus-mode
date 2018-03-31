@@ -7,7 +7,6 @@ class TypeWriterScrollingMode extends FocusModeBase
 
     constructor: ->
         super('TypeWriterScrollingMode')
-        @autoActivateTypeWriterMode = @getTypeWriterModeConfigSetting()
         @isActivated = false
         @usersScrollPastEndSetting = @getConfig('editor.scrollPastEnd')
         @mouseTextSelectionInProgress = false
@@ -30,11 +29,12 @@ class TypeWriterScrollingMode extends FocusModeBase
 
 
     off: () =>
-        @isActivated = false
-        bodyElement = @getBodyTagElement()
-        bodyElement.removeEventListener("mousedown", @onmouseDown)
-        bodyElement.removeEventListener("mouseup", @onmouseUp)
-        @getAtomNotificationsInstance().addInfo("Type writer mode off")
+        if @isActivated
+            @isActivated = false
+            bodyElement = @getBodyTagElement()
+            bodyElement.removeEventListener("mousedown", @onmouseDown)
+            bodyElement.removeEventListener("mouseup", @onmouseUp)
+            @getAtomNotificationsInstance().addInfo("Type writer mode off")
 
 
     onmouseDown: (e)=>
@@ -46,7 +46,6 @@ class TypeWriterScrollingMode extends FocusModeBase
 
 
     centerCursorRow: (cursor) =>
-        console.log('>>>> centerCursorRow <<<<')
         editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
         screenCenterRow = @getScreenCenterRow(editor)

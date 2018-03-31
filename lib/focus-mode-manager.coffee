@@ -20,7 +20,7 @@ class FocusModeManager extends FocusModeBase
         @focusModeSettings = new FocusModeSettings()
         @typeWriterScrollingMode = new TypeWriterScrollingMode()
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
-        @configSubscribers = @registerConfigSubscribers()
+        # @configSubscribers = @registerConfigSubscribers()
         @focusModes = {
             scopeFocus: "scopeFocus",
             cursorFocus: "cursorFocus",
@@ -29,13 +29,13 @@ class FocusModeManager extends FocusModeBase
         }
 
 
-    registerConfigSubscribers: =>
-        configSubscribers = new CompositeDisposable()
-        configSubscribers.add(atom.config.observe(
-            'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode',
-            (value) => @useTypeWriterScrollingValueChanged(value)
-        ))
-        return configSubscribers
+    # registerConfigSubscribers: =>
+    #     configSubscribers = new CompositeDisposable()
+    #     configSubscribers.add(atom.config.observe(
+    #         'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode',
+    #         (value) => @useTypeWriterScrollingValueChanged(value)
+    #     ))
+    #     return configSubscribers
 
 
     setFullScreen: =>
@@ -83,12 +83,6 @@ class FocusModeManager extends FocusModeBase
             @typeWriterScrollingMode.centerCursorRow(obj.cursor)
 
 
-    activateTypeWriterMode: ()=>
-        if @typeWriterScrollingMode.autoActivateTypeWriterMode
-            msg = 'Type writer mode on\n\nConfigured in package settings to activate when entering Focus Mode'
-            @typeWriterScrollingMode.on(msg)
-
-
     activateFocusMode: (mode) =>
         @turnOffActivatedFocusMode()
         switch mode
@@ -104,7 +98,6 @@ class FocusModeManager extends FocusModeBase
             when @focusModes.singleLineFocus
                 @cursorEventSubscribers = @registerCursorEventHandlers()
                 @focusSingleLineMode.on()
-        @activateTypeWriterMode() if not @typeWriterScrollingMode.isActivated
 
 
     deActivateFocusMode: (mode) =>
@@ -121,7 +114,7 @@ class FocusModeManager extends FocusModeBase
 
 
     focusModeIsActivated: ()=>
-        return @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated
+        return @focusScopeMode.isActivated or @focusCursorMode.isActivated or @focusShadowMode.isActivated or @focusSingleLineMode.isActivated
 
 
     turnOffActivatedFocusMode: ()=>
@@ -213,7 +206,7 @@ class FocusModeManager extends FocusModeBase
     dispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
         @focusShadowMode.dispose()
-        @configSubscribers.dispose()
+        # @configSubscribers.dispose()
 
 
 module.exports = FocusModeManager

@@ -27,7 +27,6 @@ Setting                         | Default  | Description
 Focus Mode Line Opacity  | 65% | Line opacity applied to any focus mode highlighted lines (options 65% or 100%)
 Enter Full Screen | true  | When focus mode is activated enter full screen mode
 Center Editor | Off | Hides side panels and centers the editor. Editor width options - "700px" (Medium.com article width), "888px" (github content/ReadMe width), "60%", "70%", "80%" and "90%".
-Use Type Writer Scrolling | false | Keeps the line containing the cursor in the center of the text editor.<br/>Type Writer Scrolling can be toggled on/off within files using keyboard shortcut `ctrl-alt-t`.
 Hide Footer Bar | true | When focus mode is activated hide editor footer bar
 Hide Line Numbers | true | When focus mode is activated hide editor line numbers
 Hide Line Length Guide | false | When focus mode is activated hide the line length guide line
@@ -41,15 +40,14 @@ Number of lines to highlight below cursor | 2 | Number of lines below the cursor
 
 **Scope Focus mode**
 
-* Currently supports files with ".js", ".coffee", ".py", ".txt" and ".md" file extensions (more file types to follow).
+* Currently supports files with ".js", ".coffee", ".py", ".rb", ".txt" and ".md" file extensions (more file types to follow).
 * Requires correct indentation of code block closing curly braces.
 * Does not focus scope when using multiple cursors.
 
-**Type Writer Scrolling**
+**Type Writer Mode**
 
 * Keeps the line containing the cursor in the center of the text editor.
-* Type Writer Scrolling can be toggled on/off within files using keyboard shortcut `ctrl-alt-t`.
-* Supported in Scope, Shadow and Cursor focus modes.
+* Type writer mode can be toggled on/off using keyboard shortcut `ctrl-alt-t` or via the focus mode menu.
 
 **To configure focus mode as per version 0.8 and earlier**
 

@@ -44,11 +44,6 @@ module.exports =
                     title: "Use Large Font Size"
                     type: 'boolean'
                     default: false
-                useTypeWriterMode:
-                    title: "Use Type Writer Scrolling"
-                    description: "Keeps the line containing the cursor in the center of the editor"
-                    type: 'boolean'
-                    default: false
                 centerEditor:
                     title: "Center Editor"
                     type: "string"
