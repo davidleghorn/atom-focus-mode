@@ -7,26 +7,34 @@ class TypeWriterScrollingMode extends FocusModeBase
 
     constructor: ->
         super('TypeWriterScrollingMode')
-        key = 'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode'
-        @useTypeWriterScrolling = @getConfig(key) or false
+        @autoActivateTypeWriterMode = @getTypeWriterModeConfigSetting()
+        @isActivated = false
         @usersScrollPastEndSetting = @getConfig('editor.scrollPastEnd')
         @mouseTextSelectionInProgress = false
 
 
-    on: () =>
-        bodyElement = @getBodyTagElement()
-        @setConfig('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        bodyElement.addEventListener("mousedown", @onmouseDown)
-        bodyElement.addEventListener("mouseup", @onmouseUp)
-        editor = @getActiveTextEditor()
-        @centerCursorRow(editor.getLastCursor()) if editor
+    getTypeWriterModeConfigSetting: ()->
+        key = 'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode'
+        @getConfig(key) or false
+
+
+    on: (msg) =>
+        if not @isActivated
+            @isActivated = true
+            bodyElement = @getBodyTagElement()
+            bodyElement.addEventListener("mousedown", @onmouseDown)
+            bodyElement.addEventListener("mouseup", @onmouseUp)
+            editor = @getActiveTextEditor()
+            @centerCursorRow(editor.getLastCursor()) if editor
+            @getAtomNotificationsInstance().addInfo(msg or "Type writer mode on")
 
 
     off: () =>
+        @isActivated = false
         bodyElement = @getBodyTagElement()
-        @setConfig('editor.scrollPastEnd', @usersScrollPastEndSetting)
         bodyElement.removeEventListener("mousedown", @onmouseDown)
         bodyElement.removeEventListener("mouseup", @onmouseUp)
+        @getAtomNotificationsInstance().addInfo("Type writer mode off")
 
 
     onmouseDown: (e)=>
@@ -38,6 +46,7 @@ class TypeWriterScrollingMode extends FocusModeBase
 
 
     centerCursorRow: (cursor) =>
+        console.log('>>>> centerCursorRow <<<<')
         editor = @getActiveTextEditor()
         cursorPoint = cursor.getScreenPosition()
         screenCenterRow = @getScreenCenterRow(editor)
@@ -51,11 +60,7 @@ class TypeWriterScrollingMode extends FocusModeBase
 
 
     toggle: ()=>
-        @useTypeWriterScrolling = !@useTypeWriterScrolling
-        key = "atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode"
-        @setConfig(key, @useTypeWriterScrolling)
-        msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
-        @getAtomNotificationsInstance().addInfo(msg)
+        if @isActivated then @off() else @on()
 
 
 module.exports = TypeWriterScrollingMode
