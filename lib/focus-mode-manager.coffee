@@ -20,22 +20,12 @@ class FocusModeManager extends FocusModeBase
         @focusModeSettings = new FocusModeSettings()
         @typeWriterScrollingMode = new TypeWriterScrollingMode()
         @usersScrollPastEndSetting = atom.config.get('editor.scrollPastEnd')
-        # @configSubscribers = @registerConfigSubscribers()
         @focusModes = {
             scopeFocus: "scopeFocus",
             cursorFocus: "cursorFocus",
             shadowFocus: "shadowFocus",
             singleLineFocus: "singleLineFocus"
         }
-
-
-    # registerConfigSubscribers: =>
-    #     configSubscribers = new CompositeDisposable()
-    #     configSubscribers.add(atom.config.observe(
-    #         'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode',
-    #         (value) => @useTypeWriterScrollingValueChanged(value)
-    #     ))
-    #     return configSubscribers
 
 
     setFullScreen: =>
@@ -87,17 +77,14 @@ class FocusModeManager extends FocusModeBase
         @turnOffActivatedFocusMode()
         switch mode
             when @focusModes.scopeFocus
-                @cursorEventSubscribers = @registerCursorEventHandlers()
                 @focusScopeMode.on()
             when @focusModes.cursorFocus
-                @cursorEventSubscribers = @registerCursorEventHandlers()
                 @focusCursorMode.on()
             when @focusModes.shadowFocus
-                @cursorEventSubscribers = @registerCursorEventHandlers()
                 @focusShadowMode.on()
             when @focusModes.singleLineFocus
-                @cursorEventSubscribers = @registerCursorEventHandlers()
                 @focusSingleLineMode.on()
+        @cursorEventSubscribers = @registerCursorEventHandlers()
 
 
     deActivateFocusMode: (mode) =>
@@ -194,19 +181,9 @@ class FocusModeManager extends FocusModeBase
         @typeWriterScrollingMode.toggle() if @focusModeIsActivated()
 
 
-    useTypeWriterScrollingValueChanged: (value) =>
-        console.log('useTypeWriterScrollingValueChanged value = ', value, ' and @focusModeIsActivated() = ', @focusModeIsActivated())
-        if @focusModeIsActivated()
-            if value is true
-                @typeWriterScrollingMode.on()
-            else
-                @typeWriterScrollingMode.off()
-
-
     dispose: =>
         @cursorEventSubscribers.dispose() if @cursorEventSubscribers
         @focusShadowMode.dispose()
-        # @configSubscribers.dispose()
 
 
 module.exports = FocusModeManager
