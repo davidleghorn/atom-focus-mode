@@ -1,7 +1,8 @@
 # atom-focus-mode
 
-Helps you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
-Hides editor panels and enters full screen mode for distraction free coding.
+Focus modes that help you focus on only the lines of code you are working with, all other lines are faded into the background.<br/>
+Hides editor panels and enters full screen mode for distraction free coding.<br/>
+Typewriter mode keeps the cursor line positioned in the center of the editor.
 
 ![Focus cursor mode with focus mode line opacity set at 100% ](https://raw.githubusercontent.com/davidleghorn/atom-focus-mode/master/screenshots/focus-mode.png)
 
@@ -44,10 +45,10 @@ Number of lines to highlight below cursor | 2 | Number of lines below the cursor
 * Requires correct indentation of code block closing curly braces.
 * Does not focus scope when using multiple cursors.
 
-**Type Writer Mode**
+**Typewriter mode**
 
 * Keeps the line containing the cursor in the center of the text editor.
-* Type writer mode can be toggled on/off using keyboard shortcut `ctrl-alt-t` or via the focus mode menu.
+* Typewriter mode can be toggled on/off using keyboard shortcut `ctrl-alt-t` or via the focus mode menu.
 
 **To configure focus mode as per version 0.8 and earlier**
 

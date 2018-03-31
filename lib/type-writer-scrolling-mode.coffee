@@ -17,7 +17,7 @@ class TypeWriterScrollingMode extends FocusModeBase
         @getConfig(key) or false
 
 
-    on: (msg) =>
+    on: () =>
         if not @isActivated
             @isActivated = true
             bodyElement = @getBodyTagElement()
@@ -25,7 +25,7 @@ class TypeWriterScrollingMode extends FocusModeBase
             bodyElement.addEventListener("mouseup", @onmouseUp)
             editor = @getActiveTextEditor()
             @centerCursorRow(editor.getLastCursor()) if editor
-            @getAtomNotificationsInstance().addInfo(msg or "Type writer mode on")
+            @getAtomNotificationsInstance().addInfo("Typewriter mode on")
 
 
     off: () =>
@@ -34,7 +34,7 @@ class TypeWriterScrollingMode extends FocusModeBase
             bodyElement = @getBodyTagElement()
             bodyElement.removeEventListener("mousedown", @onmouseDown)
             bodyElement.removeEventListener("mouseup", @onmouseUp)
-            @getAtomNotificationsInstance().addInfo("Type writer mode off")
+            @getAtomNotificationsInstance().addInfo("Typewriter mode off")
 
 
     onmouseDown: (e)=>

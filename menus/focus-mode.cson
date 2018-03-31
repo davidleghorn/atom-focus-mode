@@ -21,7 +21,7 @@
                     'command': 'atom-focus-mode:toggle-single-line-focus'
                 }
                 {
-                    'label': 'Type writer mode'
+                    'label': 'Typewriter mode'
                     'command': 'atom-focus-mode:use-type-writer-scrolling'
                 }
                 {
@@ -54,7 +54,7 @@
                     'command': 'atom-focus-mode:toggle-single-line-focus'
                 }
                 {
-                    'label': 'Type writer mode'
+                    'label': 'Typewriter mode'
                     'command': 'atom-focus-mode:use-type-writer-scrolling'
                 }
                 {
