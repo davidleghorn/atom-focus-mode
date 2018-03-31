@@ -1,6 +1,12 @@
 
+## 1.0.0  (2017-04-01)
+* Change (breaking): Activate type writer scrolling when focus mode activated package setting removed
+* Change: "Type writer mode" (previously named "Type writer scrolling") added to focus mode menus
+* Change: CSS opacity transition animation applied when focussing lines
+* Enhancement: Single line focus mode now supports Type writer mode
+
 ## 0.13.0  (2017-03-31)
-* Scope focus mode support added for Ruby files
+* Enhancement: Scope focus mode support added for Ruby files
 
 ## 0.12.2  (2017-02-10)
 * Fix to prevent focus mode exiting full screen when atom editor is full screen and focus mode full screen setting is off
