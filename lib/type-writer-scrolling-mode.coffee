@@ -7,26 +7,34 @@ class TypeWriterScrollingMode extends FocusModeBase
 
     constructor: ->
         super('TypeWriterScrollingMode')
-        key = 'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode'
-        @useTypeWriterScrolling = @getConfig(key) or false
+        @isActivated = false
         @usersScrollPastEndSetting = @getConfig('editor.scrollPastEnd')
         @mouseTextSelectionInProgress = false
 
 
+    getTypeWriterModeConfigSetting: ()->
+        key = 'atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode'
+        @getConfig(key) or false
+
+
     on: () =>
-        bodyElement = @getBodyTagElement()
-        @setConfig('editor.scrollPastEnd', true) if not @usersScrollPastEndSetting
-        bodyElement.addEventListener("mousedown", @onmouseDown)
-        bodyElement.addEventListener("mouseup", @onmouseUp)
-        editor = @getActiveTextEditor()
-        @centerCursorRow(editor.getLastCursor()) if editor
+        if not @isActivated
+            @isActivated = true
+            bodyElement = @getBodyTagElement()
+            bodyElement.addEventListener("mousedown", @onmouseDown)
+            bodyElement.addEventListener("mouseup", @onmouseUp)
+            editor = @getActiveTextEditor()
+            @centerCursorRow(editor.getLastCursor()) if editor
+            @getAtomNotificationsInstance().addInfo("Typewriter mode on")
 
 
     off: () =>
-        bodyElement = @getBodyTagElement()
-        @setConfig('editor.scrollPastEnd', @usersScrollPastEndSetting)
-        bodyElement.removeEventListener("mousedown", @onmouseDown)
-        bodyElement.removeEventListener("mouseup", @onmouseUp)
+        if @isActivated
+            @isActivated = false
+            bodyElement = @getBodyTagElement()
+            bodyElement.removeEventListener("mousedown", @onmouseDown)
+            bodyElement.removeEventListener("mouseup", @onmouseUp)
+            @getAtomNotificationsInstance().addInfo("Typewriter mode off")
 
 
     onmouseDown: (e)=>
@@ -51,11 +59,7 @@ class TypeWriterScrollingMode extends FocusModeBase
 
 
     toggle: ()=>
-        @useTypeWriterScrolling = !@useTypeWriterScrolling
-        key = "atom-focus-mode.whenFocusModeIsActivated.useTypeWriterMode"
-        @setConfig(key, @useTypeWriterScrolling)
-        msg = if @useTypeWriterScrolling then "Focus Mode Type Writer Scrolling On" else "Focus Mode Type Writer Scrolling Off"
-        @getAtomNotificationsInstance().addInfo(msg)
+        if @isActivated then @off() else @on()
 
 
 module.exports = TypeWriterScrollingMode

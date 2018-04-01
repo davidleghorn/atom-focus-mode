@@ -1,6 +1,12 @@
 
+## 1.0.0  (2017-04-01)
+* Change (breaking): Activate typewriter scrolling when focus mode activated package setting removed
+* Change: "Typewriter mode" (previously named typewriter scrolling) added to focus mode menus
+* Change: CSS opacity transition animation applied when focussing lines
+* Enhancement: Single line focus mode now supports typewriter mode
+
 ## 0.13.0  (2017-03-31)
-* Scope focus mode support added for Ruby files
+* Enhancement: Scope focus mode support added for Ruby files
 
 ## 0.12.2  (2017-02-10)
 * Fix to prevent focus mode exiting full screen when atom editor is full screen and focus mode full screen setting is off
@@ -13,7 +19,7 @@
 * Fixed TextEditor.setScrollTop deprecation warning
 
 ## 0.11.0  (2017-04-12)
-* Added: Type writer scrolling feature - keeps the line containing the cursor in the center of the text editor. Can be toggled on/off using a keyboard shortcut or via package settings.
+* Added: Typewriter scrolling feature - keeps the line containing the cursor in the center of the text editor. Can be toggled on/off using a keyboard shortcut or via package settings.
 * Added: Package setting to center editor when focus mode is activated.
 * Enhancement: In ".txt" and ".md" files, Scope Focus highlights text blocks that the cursor was placed inside - any text surrounded by blank lines is considered a text block e.g. paragraphs.
 * Enhancement/bug fix: Cursor focus now works with soft wrapped lines.

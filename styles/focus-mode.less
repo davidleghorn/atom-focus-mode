@@ -10,11 +10,14 @@
     atom-text-editor.editor {
         border: 0;
 
-        .line { opacity: 0.15; }
+        .line {
+            opacity: 0.15;
+        }
 
         .line.syntax--comment,
         .focus-line {
             opacity: 0.65;
+            transition: opacity 500ms ease;
         }
 
         // active cursor line
@@ -22,6 +25,7 @@
         .line.syntax--comment.cursor-line,
         .focus-line.cursor-line {
             opacity: 1;
+            transition: opacity 500ms ease;
         }
 
         // gutter line numbers
@@ -42,6 +46,7 @@
         li span,
         .list-item::before {
             opacity: 0.25;
+            transition: opacity 500ms ease;
         }
 
         li.selected span {opacity: 0.8;}
